@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using MoravianStar.Extensions;
 using ShumenTraffic.WebAPI.Common;
+using System.Collections.Generic;
 
 namespace ShumenTraffic.WebAPI.Controllers
 {
@@ -26,7 +28,7 @@ namespace ShumenTraffic.WebAPI.Controllers
         protected CreatedAtActionResult Created<T>(string actionName, string routeName, object routeValues, T data, string message = "Resource created successfully")
         {
             var response = ApiResponse<T>.SuccessResponse(data, message);
-            return base.CreatedAtAction(actionName, routeName, routeValues, response);
+            return base.CreatedAtAction(actionName, routeName?.TrimEnd("Controller"), routeValues, response);
         }
 
         /// <summary>
@@ -49,7 +51,7 @@ namespace ShumenTraffic.WebAPI.Controllers
         /// <summary>
         /// Returns a bad request response with multiple errors.
         /// </summary>
-        protected BadRequestObjectResult BadRequest(string message, System.Collections.Generic.List<string> errors)
+        protected BadRequestObjectResult BadRequest(string message, List<string> errors)
         {
             var response = ApiResponse.ErrorResponse(message, errors);
             return base.BadRequest(response);
@@ -92,4 +94,3 @@ namespace ShumenTraffic.WebAPI.Controllers
         }
     }
 }
-

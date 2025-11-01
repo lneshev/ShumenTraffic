@@ -1,0 +1,89 @@
+'use client';
+
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { useEffect, useState } from 'react';
+
+interface BusStop {
+  id: number;
+  name: string;
+  latitude: number;
+  longitude: number;
+}
+
+interface MapProps {
+  busStops: BusStop[];
+  selectedStopId?: number;
+}
+
+// Fix for default marker icons in Next.js
+const defaultIcon = L.icon({
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+const selectedIcon = L.icon({
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+  iconSize: [32, 51],
+  iconAnchor: [16, 51],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+L.Marker.prototype.options.icon = defaultIcon;
+
+export function Map({ busStops, selectedStopId }: MapProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="w-full h-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center">
+        <p className="text-gray-600 dark:text-gray-400">Loading map...</p>
+      </div>
+    );
+  }
+
+  // Default center: Shumen, Bulgaria
+  const defaultCenter: [number, number] = [43.2732, 26.5622];
+
+  return (
+    <MapContainer
+      center={defaultCenter}
+      zoom={13}
+      style={{ width: '100%', height: '100%' }}
+      className="rounded-lg"
+    >
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      />
+      {busStops.map((stop) => (
+        <Marker
+          key={stop.id}
+          position={[stop.latitude, stop.longitude]}
+          icon={selectedStopId === stop.id ? selectedIcon : defaultIcon}
+        >
+          <Popup>
+            <div className="text-sm">
+              <p className="font-semibold text-gray-900">{stop.name}</p>
+              <p className="text-gray-600 text-xs">
+                {stop.latitude.toFixed(6)}, {stop.longitude.toFixed(6)}
+              </p>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </MapContainer>
+  );
+}
+

@@ -98,8 +98,8 @@ namespace ShumenTraffic.WebAPI.Controllers
             }
 
             // Check if line number already exists
-            var existingLine = await _context.BusLines.FirstOrDefaultAsync(l => l.LineNumber == dto.LineNumber);
-            if (existingLine != null)
+            var existingLine = await _context.BusLines.Where(l => l.LineNumber == dto.LineNumber).AnyAsync();
+            if (existingLine)
             {
                 return Conflict("Bus line already exists", $"A bus line with number '{dto.LineNumber}' already exists");
             }
@@ -150,17 +150,21 @@ namespace ShumenTraffic.WebAPI.Controllers
             if (!string.IsNullOrEmpty(dto.LineNumber))
             {
                 // Check if new line number already exists
-                var existingLine = await _context.BusLines.FirstOrDefaultAsync(l => l.LineNumber == dto.LineNumber && l.Id != id);
-                if (existingLine != null)
+                var existingLine = await _context.BusLines.Where(l => l.LineNumber == dto.LineNumber && l.Id != id).AnyAsync();
+                if (existingLine)
                 {
                     return Conflict("Bus line already exists", $"A bus line with number '{dto.LineNumber}' already exists");
                 }
                 busLine.LineNumber = dto.LineNumber;
             }
             if (dto.Description != null)
+            {
                 busLine.Description = dto.Description;
+            }
             if (dto.IsActive.HasValue)
+            {
                 busLine.IsActive = dto.IsActive.Value;
+            }
 
             _context.BusLines.Update(busLine);
             await _context.SaveChangesAsync();

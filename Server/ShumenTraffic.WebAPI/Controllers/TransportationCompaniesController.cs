@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Data.Context;
 using ShumenTraffic.Data.Models;
 using ShumenTraffic.WebAPI.DTOs;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -104,6 +103,13 @@ namespace ShumenTraffic.WebAPI.Controllers
                 IsActive = true
             };
 
+            // Check if transportation company already exists
+            var existingCompany = await _context.Set<TransportationCompany>().Where(x => x.Name == dto.Name).AnyAsync();
+            if (existingCompany)
+            {
+                return Conflict("Transportation company already exists", $"A transportation company with name '{dto.Name}' already exists");
+            }
+
             _context.TransportationCompanies.Add(company);
             await _context.SaveChangesAsync();
 
@@ -141,11 +147,23 @@ namespace ShumenTraffic.WebAPI.Controllers
             }
 
             if (!string.IsNullOrEmpty(dto.Name))
+            {
+                // Check if new line number already exists
+                var existingCompany = await _context.Set<TransportationCompany>().Where(x => x.Name == dto.Name && x.Id != id).AnyAsync();
+                if (existingCompany)
+                {
+                    return Conflict("Transportation company already exists", $"A transportation company with name '{dto.Name}' already exists");
+                }
                 company.Name = dto.Name;
+            }
             if (dto.Description != null)
+            {
                 company.Description = dto.Description;
+            }
             if (dto.IsActive.HasValue)
+            {
                 company.IsActive = dto.IsActive.Value;
+            }
 
             _context.TransportationCompanies.Update(company);
             await _context.SaveChangesAsync();

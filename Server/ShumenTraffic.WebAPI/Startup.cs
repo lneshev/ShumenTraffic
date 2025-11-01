@@ -98,8 +98,8 @@ namespace ShumenTraffic.WebAPI
             // Configure authentication cookies for cross-origin requests
             services.ConfigureApplicationCookie(options =>
             {
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.HttpOnly = true;
                 options.Events.OnRedirectToLogin = context =>
                 {

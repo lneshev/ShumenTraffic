@@ -269,7 +269,7 @@ export default function SchedulePage() {
                       onClick={() => setHighlightedStop(highlightedStop === rs.id ? null : rs.id)}
                     >
                       <div className="flex items-center gap-2">
-                        <span className="flex-shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                        <span className="shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
                           {idx + 1}
                         </span>
                         <span className="truncate">{rs.stop?.name || 'Unknown'}</span>

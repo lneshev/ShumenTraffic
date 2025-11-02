@@ -189,7 +189,7 @@ export default function LinesPage() {
                     className="p-3 bg-white dark:bg-slate-800 rounded border border-gray-200 dark:border-slate-700 hover:shadow-md transition-shadow"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                      <div className="shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                         <span className="text-white text-sm font-bold">{idx + 1}</span>
                       </div>
                       <div className="flex-1 min-w-0">

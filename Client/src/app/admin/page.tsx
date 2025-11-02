@@ -75,7 +75,7 @@ function AdminDashboard() {
             <Link
               key={i}
               href={item.href}
-              className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg border border-blue-200 dark:border-blue-700 hover:shadow-lg transition-shadow cursor-pointer block"
+              className="p-6 bg-linear-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg border border-blue-200 dark:border-blue-700 hover:shadow-lg transition-shadow cursor-pointer block"
             >
               <div className="text-4xl mb-3">{item.icon}</div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">

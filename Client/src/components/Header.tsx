@@ -23,7 +23,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-linear-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">ST</span>
             </div>
             <span className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
@@ -61,19 +61,16 @@ export default function Header() {
             aria-label="Toggle menu"
           >
             <span
-              className={`w-6 h-0.5 bg-gray-900 dark:bg-white transition-all ${
-                isMenuOpen ? 'rotate-45 translate-y-2' : ''
-              }`}
+              className={`w-6 h-0.5 bg-gray-900 dark:bg-white transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''
+                }`}
             />
             <span
-              className={`w-6 h-0.5 bg-gray-900 dark:bg-white transition-all ${
-                isMenuOpen ? 'opacity-0' : ''
-              }`}
+              className={`w-6 h-0.5 bg-gray-900 dark:bg-white transition-all ${isMenuOpen ? 'opacity-0' : ''
+                }`}
             />
             <span
-              className={`w-6 h-0.5 bg-gray-900 dark:bg-white transition-all ${
-                isMenuOpen ? '-rotate-45 -translate-y-2' : ''
-              }`}
+              className={`w-6 h-0.5 bg-gray-900 dark:bg-white transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''
+                }`}
             />
           </button>
         </div>

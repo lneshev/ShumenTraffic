@@ -15,16 +15,13 @@ interface BusStop {
 }
 
 function BusStopsPage() {
+  const initialFormData = { name: '', latitude: 43.2732, longitude: 26.5622, zoneId: 1 };
+
   const [busStops, setBusStops] = useState<BusStop[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    latitude: 43.2732,
-    longitude: 26.5622,
-    zoneId: 1,
-  });
+  const [formData, setFormData] = useState({ ...initialFormData });
 
   useEffect(() => {
     fetchBusStops();
@@ -47,13 +44,7 @@ function BusStopsPage() {
     try {
       setError('');
       await api.post('/bus-stops', formData);
-      setFormData({
-        name: '',
-        latitude: 43.2732,
-        longitude: 26.5622,
-        zoneId: 1,
-      });
-      setShowForm(false);
+      toggleShowForm(false);
       fetchBusStops();
     } catch (err) {
       setError(err instanceof api.ApiError ? err.message : 'Error creating bus stop');
@@ -69,6 +60,12 @@ function BusStopsPage() {
       setError(err instanceof api.ApiError ? err.message : 'Error deleting bus stop');
     }
   };
+
+  const toggleShowForm = (show: boolean) => {
+    setError('');
+    setFormData({ ...initialFormData });
+    setShowForm(show);
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
@@ -93,7 +90,7 @@ function BusStopsPage() {
 
         {/* Add Bus Stop Button */}
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => toggleShowForm(!showForm)}
           className="mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
         >
           {showForm ? 'Cancel' : 'Add Bus Stop'}

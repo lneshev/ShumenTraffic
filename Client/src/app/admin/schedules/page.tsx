@@ -14,14 +14,16 @@ interface Schedule {
 }
 
 function SchedulesPage() {
+  const initialFormData = {
+    dayType: 'Weekday',
+    effectiveDate: new Date().toISOString().split('T')[0],
+  };
+
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    dayType: 'Weekday',
-    effectiveDate: new Date().toISOString().split('T')[0],
-  });
+  const [formData, setFormData] = useState({ ...initialFormData });
 
   useEffect(() => {
     fetchSchedules();
@@ -44,11 +46,7 @@ function SchedulesPage() {
     try {
       setError('');
       await api.post('/schedules', formData);
-      setFormData({
-        dayType: 'Weekday',
-        effectiveDate: new Date().toISOString().split('T')[0],
-      });
-      setShowForm(false);
+      toggleShowForm(false);
       fetchSchedules();
     } catch (err) {
       setError(err instanceof api.ApiError ? err.message : 'Error creating schedule');
@@ -64,6 +62,12 @@ function SchedulesPage() {
       setError(err instanceof api.ApiError ? err.message : 'Error deleting schedule');
     }
   };
+
+  const toggleShowForm = (show: boolean) => {
+    setError('');
+    setFormData({ ...initialFormData });
+    setShowForm(show);
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
@@ -88,7 +92,7 @@ function SchedulesPage() {
 
         {/* Add Schedule Button */}
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => toggleShowForm(!showForm)}
           className="mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
         >
           {showForm ? 'Cancel' : 'Add Schedule'}

@@ -13,11 +13,13 @@ interface BusLine {
 }
 
 function BusLinesPage() {
+  const initialFormData = { lineNumber: '', transportationCompanyId: 1 };
+
   const [busLines, setBusLines] = useState<BusLine[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ lineNumber: '', transportationCompanyId: 1 });
+  const [formData, setFormData] = useState({ ...initialFormData });
 
   useEffect(() => {
     fetchBusLines();
@@ -40,8 +42,7 @@ function BusLinesPage() {
     try {
       setError('');
       await api.post('/bus-lines', formData);
-      setFormData({ lineNumber: '', transportationCompanyId: 1 });
-      setShowForm(false);
+      toggleShowForm(false);
       fetchBusLines();
     } catch (err) {
       setError(err instanceof api.ApiError ? err.message : 'Error creating bus line');
@@ -57,6 +58,12 @@ function BusLinesPage() {
       setError(err instanceof api.ApiError ? err.message : 'Error deleting bus line');
     }
   };
+
+  const toggleShowForm = (show: boolean) => {
+    setError('');
+    setFormData({ ...initialFormData });
+    setShowForm(show);
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
@@ -81,7 +88,7 @@ function BusLinesPage() {
 
         {/* Add Bus Line Button */}
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => toggleShowForm(!showForm)}
           className="mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
         >
           {showForm ? 'Cancel' : 'Add Bus Line'}

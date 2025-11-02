@@ -13,11 +13,13 @@ interface Route {
 }
 
 function RoutesPage() {
+  const initialFormData = { busLineId: 1, direction: 0 };
+
   const [routes, setRoutes] = useState<Route[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ busLineId: 1, direction: 0 });
+  const [formData, setFormData] = useState({ ...initialFormData });
 
   useEffect(() => {
     fetchRoutes();
@@ -40,8 +42,7 @@ function RoutesPage() {
     try {
       setError('');
       await api.post('/routes', formData);
-      setFormData({ busLineId: 1, direction: 0 });
-      setShowForm(false);
+      toggleShowForm(false);
       fetchRoutes();
     } catch (err) {
       setError(err instanceof api.ApiError ? err.message : 'Error creating route');
@@ -57,6 +58,12 @@ function RoutesPage() {
       setError(err instanceof api.ApiError ? err.message : 'Error deleting route');
     }
   };
+
+  const toggleShowForm = (show: boolean) => {
+    setError('');
+    setFormData({ ...initialFormData });
+    setShowForm(show);
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
@@ -81,7 +88,7 @@ function RoutesPage() {
 
         {/* Add Route Button */}
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => toggleShowForm(!showForm)}
           className="mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
         >
           {showForm ? 'Cancel' : 'Add Route'}

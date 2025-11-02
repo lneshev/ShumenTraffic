@@ -12,11 +12,13 @@ interface Company {
 }
 
 function CompaniesPage() {
+  const initialFormData = { name: '' };
+
   const [companies, setCompanies] = useState<Company[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ name: '' });
+  const [formData, setFormData] = useState({ ...initialFormData });
 
   useEffect(() => {
     fetchCompanies();
@@ -39,8 +41,7 @@ function CompaniesPage() {
     try {
       setError('');
       await api.post('/transportation-companies', formData);
-      setFormData({ name: '' });
-      setShowForm(false);
+      toggleShowForm(false);
       fetchCompanies();
     } catch (err) {
       setError(err instanceof api.ApiError ? err.message : 'Error creating company');
@@ -56,6 +57,12 @@ function CompaniesPage() {
       setError(err instanceof api.ApiError ? err.message : 'Error deleting company');
     }
   };
+
+  const toggleShowForm = (show: boolean) => {
+    setError('');
+    setFormData({ ...initialFormData });
+    setShowForm(show);
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
@@ -80,7 +87,7 @@ function CompaniesPage() {
 
         {/* Add Company Button */}
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => toggleShowForm(!showForm)}
           className="mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
         >
           {showForm ? 'Cancel' : 'Add Company'}

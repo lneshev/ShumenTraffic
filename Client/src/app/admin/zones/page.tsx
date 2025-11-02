@@ -12,11 +12,13 @@ interface Zone {
 }
 
 function ZonesPage() {
+  const initialFormData = { name: '' };
+
   const [zones, setZones] = useState<Zone[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ name: '' });
+  const [formData, setFormData] = useState({ ...initialFormData });
 
   useEffect(() => {
     fetchZones();
@@ -39,8 +41,7 @@ function ZonesPage() {
     try {
       setError('');
       await api.post('/zones', formData);
-      setFormData({ name: '' });
-      setShowForm(false);
+      toggleShowForm(false);
       fetchZones();
     } catch (err) {
       setError(err instanceof api.ApiError ? err.message : 'Error creating zone');
@@ -56,6 +57,12 @@ function ZonesPage() {
       setError(err instanceof api.ApiError ? err.message : 'Error deleting zone');
     }
   };
+
+  const toggleShowForm = (show: boolean) => {
+    setError('');
+    setFormData({ ...initialFormData });
+    setShowForm(show);
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
@@ -80,7 +87,7 @@ function ZonesPage() {
 
         {/* Add Zone Button */}
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => toggleShowForm(!showForm)}
           className="mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
         >
           {showForm ? 'Cancel' : 'Add Zone'}

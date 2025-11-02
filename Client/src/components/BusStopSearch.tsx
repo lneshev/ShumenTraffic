@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import api from '@/lib/api';
 
 interface BusStop {
   id: number;
@@ -27,11 +28,8 @@ export function BusStopSearch({ onSelectStop, selectedStopId }: BusStopSearchPro
     const fetchBusStops = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:5000/api/bus-stops');
-        if (response.ok) {
-          const data = await response.json();
-          setBusStops(data.data || []);
-        }
+        const data = await api.get<BusStop[]>('/bus-stops');
+        setBusStops(data);
       } catch (error) {
         console.error('Failed to fetch bus stops:', error);
       } finally {
@@ -99,11 +97,10 @@ export function BusStopSearch({ onSelectStop, selectedStopId }: BusStopSearchPro
             <button
               key={stop.id}
               onClick={() => handleSelectStop(stop)}
-              className={`w-full text-left px-4 py-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors ${
-                selectedStopId === stop.id
-                  ? 'bg-blue-100 dark:bg-blue-900/30 border-l-4 border-blue-600'
-                  : ''
-              }`}
+              className={`w-full text-left px-4 py-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors ${selectedStopId === stop.id
+                ? 'bg-blue-100 dark:bg-blue-900/30 border-l-4 border-blue-600'
+                : ''
+                }`}
             >
               <p className="font-medium text-gray-900 dark:text-white">{stop.name}</p>
               <p className="text-xs text-gray-600 dark:text-gray-400">

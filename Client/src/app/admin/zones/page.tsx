@@ -3,6 +3,7 @@
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 
 interface Zone {
   id: number;
@@ -24,12 +25,10 @@ function ZonesPage() {
   const fetchZones = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:5000/api/zones');
-      if (!response.ok) throw new Error('Failed to fetch zones');
-      const data = await response.json();
-      setZones(data.data || []);
+      const data = await api.get<Zone[]>('/zones');
+      setZones(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error loading zones');
+      setError(err instanceof api.ApiError ? err.message : 'Error loading zones');
     } finally {
       setIsLoading(false);
     }
@@ -38,36 +37,23 @@ function ZonesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/zones', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) throw new Error('Failed to create zone');
+      setError('');
+      await api.post('/zones', formData);
       setFormData({ name: '' });
       setShowForm(false);
       fetchZones();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error creating zone');
+      setError(err instanceof api.ApiError ? err.message : 'Error creating zone');
     }
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/zones/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) throw new Error('Failed to delete zone');
+      await api.delete(`/zones/${id}`);
       fetchZones();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error deleting zone');
+      setError(err instanceof api.ApiError ? err.message : 'Error deleting zone');
     }
   };
 
@@ -157,8 +143,8 @@ function ZonesPage() {
                     <td className="py-3 px-4">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium ${zone.isActive
-                            ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                          ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
                           }`}
                       >
                         {zone.isActive ? 'Active' : 'Inactive'}

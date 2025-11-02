@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 
 interface BusLine {
   id: number;
@@ -48,13 +49,10 @@ export default function LinesPage() {
   useEffect(() => {
     const fetchBusLines = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/bus-lines');
-        if (response.ok) {
-          const data = await response.json();
-          setBusLines(data.data || []);
-          if (data.data && data.data.length > 0) {
-            setSelectedLineId(data.data[0].id);
-          }
+        const data = await api.get<BusLine[]>('/bus-lines');
+        setBusLines(data);
+        if (data.length > 0) {
+          setSelectedLineId(data[0].id);
         }
       } catch (error) {
         console.error('Failed to fetch bus lines:', error);
@@ -72,14 +70,9 @@ export default function LinesPage() {
 
     const fetchRoutes = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/routes');
-        if (response.ok) {
-          const data = await response.json();
-          const lineRoutes = (data.data || []).filter(
-            (r: Route) => r.busLineId === selectedLineId
-          );
-          setRoutes(lineRoutes);
-        }
+        const data = await api.get<Route[]>('/routes');
+        const lineRoutes = data.filter((r: Route) => r.busLineId === selectedLineId);
+        setRoutes(lineRoutes);
       } catch (error) {
         console.error('Failed to fetch routes:', error);
       }
@@ -95,11 +88,8 @@ export default function LinesPage() {
 
     const fetchRouteStops = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/routes/${selectedRoute.id}/stops`);
-        if (response.ok) {
-          const data = await response.json();
-          setRouteStops(data.data || []);
-        }
+        const data = await api.get<RouteStop[]>(`/routes/${selectedRoute.id}/stops`);
+        setRouteStops(data);
       } catch (error) {
         console.error('Failed to fetch route stops:', error);
       }
@@ -112,11 +102,8 @@ export default function LinesPage() {
   useEffect(() => {
     const fetchBusStops = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/bus-stops');
-        if (response.ok) {
-          const data = await response.json();
-          setBusStops(data.data || []);
-        }
+        const data = await api.get<BusStop[]>('/bus-stops');
+        setBusStops(data);
       } catch (error) {
         console.error('Failed to fetch bus stops:', error);
       }
@@ -174,8 +161,8 @@ export default function LinesPage() {
                   key={dir}
                   onClick={() => setSelectedDirection(dir)}
                   className={`flex-1 px-4 py-2 rounded-lg font-semibold transition-colors ${selectedDirection === dir
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 dark:bg-slate-800 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 dark:bg-slate-800 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700'
                     }`}
                 >
                   Direction {dir + 1}

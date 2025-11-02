@@ -3,6 +3,7 @@
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 
 interface BusStop {
   id: number;
@@ -32,12 +33,10 @@ function BusStopsPage() {
   const fetchBusStops = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:5000/api/bus-stops');
-      if (!response.ok) throw new Error('Failed to fetch bus stops');
-      const data = await response.json();
-      setBusStops(data.data || []);
+      const data = await api.get<BusStop[]>('/bus-stops');
+      setBusStops(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error loading bus stops');
+      setError(err instanceof api.ApiError ? err.message : 'Error loading bus stops');
     } finally {
       setIsLoading(false);
     }
@@ -46,16 +45,8 @@ function BusStopsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/bus-stops', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) throw new Error('Failed to create bus stop');
+      setError('');
+      await api.post('/bus-stops', formData);
       setFormData({
         name: '',
         latitude: 43.2732,
@@ -65,22 +56,17 @@ function BusStopsPage() {
       setShowForm(false);
       fetchBusStops();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error creating bus stop');
+      setError(err instanceof api.ApiError ? err.message : 'Error creating bus stop');
     }
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/bus-stops/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) throw new Error('Failed to delete bus stop');
+      await api.delete(`/bus-stops/${id}`);
       fetchBusStops();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error deleting bus stop');
+      setError(err instanceof api.ApiError ? err.message : 'Error deleting bus stop');
     }
   };
 
@@ -210,8 +196,8 @@ function BusStopsPage() {
                     <td className="py-3 px-4">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium ${stop.isActive
-                            ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                          ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
                           }`}
                       >
                         {stop.isActive ? 'Active' : 'Inactive'}

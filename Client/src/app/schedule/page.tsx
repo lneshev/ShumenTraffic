@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 
 interface BusLine {
   id: number;
@@ -51,13 +52,10 @@ export default function SchedulePage() {
   useEffect(() => {
     const fetchBusLines = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/bus-lines');
-        if (response.ok) {
-          const data = await response.json();
-          setBusLines(data.data || []);
-          if (data.data && data.data.length > 0) {
-            setSelectedLineId(data.data[0].id);
-          }
+        const data = await api.get<BusLine[]>('/bus-lines');
+        setBusLines(data);
+        if (data.length > 0) {
+          setSelectedLineId(data[0].id);
         }
       } catch (error) {
         console.error('Failed to fetch bus lines:', error);
@@ -75,14 +73,9 @@ export default function SchedulePage() {
 
     const fetchRoutes = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/routes');
-        if (response.ok) {
-          const data = await response.json();
-          const lineRoutes = (data.data || []).filter(
-            (r: Route) => r.busLineId === selectedLineId
-          );
-          setRoutes(lineRoutes);
-        }
+        const data = await api.get<Route[]>('/routes');
+        const lineRoutes = data.filter((r: Route) => r.busLineId === selectedLineId);
+        setRoutes(lineRoutes);
       } catch (error) {
         console.error('Failed to fetch routes:', error);
       }
@@ -98,11 +91,8 @@ export default function SchedulePage() {
 
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/schedules?routeId=${selectedRoute.id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setCourses(data.data || []);
-        }
+        const data = await api.get<ScheduleCourse[]>(`/schedules?routeId=${selectedRoute.id}`);
+        setCourses(data);
       } catch (error) {
         console.error('Failed to fetch courses:', error);
       }
@@ -118,11 +108,8 @@ export default function SchedulePage() {
 
     const fetchRouteStops = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/routes/${selectedRoute.id}/stops`);
-        if (response.ok) {
-          const data = await response.json();
-          setRouteStops(data.data || []);
-        }
+        const data = await api.get<RouteStop[]>(`/routes/${selectedRoute.id}/stops`);
+        setRouteStops(data);
       } catch (error) {
         console.error('Failed to fetch route stops:', error);
       }
@@ -135,11 +122,8 @@ export default function SchedulePage() {
   useEffect(() => {
     const fetchBusStops = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/bus-stops');
-        if (response.ok) {
-          const data = await response.json();
-          setBusStops(data.data || []);
-        }
+        const data = await api.get<BusStop[]>('/bus-stops');
+        setBusStops(data);
       } catch (error) {
         console.error('Failed to fetch bus stops:', error);
       }
@@ -215,8 +199,8 @@ export default function SchedulePage() {
                   key={dir}
                   onClick={() => setSelectedDirection(dir)}
                   className={`flex-1 px-3 py-2 rounded-lg font-semibold transition-colors text-sm ${selectedDirection === dir
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 dark:bg-slate-800 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 dark:bg-slate-800 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700'
                     }`}
                 >
                   Dir {dir + 1}
@@ -251,8 +235,8 @@ export default function SchedulePage() {
                   <th
                     key={course.id}
                     className={`text-center py-3 px-2 font-semibold text-gray-900 dark:text-white whitespace-nowrap cursor-pointer transition-colors ${highlightedCourse === course.id
-                        ? 'bg-blue-100 dark:bg-blue-900'
-                        : 'hover:bg-gray-200 dark:hover:bg-slate-700'
+                      ? 'bg-blue-100 dark:bg-blue-900'
+                      : 'hover:bg-gray-200 dark:hover:bg-slate-700'
                       }`}
                     onClick={() => setHighlightedCourse(highlightedCourse === course.id ? null : course.id)}
                   >
@@ -273,14 +257,14 @@ export default function SchedulePage() {
                   <tr
                     key={rs.id}
                     className={`border-b border-gray-200 dark:border-slate-700 transition-colors ${highlightedStop === rs.id
-                        ? 'bg-blue-50 dark:bg-blue-900/20'
-                        : 'hover:bg-gray-100 dark:hover:bg-slate-800'
+                      ? 'bg-blue-50 dark:bg-blue-900/20'
+                      : 'hover:bg-gray-100 dark:hover:bg-slate-800'
                       }`}
                   >
                     <td
                       className={`py-3 px-4 font-medium text-gray-900 dark:text-white sticky left-0 z-10 cursor-pointer transition-colors ${highlightedStop === rs.id
-                          ? 'bg-blue-50 dark:bg-blue-900/20'
-                          : 'bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800'
+                        ? 'bg-blue-50 dark:bg-blue-900/20'
+                        : 'bg-gray-50 dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800'
                         }`}
                       onClick={() => setHighlightedStop(highlightedStop === rs.id ? null : rs.id)}
                     >
@@ -295,8 +279,8 @@ export default function SchedulePage() {
                       <td
                         key={`${rs.id}-${course.id}`}
                         className={`text-center py-3 px-2 text-gray-900 dark:text-white transition-colors ${highlightedCourse === course.id
-                            ? 'bg-blue-100 dark:bg-blue-900'
-                            : ''
+                          ? 'bg-blue-100 dark:bg-blue-900'
+                          : ''
                           }`}
                       >
                         {calculateStopTime(course.departureTime, rs.estimatedMinutesFromStart)}

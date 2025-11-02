@@ -3,6 +3,7 @@
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 
 interface Company {
   id: number;
@@ -24,10 +25,8 @@ function CompaniesPage() {
   const fetchCompanies = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:5000/api/transportation-companies');
-      if (!response.ok) throw new Error('Failed to fetch companies');
-      const data = await response.json();
-      setCompanies(data.data || []);
+      const data = await api.get<Company[]>('/transportation-companies');
+      setCompanies(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error loading companies');
     } finally {
@@ -38,36 +37,23 @@ function CompaniesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/transportation-companies', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) throw new Error('Failed to create company');
+      setError('');
+      await api.post('/transportation-companies', formData);
       setFormData({ name: '' });
       setShowForm(false);
       fetchCompanies();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error creating company');
+      setError(err instanceof api.ApiError ? err.message : 'Error creating company');
     }
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/transportation-companies/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) throw new Error('Failed to delete company');
+      await api.delete(`/transportation-companies/${id}`);
       fetchCompanies();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error deleting company');
+      setError(err instanceof api.ApiError ? err.message : 'Error deleting company');
     }
   };
 
@@ -157,8 +143,8 @@ function CompaniesPage() {
                     <td className="py-3 px-4">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium ${company.isActive
-                            ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                          ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
                           }`}
                       >
                         {company.isActive ? 'Active' : 'Inactive'}

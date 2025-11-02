@@ -3,6 +3,7 @@
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 
 interface Route {
   id: number;
@@ -25,12 +26,10 @@ function RoutesPage() {
   const fetchRoutes = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:5000/api/routes');
-      if (!response.ok) throw new Error('Failed to fetch routes');
-      const data = await response.json();
-      setRoutes(data.data || []);
+      const data = await api.get<Route[]>('/routes');
+      setRoutes(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error loading routes');
+      setError(err instanceof api.ApiError ? err.message : 'Error loading routes');
     } finally {
       setIsLoading(false);
     }
@@ -39,36 +38,23 @@ function RoutesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/routes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) throw new Error('Failed to create route');
+      setError('');
+      await api.post('/routes', formData);
       setFormData({ busLineId: 1, direction: 0 });
       setShowForm(false);
       fetchRoutes();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error creating route');
+      setError(err instanceof api.ApiError ? err.message : 'Error creating route');
     }
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/routes/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) throw new Error('Failed to delete route');
+      await api.delete(`/routes/${id}`);
       fetchRoutes();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error deleting route');
+      setError(err instanceof api.ApiError ? err.message : 'Error deleting route');
     }
   };
 
@@ -182,8 +168,8 @@ function RoutesPage() {
                     <td className="py-3 px-4">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium ${route.isActive
-                            ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                          ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
                           }`}
                       >
                         {route.isActive ? 'Active' : 'Inactive'}

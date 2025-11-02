@@ -3,6 +3,7 @@
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 
 interface Schedule {
   id: number;
@@ -29,12 +30,10 @@ function SchedulesPage() {
   const fetchSchedules = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:5000/api/schedules');
-      if (!response.ok) throw new Error('Failed to fetch schedules');
-      const data = await response.json();
-      setSchedules(data.data || []);
+      const data = await api.get<Schedule[]>('/schedules');
+      setSchedules(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error loading schedules');
+      setError(err instanceof api.ApiError ? err.message : 'Error loading schedules');
     } finally {
       setIsLoading(false);
     }
@@ -43,16 +42,8 @@ function SchedulesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/schedules', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) throw new Error('Failed to create schedule');
+      setError('');
+      await api.post('/schedules', formData);
       setFormData({
         dayType: 'Weekday',
         effectiveDate: new Date().toISOString().split('T')[0],
@@ -60,22 +51,17 @@ function SchedulesPage() {
       setShowForm(false);
       fetchSchedules();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error creating schedule');
+      setError(err instanceof api.ApiError ? err.message : 'Error creating schedule');
     }
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/schedules/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) throw new Error('Failed to delete schedule');
+      await api.delete(`/schedules/${id}`);
       fetchSchedules();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error deleting schedule');
+      setError(err instanceof api.ApiError ? err.message : 'Error deleting schedule');
     }
   };
 
@@ -185,8 +171,8 @@ function SchedulesPage() {
                     <td className="py-3 px-4">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium ${schedule.isActive
-                            ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                          ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
                           }`}
                       >
                         {schedule.isActive ? 'Active' : 'Inactive'}

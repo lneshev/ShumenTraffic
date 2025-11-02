@@ -4,6 +4,7 @@ import Link from "next/link";
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { BusStopSearch } from '@/components/BusStopSearch';
+import api from '@/lib/api';
 
 interface BusStop {
   id: number;
@@ -26,11 +27,8 @@ export default function Home() {
   useEffect(() => {
     const fetchBusStops = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/bus-stops');
-        if (response.ok) {
-          const data = await response.json();
-          setBusStops(data.data || []);
-        }
+        const data = await api.get<BusStop[]>('/bus-stops');
+        setBusStops(data);
       } catch (error) {
         console.error('Failed to fetch bus stops:', error);
       } finally {

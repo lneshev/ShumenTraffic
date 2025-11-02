@@ -33,31 +33,19 @@ function AdminDashboard() {
         </p>
 
         {/* Admin Navigation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {[
             {
-              title: 'Transportation Companies',
-              description: 'Manage bus companies',
-              icon: '🏢',
-              href: '/admin/companies',
-            },
-            {
-              title: 'Bus Lines',
-              description: 'Create and edit bus lines',
-              icon: '🚌',
-              href: '/admin/bus-lines',
+              title: 'Schedules',
+              description: 'Create and edit schedules',
+              icon: '📅',
+              href: '/admin/schedules',
             },
             {
               title: 'Routes',
               description: 'Manage routes and stops',
               icon: '🗺️',
               href: '/admin/routes',
-            },
-            {
-              title: 'Schedules',
-              description: 'Create and edit schedules',
-              icon: '📅',
-              href: '/admin/schedules',
             },
             {
               title: 'Bus Stops',
@@ -71,6 +59,18 @@ function AdminDashboard() {
               icon: '🎯',
               href: '/admin/zones',
             },
+            {
+              title: 'Bus Lines',
+              description: 'Create and edit bus lines',
+              icon: '🚌',
+              href: '/admin/bus-lines',
+            },
+            {
+              title: 'Transportation Companies',
+              description: 'Manage bus companies',
+              icon: '🏢',
+              href: '/admin/companies',
+            }
           ].map((item, i) => (
             <Link
               key={i}

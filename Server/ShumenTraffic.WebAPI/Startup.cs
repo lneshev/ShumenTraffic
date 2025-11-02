@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -44,6 +45,13 @@ namespace ShumenTraffic.WebAPI
                 options.Filters.Add<ValidationFilter>();
             })
             .AddControllersAsServices();
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                // This is needed, because the logic in ValidateModelStateAttribute 
+                // won't be triggered for controllers marked with ApiControllerAttribute
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
             // Add CORS
             var consumersConfig = Configuration.GetSection(nameof(ConsumersConfiguration)).Get<ConsumersConfiguration>();

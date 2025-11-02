@@ -54,12 +54,12 @@ export function Map({ busStops, selectedStopId }: MapProps) {
   }
 
   // Default center: Shumen, Bulgaria
-  const defaultCenter: [number, number] = [43.2732, 26.5622];
+  const defaultCenter: [number, number] = [43.27109895944945, 26.935763019161463];
 
   return (
     <MapContainer
       center={defaultCenter}
-      zoom={13}
+      zoom={14}
       style={{ width: '100%', height: '100%' }}
       className="rounded-lg"
     >

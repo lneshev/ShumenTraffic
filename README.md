@@ -2,6 +2,9 @@
 
 A website for tracking live buses in Shumen, Bulgaria with real-time bus stop information, schedules, and route management.
 
+## 🟥 **Warning**
+Status: Early stage of development!
+
 ## Project Overview
 
 ShumenTraffic provides users with:

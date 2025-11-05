@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShumenTraffic.Common.Core\ShumenTraffic.Common.Core.csproj" />
+    <ProjectReference Include="..\ShumenTraffic.Persistence\ShumenTraffic.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

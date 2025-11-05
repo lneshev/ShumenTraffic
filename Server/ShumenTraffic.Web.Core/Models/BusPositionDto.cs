@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ShumenTraffic.Web.WebAPI.DTOs
+namespace ShumenTraffic.Web.Core.Models
 {
     /// <summary>
     /// DTO for current bus position.

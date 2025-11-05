@@ -1,24 +1,24 @@
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Persistence.DbContexts;
-using ShumenTraffic.Web.WebAPI.Services.Interfaces;
+using ShumenTraffic.Web.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Base
+namespace ShumenTraffic.Web.Services.Services
 {
     /// <summary>
     /// Base service class with common CRUD operations.
     /// </summary>
     /// <typeparam name="TEntity">The entity type</typeparam>
     /// <typeparam name="TDto">The DTO type</typeparam>
-    public abstract class BaseService<TEntity, TDto> : IBaseService<TDto>
+    public abstract class BaseModelService<TEntity, TDto> : IBaseModelService<TDto>
         where TEntity : class
         where TDto : class
     {
         protected readonly AppDbContext _context;
 
-        protected BaseService(AppDbContext context)
+        protected BaseModelService(AppDbContext context)
         {
             _context = context;
         }
@@ -99,4 +99,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Base
         }
     }
 }
-

@@ -11,4 +11,8 @@
     <PackageReference Include="MoravianStar" Version="1.40.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
 </Project>

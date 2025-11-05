@@ -1,21 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
 using ShumenTraffic.Persistence.DbContexts;
-using ShumenTraffic.Web.WebAPI.DTOs;
-using ShumenTraffic.Web.WebAPI.Services.Base;
-using ShumenTraffic.Web.WebAPI.Services.Interfaces;
+using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Implementations
+namespace ShumenTraffic.Web.Services.Services
 {
     /// <summary>
     /// Service for Bus Stop operations.
     /// </summary>
-    public class BusStopService : BaseService<BusStop, BusStopDto>, IBusStopService
+    public class BusStopModelService : BaseModelService<BusStop, BusStopDto>, IBusStopModelService
     {
-        public BusStopService(AppDbContext context) : base(context)
+        public BusStopModelService(AppDbContext context) : base(context)
         {
         }
 
@@ -185,4 +184,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Implementations
         }
     }
 }
-

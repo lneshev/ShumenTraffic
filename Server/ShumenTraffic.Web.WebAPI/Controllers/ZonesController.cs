@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShumenTraffic.Web.WebAPI.DTOs;
-using ShumenTraffic.Web.WebAPI.Services.Interfaces;
+using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Services.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,9 +15,9 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
     [Authorize]
     public class ZonesController : BaseController
     {
-        private readonly IZoneService _zoneService;
+        private readonly IZoneModelService _zoneService;
 
-        public ZonesController(IZoneService zoneService)
+        public ZonesController(IZoneModelService zoneService)
         {
             _zoneService = zoneService;
         }
@@ -118,4 +118,3 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         }
     }
 }
-

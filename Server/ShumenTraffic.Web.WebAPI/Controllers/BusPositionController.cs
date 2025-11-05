@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
 using ShumenTraffic.Persistence.DbContexts;
-using ShumenTraffic.Web.WebAPI.DTOs;
+using ShumenTraffic.Web.Core.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -194,4 +194,3 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         }
     }
 }
-

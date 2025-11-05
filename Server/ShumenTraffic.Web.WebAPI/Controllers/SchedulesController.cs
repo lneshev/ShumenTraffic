@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShumenTraffic.Web.WebAPI.DTOs;
-using ShumenTraffic.Web.WebAPI.Services.Interfaces;
+using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Services.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,9 +15,9 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
     [Authorize]
     public class SchedulesController : BaseController
     {
-        private readonly IScheduleService _scheduleService;
+        private readonly IScheduleModelService _scheduleService;
 
-        public SchedulesController(IScheduleService scheduleService)
+        public SchedulesController(IScheduleModelService scheduleService)
         {
             _scheduleService = scheduleService;
         }
@@ -124,4 +124,3 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         }
     }
 }
-

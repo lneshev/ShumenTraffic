@@ -1,22 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
 using ShumenTraffic.Persistence.DbContexts;
-using ShumenTraffic.Web.WebAPI.DTOs;
-using ShumenTraffic.Web.WebAPI.Services.Base;
-using ShumenTraffic.Web.WebAPI.Services.Interfaces;
+using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Implementations
+namespace ShumenTraffic.Web.Services.Services
 {
     /// <summary>
     /// Service for Schedule operations.
     /// </summary>
-    public class ScheduleService : BaseService<Schedule, ScheduleDto>, IScheduleService
+    public class ScheduleModelService : BaseModelService<Schedule, ScheduleDto>, IScheduleModelService
     {
-        public ScheduleService(AppDbContext context) : base(context)
+        public ScheduleModelService(AppDbContext context) : base(context)
         {
         }
 
@@ -269,4 +268,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Implementations
         }
     }
 }
-

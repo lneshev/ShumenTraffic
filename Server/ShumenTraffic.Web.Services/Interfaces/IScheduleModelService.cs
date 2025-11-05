@@ -1,13 +1,13 @@
-using ShumenTraffic.Web.WebAPI.DTOs;
+using ShumenTraffic.Web.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
+namespace ShumenTraffic.Web.Services.Interfaces
 {
     /// <summary>
     /// Service interface for Schedule operations.
     /// </summary>
-    public interface IScheduleService : IBaseService<ScheduleDto>
+    public interface IScheduleModelService : IBaseModelService<ScheduleDto>
     {
         /// <summary>
         /// Get all schedules, optionally filtered by day type.
@@ -33,4 +33,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
         Task<ScheduleDto> UpdateAsync(int id, UpdateScheduleDto dto);
     }
 }
-

@@ -1,12 +1,12 @@
-using ShumenTraffic.Web.WebAPI.DTOs;
+using ShumenTraffic.Web.Core.Models;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
+namespace ShumenTraffic.Web.Services.Interfaces
 {
     /// <summary>
     /// Service interface for Transportation Company operations.
     /// </summary>
-    public interface ITransportationCompanyService : IBaseService<TransportationCompanyDto>
+    public interface ITransportationCompanyModelService : IBaseModelService<TransportationCompanyDto>
     {
         /// <summary>
         /// Create a new transportation company.
@@ -32,4 +32,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
         Task<bool> NameExistsAsync(string name, int? excludeId = null);
     }
 }
-

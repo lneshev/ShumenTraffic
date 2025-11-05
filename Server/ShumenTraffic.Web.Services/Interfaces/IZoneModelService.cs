@@ -1,12 +1,12 @@
-using ShumenTraffic.Web.WebAPI.DTOs;
+using ShumenTraffic.Web.Core.Models;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
+namespace ShumenTraffic.Web.Services.Interfaces
 {
     /// <summary>
     /// Service interface for Zone operations.
     /// </summary>
-    public interface IZoneService : IBaseService<ZoneDto>
+    public interface IZoneModelService : IBaseModelService<ZoneDto>
     {
         /// <summary>
         /// Create a new zone.
@@ -24,4 +24,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
         Task<ZoneDto> UpdateAsync(int id, UpdateZoneDto dto);
     }
 }
-

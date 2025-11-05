@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
+namespace ShumenTraffic.Web.Services.Interfaces
 {
     /// <summary>
     /// Base service interface for common CRUD operations.
     /// </summary>
     /// <typeparam name="TDto">The DTO type</typeparam>
-    public interface IBaseService<TDto> where TDto : class
+    public interface IBaseModelService<TDto> where TDto : class
     {
         /// <summary>
         /// Get all entities.
@@ -31,4 +31,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
         Task<bool> DeleteAsync(int id);
     }
 }
-

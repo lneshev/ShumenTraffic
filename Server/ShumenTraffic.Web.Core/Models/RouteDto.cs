@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ShumenTraffic.Web.WebAPI.DTOs
+namespace ShumenTraffic.Web.Core.Models
 {
     /// <summary>
     /// DTO for Route Stop (waypoint or actual bus stop on a route).

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ShumenTraffic.Web.WebAPI.DTOs.Auth
+namespace ShumenTraffic.Web.Core.Models.Auth
 {
     /// <summary>
     /// Login response DTO.

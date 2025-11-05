@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ShumenTraffic.Web.WebAPI.DTOs
+namespace ShumenTraffic.Web.Core.Models
 {
     /// <summary>
     /// DTO for Schedule Course (trip/departure).

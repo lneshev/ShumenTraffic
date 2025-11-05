@@ -1,12 +1,12 @@
-using ShumenTraffic.Web.WebAPI.DTOs;
+using ShumenTraffic.Web.Core.Models;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
+namespace ShumenTraffic.Web.Services.Interfaces
 {
     /// <summary>
     /// Service interface for Bus Line operations.
     /// </summary>
-    public interface IBusLineService : IBaseService<BusLineDto>
+    public interface IBusLineModelService : IBaseModelService<BusLineDto>
     {
         /// <summary>
         /// Create a new bus line.
@@ -32,4 +32,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
         Task<bool> LineNumberExistsAsync(string lineNumber, int? excludeId = null);
     }
 }
-

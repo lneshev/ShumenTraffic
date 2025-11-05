@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShumenTraffic.Web.WebAPI.DTOs;
-using ShumenTraffic.Web.WebAPI.Services.Interfaces;
+using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Services.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,9 +15,9 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
     [Authorize]
     public class TransportationCompaniesController : BaseController
     {
-        private readonly ITransportationCompanyService _transportationCompanyService;
+        private readonly ITransportationCompanyModelService _transportationCompanyService;
 
-        public TransportationCompaniesController(ITransportationCompanyService transportationCompanyService)
+        public TransportationCompaniesController(ITransportationCompanyModelService transportationCompanyService)
         {
             _transportationCompanyService = transportationCompanyService;
         }
@@ -127,4 +127,3 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         }
     }
 }
-

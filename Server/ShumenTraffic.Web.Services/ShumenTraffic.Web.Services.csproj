@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ShumenTraffic.Common.Services\ShumenTraffic.Common.Services.csproj" />
     <ProjectReference Include="..\ShumenTraffic.Web.Core\ShumenTraffic.Web.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

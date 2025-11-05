@@ -1,13 +1,13 @@
-using ShumenTraffic.Web.WebAPI.DTOs;
+using ShumenTraffic.Web.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
+namespace ShumenTraffic.Web.Services.Interfaces
 {
     /// <summary>
     /// Service interface for Route operations.
     /// </summary>
-    public interface IRouteService : IBaseService<RouteDto>
+    public interface IRouteModelService : IBaseModelService<RouteDto>
     {
         /// <summary>
         /// Get all routes, optionally filtered by bus line.
@@ -33,4 +33,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
         Task<RouteDto> UpdateAsync(int id, UpdateRouteDto dto);
     }
 }
-

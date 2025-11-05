@@ -1,74 +1,74 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ShumenTraffic.Web.WebAPI.DTOs
+namespace ShumenTraffic.Web.Core.Models
 {
     /// <summary>
-    /// DTO for Zone.
+    /// DTO for Transportation Company.
     /// </summary>
-    public class ZoneDto
+    public class TransportationCompanyDto
     {
         /// <summary>
-        /// Zone ID.
+        /// Company ID.
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// Zone name.
+        /// Company name.
         /// </summary>
-        [Required(ErrorMessage = "Zone name is required")]
-        [StringLength(256, MinimumLength = 1, ErrorMessage = "Zone name must be between 1 and 256 characters")]
+        [Required(ErrorMessage = "Company name is required")]
+        [StringLength(256, MinimumLength = 1, ErrorMessage = "Company name must be between 1 and 256 characters")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Zone description.
+        /// Company description.
         /// </summary>
         [StringLength(1000, ErrorMessage = "Description cannot exceed 1000 characters")]
         public string Description { get; set; }
 
         /// <summary>
-        /// Whether the zone is active.
+        /// Whether the company is active.
         /// </summary>
         public bool IsActive { get; set; } = true;
     }
 
     /// <summary>
-    /// DTO for creating a new Zone.
+    /// DTO for creating a new Transportation Company.
     /// </summary>
-    public class CreateZoneDto
+    public class CreateTransportationCompanyDto
     {
         /// <summary>
-        /// Zone name.
+        /// Company name.
         /// </summary>
-        [Required(ErrorMessage = "Zone name is required")]
-        [StringLength(256, MinimumLength = 1, ErrorMessage = "Zone name must be between 1 and 256 characters")]
+        [Required(ErrorMessage = "Company name is required")]
+        [StringLength(256, MinimumLength = 1, ErrorMessage = "Company name must be between 1 and 256 characters")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Zone description.
+        /// Company description.
         /// </summary>
         [StringLength(1000, ErrorMessage = "Description cannot exceed 1000 characters")]
         public string Description { get; set; }
     }
 
     /// <summary>
-    /// DTO for updating a Zone.
+    /// DTO for updating a Transportation Company.
     /// </summary>
-    public class UpdateZoneDto
+    public class UpdateTransportationCompanyDto
     {
         /// <summary>
-        /// Zone name.
+        /// Company name.
         /// </summary>
-        [StringLength(256, MinimumLength = 1, ErrorMessage = "Zone name must be between 1 and 256 characters")]
+        [StringLength(256, MinimumLength = 1, ErrorMessage = "Company name must be between 1 and 256 characters")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Zone description.
+        /// Company description.
         /// </summary>
         [StringLength(1000, ErrorMessage = "Description cannot exceed 1000 characters")]
         public string Description { get; set; }
 
         /// <summary>
-        /// Whether the zone is active.
+        /// Whether the company is active.
         /// </summary>
         public bool? IsActive { get; set; }
     }

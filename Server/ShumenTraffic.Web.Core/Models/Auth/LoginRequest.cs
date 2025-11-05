@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ShumenTraffic.Web.WebAPI.DTOs.Auth
+namespace ShumenTraffic.Web.Core.Models.Auth
 {
     /// <summary>
     /// Login request DTO.

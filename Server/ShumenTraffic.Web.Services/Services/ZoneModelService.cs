@@ -1,21 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
 using ShumenTraffic.Persistence.DbContexts;
-using ShumenTraffic.Web.WebAPI.DTOs;
-using ShumenTraffic.Web.WebAPI.Services.Base;
-using ShumenTraffic.Web.WebAPI.Services.Interfaces;
+using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Implementations
+namespace ShumenTraffic.Web.Services.Services
 {
     /// <summary>
     /// Service for Zone operations.
     /// </summary>
-    public class ZoneService : BaseService<Zone, ZoneDto>, IZoneService
+    public class ZoneModelService : BaseModelService<Zone, ZoneDto>, IZoneModelService
     {
-        public ZoneService(AppDbContext context) : base(context)
+        public ZoneModelService(AppDbContext context) : base(context)
         {
         }
 
@@ -140,4 +139,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Implementations
         }
     }
 }
-

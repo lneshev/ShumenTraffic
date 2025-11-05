@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ShumenTraffic.Web.WebAPI.DTOs.Auth;
-using System.Collections.Generic;
+using ShumenTraffic.Web.Core.Models.Auth;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -130,4 +129,3 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         }
     }
 }
-

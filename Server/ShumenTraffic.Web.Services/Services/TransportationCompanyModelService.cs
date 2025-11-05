@@ -1,21 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
 using ShumenTraffic.Persistence.DbContexts;
-using ShumenTraffic.Web.WebAPI.DTOs;
-using ShumenTraffic.Web.WebAPI.Services.Base;
-using ShumenTraffic.Web.WebAPI.Services.Interfaces;
+using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Implementations
+namespace ShumenTraffic.Web.Services.Services
 {
     /// <summary>
     /// Service for Transportation Company operations.
     /// </summary>
-    public class TransportationCompanyService : BaseService<TransportationCompany, TransportationCompanyDto>, ITransportationCompanyService
+    public class TransportationCompanyModelService : BaseModelService<TransportationCompany, TransportationCompanyDto>, ITransportationCompanyModelService
     {
-        public TransportationCompanyService(AppDbContext context) : base(context)
+        public TransportationCompanyModelService(AppDbContext context) : base(context)
         {
         }
 
@@ -93,7 +92,7 @@ namespace ShumenTraffic.Web.WebAPI.Services.Implementations
         public async Task<bool> NameExistsAsync(string name, int? excludeId = null)
         {
             var query = _context.TransportationCompanies.Where(c => c.Name == name);
-            
+
             if (excludeId.HasValue)
             {
                 query = query.Where(c => c.Id != excludeId.Value);
@@ -173,4 +172,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Implementations
         }
     }
 }
-

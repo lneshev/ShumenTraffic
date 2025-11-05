@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShumenTraffic.Web.WebAPI.DTOs;
-using ShumenTraffic.Web.WebAPI.Services.Interfaces;
+using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Services.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,9 +15,9 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
     [Authorize]
     public class RoutesController : BaseController
     {
-        private readonly IRouteService _routeService;
+        private readonly IRouteModelService _routeService;
 
-        public RoutesController(IRouteService routeService)
+        public RoutesController(IRouteModelService routeService)
         {
             _routeService = routeService;
         }
@@ -124,4 +124,3 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         }
     }
 }
-

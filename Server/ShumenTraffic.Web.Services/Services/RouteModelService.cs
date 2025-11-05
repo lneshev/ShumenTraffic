@@ -1,21 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
 using ShumenTraffic.Persistence.DbContexts;
-using ShumenTraffic.Web.WebAPI.DTOs;
-using ShumenTraffic.Web.WebAPI.Services.Base;
-using ShumenTraffic.Web.WebAPI.Services.Interfaces;
+using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Implementations
+namespace ShumenTraffic.Web.Services.Services
 {
     /// <summary>
     /// Service for Route operations.
     /// </summary>
-    public class RouteService : BaseService<Route, RouteDto>, IRouteService
+    public class RouteModelService : BaseModelService<Route, RouteDto>, IRouteModelService
     {
-        public RouteService(AppDbContext context) : base(context)
+        public RouteModelService(AppDbContext context) : base(context)
         {
         }
 
@@ -298,4 +297,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Implementations
         }
     }
 }
-

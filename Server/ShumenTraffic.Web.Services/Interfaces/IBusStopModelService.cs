@@ -1,13 +1,13 @@
-using ShumenTraffic.Web.WebAPI.DTOs;
+using ShumenTraffic.Web.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
+namespace ShumenTraffic.Web.Services.Interfaces
 {
     /// <summary>
     /// Service interface for Bus Stop operations.
     /// </summary>
-    public interface IBusStopService : IBaseService<BusStopDto>
+    public interface IBusStopModelService : IBaseModelService<BusStopDto>
     {
         /// <summary>
         /// Get all bus stops, optionally filtered by zone.
@@ -33,4 +33,3 @@ namespace ShumenTraffic.Web.WebAPI.Services.Interfaces
         Task<(BusStopDto dto, string error)> UpdateAsync(int id, UpdateBusStopDto dto);
     }
 }
-

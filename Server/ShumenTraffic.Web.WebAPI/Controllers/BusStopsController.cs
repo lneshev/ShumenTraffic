@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShumenTraffic.Web.WebAPI.DTOs;
-using ShumenTraffic.Web.WebAPI.Services.Interfaces;
+using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Services.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,9 +15,9 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
     [Authorize]
     public class BusStopsController : BaseController
     {
-        private readonly IBusStopService _busStopService;
+        private readonly IBusStopModelService _busStopService;
 
-        public BusStopsController(IBusStopService busStopService)
+        public BusStopsController(IBusStopModelService busStopService)
         {
             _busStopService = busStopService;
         }
@@ -128,4 +128,3 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         }
     }
 }
-

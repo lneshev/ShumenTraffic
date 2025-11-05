@@ -1,6 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
-using ShumenTraffic.Persistence.DbContexts;
+using ShumenTraffic.Common.Services.Interfaces;
 using ShumenTraffic.Web.Core.Models;
 using ShumenTraffic.Web.Services.Interfaces;
 using System.Collections.Generic;
@@ -12,34 +11,16 @@ namespace ShumenTraffic.Web.Services.Services
     /// <summary>
     /// Service for Transportation Company operations.
     /// </summary>
-    public class TransportationCompanyModelService : BaseModelService<TransportationCompany, TransportationCompanyModel>, ITransportationCompanyModelService
+    public class TransportationCompanyModelService : ITransportationCompanyModelService
     {
-        public TransportationCompanyModelService(AppDbContext context) : base(context)
+        private readonly ITransportationCompanyService _transportationCompanyService;
+
+        public TransportationCompanyModelService(ITransportationCompanyService transportationCompanyService)
         {
+            _transportationCompanyService = transportationCompanyService;
         }
 
-        protected override DbSet<TransportationCompany> GetDbSet() => _context.TransportationCompanies;
-
-        protected override IQueryable<TransportationCompany> BuildQuery(IQueryable<TransportationCompany> query)
-        {
-            return query;
-        }
-
-        protected override IQueryable<TransportationCompany> ApplyActiveFilter(IQueryable<TransportationCompany> query, bool includeInactive)
-        {
-            if (!includeInactive)
-            {
-                query = query.Where(c => c.IsActive);
-            }
-            return query;
-        }
-
-        protected override async Task<TransportationCompany> FindByIdAsync(IQueryable<TransportationCompany> query, int id)
-        {
-            return await query.FirstOrDefaultAsync(c => c.Id == id);
-        }
-
-        protected override TransportationCompanyModel MapToDto(TransportationCompany entity)
+        private TransportationCompanyModel MapToModel(TransportationCompany entity)
         {
             return new TransportationCompanyModel
             {
@@ -50,125 +31,62 @@ namespace ShumenTraffic.Web.Services.Services
             };
         }
 
-        public override async Task<IEnumerable<TransportationCompanyModel>> GetAllAsync(bool includeInactive = false)
+        public async Task<IEnumerable<TransportationCompanyModel>> GetAllAsync(bool includeInactive = false)
         {
-            var query = _context.TransportationCompanies.AsQueryable();
-
-            if (!includeInactive)
-            {
-                query = query.Where(c => c.IsActive);
-            }
-
-            var companies = await query
-                .OrderBy(c => c.Name)
-                .Select(c => new TransportationCompanyModel
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    Description = c.Description,
-                    IsActive = c.IsActive
-                })
-                .ToListAsync();
-
-            return companies;
+            var entities = await _transportationCompanyService.GetAllAsync(includeInactive);
+            return entities.Select(MapToModel);
         }
 
-        public override async Task<TransportationCompanyModel> GetByIdAsync(int id)
+        public async Task<TransportationCompanyModel> GetByIdAsync(int id)
         {
-            var company = await _context.TransportationCompanies
-                .Where(c => c.Id == id)
-                .Select(c => new TransportationCompanyModel
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    Description = c.Description,
-                    IsActive = c.IsActive
-                })
-                .FirstOrDefaultAsync();
+            var entity = await _transportationCompanyService.GetByIdAsync(id);
+            return entity != null ? MapToModel(entity) : null;
+        }
 
-            return company;
+        public async Task<bool> DeleteAsync(int id)
+        {
+            return await _transportationCompanyService.DeleteAsync(id);
         }
 
         public async Task<bool> NameExistsAsync(string name, int? excludeId = null)
         {
-            var query = _context.TransportationCompanies.Where(c => c.Name == name);
-
-            if (excludeId.HasValue)
-            {
-                query = query.Where(c => c.Id != excludeId.Value);
-            }
-
-            return await query.AnyAsync();
+            return await _transportationCompanyService.NameExistsAsync(name, excludeId);
         }
 
         public async Task<(TransportationCompanyModel dto, string error)> CreateAsync(CreateTransportationCompanyDto dto)
         {
             // Check if transportation company already exists
-            if (await NameExistsAsync(dto.Name))
+            if (await _transportationCompanyService.NameExistsAsync(dto.Name))
             {
                 return (null, $"A transportation company with name '{dto.Name}' already exists");
             }
 
-            var company = new TransportationCompany
-            {
-                Name = dto.Name,
-                Description = dto.Description,
-                IsActive = true
-            };
+            var entity = await _transportationCompanyService.CreateAsync(dto.Name, dto.Description);
 
-            _context.TransportationCompanies.Add(company);
-            await _context.SaveChangesAsync();
-
-            var result = new TransportationCompanyModel
-            {
-                Id = company.Id,
-                Name = company.Name,
-                Description = company.Description,
-                IsActive = company.IsActive
-            };
-
-            return (result, null);
+            return (MapToModel(entity), null);
         }
 
         public async Task<(TransportationCompanyModel dto, string error)> UpdateAsync(int id, UpdateTransportationCompanyDto dto)
         {
-            var company = await _context.TransportationCompanies.FindAsync(id);
+            // Check if new name already exists
+            if (!string.IsNullOrEmpty(dto.Name) && await _transportationCompanyService.NameExistsAsync(dto.Name, id))
+            {
+                return (null, $"A transportation company with name '{dto.Name}' already exists");
+            }
 
-            if (company == null)
+            var entity = await _transportationCompanyService.UpdateAsync(
+                id,
+                dto.Name,
+                dto.Description,
+                dto.IsActive
+            );
+
+            if (entity == null)
             {
                 return (null, $"No company found with ID {id}");
             }
 
-            if (!string.IsNullOrEmpty(dto.Name))
-            {
-                // Check if new name already exists
-                if (await NameExistsAsync(dto.Name, id))
-                {
-                    return (null, $"A transportation company with name '{dto.Name}' already exists");
-                }
-                company.Name = dto.Name;
-            }
-            if (dto.Description != null)
-            {
-                company.Description = dto.Description;
-            }
-            if (dto.IsActive.HasValue)
-            {
-                company.IsActive = dto.IsActive.Value;
-            }
-
-            _context.TransportationCompanies.Update(company);
-            await _context.SaveChangesAsync();
-
-            var result = new TransportationCompanyModel
-            {
-                Id = company.Id,
-                Name = company.Name,
-                Description = company.Description,
-                IsActive = company.IsActive
-            };
-
-            return (result, null);
+            return (MapToModel(entity), null);
         }
     }
 }

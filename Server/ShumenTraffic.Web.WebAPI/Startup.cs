@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MoravianStar.WebAPI.Transformers;
 using ShumenTraffic.Common.Core.Configuration;
+using ShumenTraffic.Common.Services.Interfaces;
+using ShumenTraffic.Common.Services.Services;
 using ShumenTraffic.Common.Services.Services.Maintenance;
 using ShumenTraffic.Persistence.DbContexts;
 using ShumenTraffic.Web.Services.Interfaces;
@@ -130,7 +132,15 @@ namespace ShumenTraffic.Web.WebAPI
             // Add Application Services
             services.AddTransient<IDbUpdater, DbUpdater>();
 
-            // Add Business Services
+            // Add Domain Services (Common Layer)
+            services.AddScoped<IBusLineService, BusLineService>();
+            services.AddScoped<IBusStopService, BusStopService>();
+            services.AddScoped<IZoneService, ZoneService>();
+            services.AddScoped<ITransportationCompanyService, TransportationCompanyService>();
+            services.AddScoped<IRouteService, RouteService>();
+            services.AddScoped<IScheduleService, ScheduleService>();
+
+            // Add Application Services (Web Layer)
             services.AddScoped<IBusLineModelService, BusLineModelService>();
             services.AddScoped<IBusStopModelService, BusStopModelService>();
             services.AddScoped<IZoneModelService, ZoneModelService>();

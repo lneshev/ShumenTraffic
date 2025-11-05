@@ -182,20 +182,107 @@ ShumenTraffic is a web application for tracking live buses in Shumen, Bulgaria. 
 | Authentication | ASP.NET Core Identity |
 | Version Control | Git/GitHub |
 
+## Layered Architecture
+
+The backend follows a clean layered architecture pattern with clear separation of concerns:
+
+### Domain Layer (ShumenTraffic.Common.Services)
+- **Purpose**: Reusable business logic that works only with entities
+- **Responsibilities**:
+  - CRUD operations on entities
+  - Business rules and validations at entity level
+  - Database access through Entity Framework Core
+- **Dependencies**:
+  - ShumenTraffic.Common.Core (entities)
+  - ShumenTraffic.Persistence (DbContext)
+- **Key Services**:
+  - `BusLineService`, `BusStopService`, `ZoneService`
+  - `TransportationCompanyService`, `RouteService`, `ScheduleService`
+- **Characteristics**:
+  - No knowledge of DTOs or Models
+  - Can be reused across multiple projects
+  - Contains core business logic
+
+### Application Layer (ShumenTraffic.Web.Services)
+- **Purpose**: Application-specific logic for the Web API
+- **Responsibilities**:
+  - DTO/Model mapping
+  - API-specific validation
+  - Orchestrating domain services
+  - Converting between DTOs and domain service parameters
+- **Dependencies**:
+  - ShumenTraffic.Common.Services (domain services)
+  - ShumenTraffic.Web.Core (DTOs and Models)
+- **Key Services**:
+  - `BusLineModelService`, `BusStopModelService`, `ZoneModelService`
+  - `TransportationCompanyModelService`, `RouteModelService`, `ScheduleModelService`
+- **Characteristics**:
+  - Uses domain services for entity operations
+  - Handles DTO/Model transformations
+  - Contains Web API-specific logic
+
+### Presentation Layer (ShumenTraffic.Web.WebAPI)
+- **Purpose**: HTTP API endpoints
+- **Responsibilities**:
+  - HTTP request/response handling
+  - Routing
+  - Dependency injection configuration
+  - Authentication/Authorization
+- **Dependencies**:
+  - ShumenTraffic.Web.Services (application services)
+  - ShumenTraffic.Web.Core (DTOs)
+
+### Data Access Layer (ShumenTraffic.Persistence)
+- **Purpose**: Database context and configurations
+- **Responsibilities**:
+  - Entity Framework Core DbContext
+  - Entity configurations
+  - Database migrations
+- **Dependencies**:
+  - ShumenTraffic.Common.Core (entities)
+
+### Core Layers
+- **ShumenTraffic.Common.Core**: Entity definitions (BusLine, BusStop, Route, etc.)
+- **ShumenTraffic.Web.Core**: DTOs and Models for Web API
+
+### Service Interaction Pattern
+
+```
+Controller → ModelService (Application Layer) → EntityService (Domain Layer) → DbContext
+```
+
+**Example Flow**:
+1. `BusLineController` receives HTTP request
+2. Calls `BusLineModelService.CreateAsync(dto)`
+3. `BusLineModelService` validates DTO and calls `BusLineService.CreateAsync(params)`
+4. `BusLineService` creates entity and saves to database
+5. `BusLineModelService` maps entity to model and returns to controller
+6. Controller returns HTTP response
+
+**Benefits**:
+- Clear separation of concerns
+- Reusable domain logic
+- Easier testing (can test layers independently)
+- Flexible - can add new applications (e.g., mobile API) that reuse domain services
+
 ## File Structure
 
 ```
 ShumenTraffic/
-├── Client/                    # Next.js frontend
-├── Server/                    # ASP.NET Core backend
-│   ├── ShumenTraffic.WebAPI/  # Web API project
-│   └── ShumenTraffic.Data/    # Data access layer
-├── Docs/                      # Documentation
+├── Client/                                    # Next.js frontend
+├── Server/                                    # ASP.NET Core backend
+│   ├── ShumenTraffic.Web.WebAPI/              # Presentation Layer - Web API endpoints
+│   ├── ShumenTraffic.Web.Services/            # Application Layer - Web API services
+│   ├── ShumenTraffic.Web.Core/                # Web API DTOs and Models
+│   ├── ShumenTraffic.Common.Services/         # Domain Layer - Reusable business logic
+│   ├── ShumenTraffic.Common.Core/             # Entity definitions
+│   └── ShumenTraffic.Persistence/             # Data Access Layer - DbContext
+├── Docs/                                      # Documentation
 │   ├── DATABASE_SCHEMA.md
 │   ├── BUS_POSITION_SYSTEM.md
 │   ├── ARCHITECTURE.md
 │   └── ...
-└── .git/                      # Git repository
+└── .git/                                      # Git repository
 ```
 
 ## Development Workflow

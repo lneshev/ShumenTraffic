@@ -1,6 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
-using ShumenTraffic.Persistence.DbContexts;
+using ShumenTraffic.Common.Services.Interfaces;
 using ShumenTraffic.Web.Core.Models;
 using ShumenTraffic.Web.Services.Interfaces;
 using System.Collections.Generic;
@@ -12,34 +11,18 @@ namespace ShumenTraffic.Web.Services.Services
     /// <summary>
     /// Service for Bus Stop operations.
     /// </summary>
-    public class BusStopModelService : BaseModelService<BusStop, BusStopModel>, IBusStopModelService
+    public class BusStopModelService : IBusStopModelService
     {
-        public BusStopModelService(AppDbContext context) : base(context)
+        private readonly IBusStopService _busStopService;
+        private readonly IZoneService _zoneService;
+
+        public BusStopModelService(IBusStopService busStopService, IZoneService zoneService)
         {
+            _busStopService = busStopService;
+            _zoneService = zoneService;
         }
 
-        protected override DbSet<BusStop> GetDbSet() => _context.BusStops;
-
-        protected override IQueryable<BusStop> BuildQuery(IQueryable<BusStop> query)
-        {
-            return query.Include(b => b.Zone);
-        }
-
-        protected override IQueryable<BusStop> ApplyActiveFilter(IQueryable<BusStop> query, bool includeInactive)
-        {
-            if (!includeInactive)
-            {
-                query = query.Where(b => b.IsActive);
-            }
-            return query;
-        }
-
-        protected override async Task<BusStop> FindByIdAsync(IQueryable<BusStop> query, int id)
-        {
-            return await query.FirstOrDefaultAsync(b => b.Id == id);
-        }
-
-        protected override BusStopModel MapToDto(BusStop entity)
+        private BusStopModel MapToModel(BusStop entity)
         {
             return new BusStopModel
             {
@@ -55,132 +38,62 @@ namespace ShumenTraffic.Web.Services.Services
 
         public async Task<IEnumerable<BusStopModel>> GetAllAsync(int? zoneId = null, bool includeInactive = false)
         {
-            var query = _context.BusStops.Include(b => b.Zone).AsQueryable();
-
-            if (zoneId.HasValue)
-            {
-                query = query.Where(b => b.ZoneId == zoneId.Value);
-            }
-
-            if (!includeInactive)
-            {
-                query = query.Where(b => b.IsActive);
-            }
-
-            var busStops = await query
-                .OrderBy(b => b.Name)
-                .Select(b => new BusStopModel
-                {
-                    Id = b.Id,
-                    Name = b.Name,
-                    ZoneId = b.ZoneId,
-                    ZoneName = b.Zone.Name,
-                    Latitude = b.Latitude,
-                    Longitude = b.Longitude,
-                    IsActive = b.IsActive
-                })
-                .ToListAsync();
-
-            return busStops;
+            var entities = await _busStopService.GetAllWithZonesAsync(zoneId, includeInactive);
+            return entities.Select(MapToModel);
         }
 
-        public override async Task<BusStopModel> GetByIdAsync(int id)
+        public async Task<BusStopModel> GetByIdAsync(int id)
         {
-            var busStop = await _context.BusStops
-                .Include(b => b.Zone)
-                .Where(b => b.Id == id)
-                .Select(b => new BusStopModel
-                {
-                    Id = b.Id,
-                    Name = b.Name,
-                    ZoneId = b.ZoneId,
-                    ZoneName = b.Zone.Name,
-                    Latitude = b.Latitude,
-                    Longitude = b.Longitude,
-                    IsActive = b.IsActive
-                })
-                .FirstOrDefaultAsync();
+            var entity = await _busStopService.GetByIdWithZoneAsync(id);
+            return entity != null ? MapToModel(entity) : null;
+        }
 
-            return busStop;
+        public async Task<bool> DeleteAsync(int id)
+        {
+            return await _busStopService.DeleteAsync(id);
         }
 
         public async Task<(BusStopModel dto, string error)> CreateAsync(CreateBusStopDto dto)
         {
             // Verify zone exists
-            var zone = await _context.Zones.FindAsync(dto.ZoneId);
-            if (zone == null)
+            if (!await _zoneService.ExistsAsync(dto.ZoneId))
             {
                 return (null, $"Zone with ID {dto.ZoneId} does not exist");
             }
 
-            var busStop = new BusStop
-            {
-                Name = dto.Name,
-                ZoneId = dto.ZoneId,
-                Latitude = dto.Latitude,
-                Longitude = dto.Longitude,
-                IsActive = true
-            };
+            var entity = await _busStopService.CreateAsync(
+                dto.Name,
+                dto.ZoneId,
+                dto.Latitude,
+                dto.Longitude
+            );
 
-            _context.BusStops.Add(busStop);
-            await _context.SaveChangesAsync();
-
-            var result = new BusStopModel
-            {
-                Id = busStop.Id,
-                Name = busStop.Name,
-                ZoneId = busStop.ZoneId,
-                ZoneName = zone.Name,
-                Latitude = busStop.Latitude,
-                Longitude = busStop.Longitude,
-                IsActive = busStop.IsActive
-            };
-
-            return (result, null);
+            return (MapToModel(entity), null);
         }
 
         public async Task<(BusStopModel dto, string error)> UpdateAsync(int id, UpdateBusStopDto dto)
         {
-            var busStop = await _context.BusStops.Include(b => b.Zone).FirstOrDefaultAsync(b => b.Id == id);
+            // Verify zone exists if provided
+            if (dto.ZoneId.HasValue && !await _zoneService.ExistsAsync(dto.ZoneId.Value))
+            {
+                return (null, $"Zone with ID {dto.ZoneId} does not exist");
+            }
 
-            if (busStop == null)
+            var entity = await _busStopService.UpdateAsync(
+                id,
+                dto.Name,
+                dto.ZoneId,
+                dto.Latitude,
+                dto.Longitude,
+                dto.IsActive
+            );
+
+            if (entity == null)
             {
                 return (null, $"No bus stop found with ID {id}");
             }
 
-            if (!string.IsNullOrEmpty(dto.Name))
-                busStop.Name = dto.Name;
-            if (dto.ZoneId.HasValue)
-            {
-                var zone = await _context.Zones.FindAsync(dto.ZoneId.Value);
-                if (zone == null)
-                {
-                    return (null, $"Zone with ID {dto.ZoneId} does not exist");
-                }
-                busStop.ZoneId = dto.ZoneId.Value;
-            }
-            if (dto.Latitude.HasValue)
-                busStop.Latitude = dto.Latitude.Value;
-            if (dto.Longitude.HasValue)
-                busStop.Longitude = dto.Longitude.Value;
-            if (dto.IsActive.HasValue)
-                busStop.IsActive = dto.IsActive.Value;
-
-            _context.BusStops.Update(busStop);
-            await _context.SaveChangesAsync();
-
-            var result = new BusStopModel
-            {
-                Id = busStop.Id,
-                Name = busStop.Name,
-                ZoneId = busStop.ZoneId,
-                ZoneName = busStop.Zone.Name,
-                Latitude = busStop.Latitude,
-                Longitude = busStop.Longitude,
-                IsActive = busStop.IsActive
-            };
-
-            return (result, null);
+            return (MapToModel(entity), null);
         }
     }
 }

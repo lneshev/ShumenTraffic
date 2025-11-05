@@ -1,6 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
-using ShumenTraffic.Persistence.DbContexts;
+using ShumenTraffic.Common.Services.Interfaces;
 using ShumenTraffic.Web.Core.Models;
 using ShumenTraffic.Web.Services.Interfaces;
 using System.Collections.Generic;
@@ -12,34 +11,16 @@ namespace ShumenTraffic.Web.Services.Services
     /// <summary>
     /// Service for Bus Line operations.
     /// </summary>
-    public class BusLineModelService : BaseModelService<BusLine, BusLineModel>, IBusLineModelService
+    public class BusLineModelService : IBusLineModelService
     {
-        public BusLineModelService(AppDbContext context) : base(context)
+        private readonly IBusLineService _busLineService;
+
+        public BusLineModelService(IBusLineService busLineService)
         {
+            _busLineService = busLineService;
         }
 
-        protected override DbSet<BusLine> GetDbSet() => _context.BusLines;
-
-        protected override IQueryable<BusLine> BuildQuery(IQueryable<BusLine> query)
-        {
-            return query;
-        }
-
-        protected override IQueryable<BusLine> ApplyActiveFilter(IQueryable<BusLine> query, bool includeInactive)
-        {
-            if (!includeInactive)
-            {
-                query = query.Where(l => l.IsActive);
-            }
-            return query;
-        }
-
-        protected override async Task<BusLine> FindByIdAsync(IQueryable<BusLine> query, int id)
-        {
-            return await query.FirstOrDefaultAsync(l => l.Id == id);
-        }
-
-        protected override BusLineModel MapToDto(BusLine entity)
+        private BusLineModel MapToModel(BusLine entity)
         {
             return new BusLineModel
             {
@@ -52,65 +33,32 @@ namespace ShumenTraffic.Web.Services.Services
             };
         }
 
-        public override async Task<IEnumerable<BusLineModel>> GetAllAsync(bool includeInactive = false)
+        public async Task<IEnumerable<BusLineModel>> GetAllAsync(bool includeInactive = false)
         {
-            var query = _context.BusLines.AsQueryable();
-
-            if (!includeInactive)
-            {
-                query = query.Where(l => l.IsActive);
-            }
-
-            var busLines = await query
-                .OrderBy(l => l.LineNumber)
-                .Select(l => new BusLineModel
-                {
-                    Id = l.Id,
-                    LineNumber = l.LineNumber,
-                    Description = l.Description,
-                    TransportationCompanyIds = l.TransportationCompanyBusLines.Select(x => x.TransportationCompanyId).ToList(),
-                    TransportationCompanyNames = l.TransportationCompanyBusLines.Select(x => x.TransportationCompany.Name).ToList(),
-                    IsActive = l.IsActive
-                })
-                .ToListAsync();
-
-            return busLines;
+            var entities = await _busLineService.GetAllWithCompaniesAsync(includeInactive);
+            return entities.Select(MapToModel);
         }
 
-        public override async Task<BusLineModel> GetByIdAsync(int id)
+        public async Task<BusLineModel> GetByIdAsync(int id)
         {
-            var busLine = await _context.BusLines
-                .Where(l => l.Id == id)
-                .Select(l => new BusLineModel
-                {
-                    Id = l.Id,
-                    LineNumber = l.LineNumber,
-                    Description = l.Description,
-                    TransportationCompanyIds = l.TransportationCompanyBusLines.Select(x => x.TransportationCompanyId).ToList(),
-                    TransportationCompanyNames = l.TransportationCompanyBusLines.Select(x => x.TransportationCompany.Name).ToList(),
-                    IsActive = l.IsActive
-                })
-                .FirstOrDefaultAsync();
+            var entity = await _busLineService.GetByIdWithCompaniesAsync(id);
+            return entity != null ? MapToModel(entity) : null;
+        }
 
-            return busLine;
+        public async Task<bool> DeleteAsync(int id)
+        {
+            return await _busLineService.DeleteAsync(id);
         }
 
         public async Task<bool> LineNumberExistsAsync(string lineNumber, int? excludeId = null)
         {
-            var query = _context.BusLines.Where(l => l.LineNumber == lineNumber);
-
-            if (excludeId.HasValue)
-            {
-                query = query.Where(l => l.Id != excludeId.Value);
-            }
-
-            return await query.AnyAsync();
+            return await _busLineService.LineNumberExistsAsync(lineNumber, excludeId);
         }
 
         public async Task<(BusLineModel dto, string error)> CreateAsync(CreateBusLineDto dto)
         {
             // Check if line number already exists
-            if (await LineNumberExistsAsync(dto.LineNumber))
+            if (await _busLineService.LineNumberExistsAsync(dto.LineNumber))
             {
                 return (null, $"A bus line with number '{dto.LineNumber}' already exists");
             }
@@ -120,98 +68,36 @@ namespace ShumenTraffic.Web.Services.Services
                 return (null, "At least one transportation company is required");
             }
 
-            var busLine = new BusLine
-            {
-                LineNumber = dto.LineNumber,
-                Description = dto.Description,
-                IsActive = true
-            };
+            var entity = await _busLineService.CreateAsync(
+                dto.LineNumber,
+                dto.Description,
+                dto.TransportationCompanyIds
+            );
 
-            await FillEntityTransportCompanies(busLine, dto);
-
-            _context.BusLines.Add(busLine);
-            await _context.SaveChangesAsync();
-
-            var result = new BusLineModel
-            {
-                Id = busLine.Id,
-                LineNumber = busLine.LineNumber,
-                Description = busLine.Description,
-                TransportationCompanyIds = busLine.TransportationCompanyBusLines.Select(x => x.TransportationCompanyId).ToList(),
-                TransportationCompanyNames = busLine.TransportationCompanyBusLines.Select(x => x.TransportationCompany.Name).ToList(),
-                IsActive = busLine.IsActive
-            };
-
-            return (result, null);
+            return (MapToModel(entity), null);
         }
 
         public async Task<(BusLineModel dto, string error)> UpdateAsync(int id, UpdateBusLineDto dto)
         {
-            var busLine = await _context.BusLines.FindAsync(id);
+            // Check if new line number already exists
+            if (!string.IsNullOrEmpty(dto.LineNumber) && await _busLineService.LineNumberExistsAsync(dto.LineNumber, id))
+            {
+                return (null, $"A bus line with number '{dto.LineNumber}' already exists");
+            }
 
-            if (busLine == null)
+            var entity = await _busLineService.UpdateAsync(
+                id,
+                dto.LineNumber,
+                dto.Description,
+                dto.IsActive
+            );
+
+            if (entity == null)
             {
                 return (null, $"No bus line found with ID {id}");
             }
 
-            if (!string.IsNullOrEmpty(dto.LineNumber))
-            {
-                // Check if new line number already exists
-                if (await LineNumberExistsAsync(dto.LineNumber, id))
-                {
-                    return (null, $"A bus line with number '{dto.LineNumber}' already exists");
-                }
-                busLine.LineNumber = dto.LineNumber;
-            }
-            if (dto.Description != null)
-            {
-                busLine.Description = dto.Description;
-            }
-            if (dto.IsActive.HasValue)
-            {
-                busLine.IsActive = dto.IsActive.Value;
-            }
-
-            _context.BusLines.Update(busLine);
-            await _context.SaveChangesAsync();
-
-            var result = new BusLineModel
-            {
-                Id = busLine.Id,
-                LineNumber = busLine.LineNumber,
-                Description = busLine.Description,
-                TransportationCompanyIds = busLine.TransportationCompanyBusLines.Select(x => x.TransportationCompanyId).ToList(),
-                TransportationCompanyNames = busLine.TransportationCompanyBusLines.Select(x => x.TransportationCompany.Name).ToList(),
-                IsActive = busLine.IsActive
-            };
-
-            return (result, null);
-        }
-
-        private async Task FillEntityTransportCompanies(BusLine entity, CreateBusLineDto model)
-        {
-            var distinctModelTransportCompanyIds = model.TransportationCompanyIds.Distinct();
-            var existingTransportCompanyIds = entity.TransportationCompanyBusLines.Select(x => x.TransportationCompanyId).ToList();
-
-            var transportCompanyIdsToDelete = existingTransportCompanyIds.Except(distinctModelTransportCompanyIds);
-            var transportCompanyIdsToInsert = distinctModelTransportCompanyIds.Except(existingTransportCompanyIds);
-
-            if (transportCompanyIdsToDelete.Any() || transportCompanyIdsToInsert.Any())
-            {
-                foreach (var transportCompanyId in transportCompanyIdsToDelete.ToList())
-                {
-                    var userRoleEntity = entity.TransportationCompanyBusLines.Single(x => x.TransportationCompanyId == transportCompanyId);
-                    entity.TransportationCompanyBusLines.Remove(userRoleEntity);
-                }
-
-                foreach (var transportCompanyId in transportCompanyIdsToInsert)
-                {
-                    entity.TransportationCompanyBusLines.Add(new TransportationCompanyBusLine()
-                    {
-                        TransportationCompany = await _context.TransportationCompanies.FindAsync(transportCompanyId)
-                    });
-                }
-            }
+            return (MapToModel(entity), null);
         }
     }
 }

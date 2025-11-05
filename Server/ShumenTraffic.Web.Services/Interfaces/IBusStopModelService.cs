@@ -7,7 +7,7 @@ namespace ShumenTraffic.Web.Services.Interfaces
     /// <summary>
     /// Service interface for Bus Stop operations.
     /// </summary>
-    public interface IBusStopModelService : IBaseModelService<BusStopModel>
+    public interface IBusStopModelService
     {
         /// <summary>
         /// Get all bus stops, optionally filtered by zone.
@@ -16,6 +16,20 @@ namespace ShumenTraffic.Web.Services.Interfaces
         /// <param name="includeInactive">Include inactive bus stops</param>
         /// <returns>List of bus stop DTOs</returns>
         Task<IEnumerable<BusStopModel>> GetAllAsync(int? zoneId = null, bool includeInactive = false);
+
+        /// <summary>
+        /// Get bus stop by ID.
+        /// </summary>
+        /// <param name="id">Bus stop ID</param>
+        /// <returns>Bus stop DTO or null if not found</returns>
+        Task<BusStopModel> GetByIdAsync(int id);
+
+        /// <summary>
+        /// Delete bus stop by ID.
+        /// </summary>
+        /// <param name="id">Bus stop ID</param>
+        /// <returns>True if deleted, false if not found</returns>
+        Task<bool> DeleteAsync(int id);
 
         /// <summary>
         /// Create a new bus stop.

@@ -7,7 +7,7 @@ namespace ShumenTraffic.Web.Services.Interfaces
     /// <summary>
     /// Service interface for Schedule operations.
     /// </summary>
-    public interface IScheduleModelService : IBaseModelService<ScheduleModel>
+    public interface IScheduleModelService
     {
         /// <summary>
         /// Get all schedules, optionally filtered by day type.
@@ -16,6 +16,20 @@ namespace ShumenTraffic.Web.Services.Interfaces
         /// <param name="includeInactive">Include inactive schedules</param>
         /// <returns>List of schedule DTOs</returns>
         Task<IEnumerable<ScheduleModel>> GetAllAsync(string dayType = null, bool includeInactive = false);
+
+        /// <summary>
+        /// Get schedule by ID.
+        /// </summary>
+        /// <param name="id">Schedule ID</param>
+        /// <returns>Schedule DTO or null if not found</returns>
+        Task<ScheduleModel> GetByIdAsync(int id);
+
+        /// <summary>
+        /// Delete schedule by ID.
+        /// </summary>
+        /// <param name="id">Schedule ID</param>
+        /// <returns>True if deleted, false if not found</returns>
+        Task<bool> DeleteAsync(int id);
 
         /// <summary>
         /// Create a new schedule with courses.

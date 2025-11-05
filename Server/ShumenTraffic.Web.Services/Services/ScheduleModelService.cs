@@ -1,9 +1,7 @@
-using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
-using ShumenTraffic.Persistence.DbContexts;
+using ShumenTraffic.Common.Services.Interfaces;
 using ShumenTraffic.Web.Core.Models;
 using ShumenTraffic.Web.Services.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,37 +11,18 @@ namespace ShumenTraffic.Web.Services.Services
     /// <summary>
     /// Service for Schedule operations.
     /// </summary>
-    public class ScheduleModelService : BaseModelService<Schedule, ScheduleModel>, IScheduleModelService
+    public class ScheduleModelService : IScheduleModelService
     {
-        public ScheduleModelService(AppDbContext context) : base(context)
+        private readonly IScheduleService _scheduleService;
+        private readonly IRouteService _routeService;
+
+        public ScheduleModelService(IScheduleService scheduleService, IRouteService routeService)
         {
+            _scheduleService = scheduleService;
+            _routeService = routeService;
         }
 
-        protected override DbSet<Schedule> GetDbSet() => _context.Schedules;
-
-        protected override IQueryable<Schedule> BuildQuery(IQueryable<Schedule> query)
-        {
-            return query
-                .Include(s => s.ScheduleCourses)
-                .ThenInclude(sc => sc.Route)
-                .ThenInclude(r => r.BusLine);
-        }
-
-        protected override IQueryable<Schedule> ApplyActiveFilter(IQueryable<Schedule> query, bool includeInactive)
-        {
-            if (!includeInactive)
-            {
-                query = query.Where(s => s.IsActive);
-            }
-            return query;
-        }
-
-        protected override async Task<Schedule> FindByIdAsync(IQueryable<Schedule> query, int id)
-        {
-            return await query.FirstOrDefaultAsync(s => s.Id == id);
-        }
-
-        protected override ScheduleModel MapToDto(Schedule entity)
+        private ScheduleModel MapToModel(Schedule entity)
         {
             return new ScheduleModel
             {
@@ -68,203 +47,58 @@ namespace ShumenTraffic.Web.Services.Services
 
         public async Task<IEnumerable<ScheduleModel>> GetAllAsync(string dayType = null, bool includeInactive = false)
         {
-            var query = _context.Schedules
-                .Include(s => s.ScheduleCourses)
-                .ThenInclude(sc => sc.Route)
-                .ThenInclude(r => r.BusLine)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(dayType))
-            {
-                query = query.Where(s => s.DayType == dayType);
-            }
-
-            if (!includeInactive)
-            {
-                query = query.Where(s => s.IsActive);
-            }
-
-            var schedules = await query
-                .OrderBy(s => s.DayType)
-                .ThenBy(s => s.EffectiveDate)
-                .Select(s => new ScheduleModel
-                {
-                    Id = s.Id,
-                    DayType = s.DayType,
-                    EffectiveDate = s.EffectiveDate,
-                    ExpiryDate = s.ExpiryDate,
-                    IsActive = s.IsActive,
-                    Courses = s.ScheduleCourses
-                        .OrderBy(sc => sc.DepartureTime)
-                        .Select(sc => new ScheduleCourseDto
-                        {
-                            Id = sc.Id,
-                            RouteId = sc.RouteId,
-                            BusLineNumber = sc.Route.BusLine.LineNumber,
-                            Direction = sc.Route.Direction,
-                            DepartureTime = sc.DepartureTime.ToTimeSpan()
-                        })
-                        .ToList()
-                })
-                .ToListAsync();
-
-            return schedules;
+            var entities = await _scheduleService.GetAllWithCoursesAsync(dayType, includeInactive);
+            return entities.Select(MapToModel);
         }
 
-        public override async Task<ScheduleModel> GetByIdAsync(int id)
+        public async Task<ScheduleModel> GetByIdAsync(int id)
         {
-            var schedule = await _context.Schedules
-                .Include(s => s.ScheduleCourses)
-                .ThenInclude(sc => sc.Route)
-                .ThenInclude(r => r.BusLine)
-                .Where(s => s.Id == id)
-                .Select(s => new ScheduleModel
-                {
-                    Id = s.Id,
-                    DayType = s.DayType,
-                    EffectiveDate = s.EffectiveDate,
-                    ExpiryDate = s.ExpiryDate,
-                    IsActive = s.IsActive,
-                    Courses = s.ScheduleCourses
-                        .OrderBy(sc => sc.DepartureTime)
-                        .Select(sc => new ScheduleCourseDto
-                        {
-                            Id = sc.Id,
-                            RouteId = sc.RouteId,
-                            BusLineNumber = sc.Route.BusLine.LineNumber,
-                            Direction = sc.Route.Direction,
-                            DepartureTime = sc.DepartureTime.ToTimeSpan()
-                        })
-                        .ToList()
-                })
-                .FirstOrDefaultAsync();
+            var entity = await _scheduleService.GetByIdWithCoursesAsync(id);
+            return entity != null ? MapToModel(entity) : null;
+        }
 
-            return schedule;
+        public async Task<bool> DeleteAsync(int id)
+        {
+            return await _scheduleService.DeleteAsync(id);
         }
 
         public async Task<(ScheduleModel dto, string error)> CreateAsync(CreateScheduleDto dto)
         {
             // Verify routes exist
             var routeIds = dto.Courses.Select(c => c.RouteId).Distinct().ToList();
-            var existingRoutes = await _context.Routes.Where(r => routeIds.Contains(r.Id)).CountAsync();
-            if (existingRoutes != routeIds.Count)
+            foreach (var routeId in routeIds)
             {
-                return (null, "One or more routes do not exist");
-            }
-
-            var schedule = new Schedule
-            {
-                DayType = dto.DayType,
-                EffectiveDate = dto.EffectiveDate,
-                ExpiryDate = dto.ExpiryDate,
-                IsActive = true
-            };
-
-            _context.Schedules.Add(schedule);
-            await _context.SaveChangesAsync();
-
-            // Add courses
-            foreach (var courseDto in dto.Courses)
-            {
-                var course = new ScheduleCourse
+                if (!await _routeService.ExistsAsync(routeId))
                 {
-                    ScheduleId = schedule.Id,
-                    RouteId = courseDto.RouteId,
-                    DepartureTime = TimeOnly.FromTimeSpan(courseDto.DepartureTime)
-                };
-                _context.ScheduleCourses.Add(course);
+                    return (null, "One or more routes do not exist");
+                }
             }
 
-            await _context.SaveChangesAsync();
-
-            // Reload schedule with courses
-            var createdSchedule = await _context.Schedules
-                .Include(s => s.ScheduleCourses)
-                .ThenInclude(sc => sc.Route)
-                .ThenInclude(r => r.BusLine)
-                .FirstAsync(s => s.Id == schedule.Id);
-
-            var result = new ScheduleModel
+            var courses = dto.Courses.Select(c => new ScheduleCourseData
             {
-                Id = createdSchedule.Id,
-                DayType = createdSchedule.DayType,
-                EffectiveDate = createdSchedule.EffectiveDate,
-                ExpiryDate = createdSchedule.ExpiryDate,
-                IsActive = createdSchedule.IsActive,
-                Courses = createdSchedule.ScheduleCourses
-                    .OrderBy(sc => sc.DepartureTime)
-                    .Select(sc => new ScheduleCourseDto
-                    {
-                        Id = sc.Id,
-                        RouteId = sc.RouteId,
-                        BusLineNumber = sc.Route.BusLine.LineNumber,
-                        Direction = sc.Route.Direction,
-                        DepartureTime = sc.DepartureTime.ToTimeSpan()
-                    })
-                    .ToList()
-            };
+                RouteId = c.RouteId,
+                DepartureTime = c.DepartureTime
+            });
 
-            return (result, null);
+            var entity = await _scheduleService.CreateAsync(
+                dto.DayType,
+                dto.EffectiveDate,
+                dto.ExpiryDate,
+                courses
+            );
+
+            return (MapToModel(entity), null);
         }
 
         public async Task<ScheduleModel> UpdateAsync(int id, UpdateScheduleDto dto)
         {
-            var schedule = await _context.Schedules
-                .Include(s => s.ScheduleCourses)
-                .ThenInclude(sc => sc.Route)
-                .ThenInclude(r => r.BusLine)
-                .FirstOrDefaultAsync(s => s.Id == id);
+            var entity = await _scheduleService.UpdateAsync(
+                id,
+                dto.ExpiryDate,
+                dto.IsActive
+            );
 
-            if (schedule == null)
-            {
-                return null;
-            }
-
-            if (dto.ExpiryDate.HasValue)
-                schedule.ExpiryDate = dto.ExpiryDate.Value;
-            if (dto.IsActive.HasValue)
-                schedule.IsActive = dto.IsActive.Value;
-
-            _context.Schedules.Update(schedule);
-            await _context.SaveChangesAsync();
-
-            var result = new ScheduleModel
-            {
-                Id = schedule.Id,
-                DayType = schedule.DayType,
-                EffectiveDate = schedule.EffectiveDate,
-                ExpiryDate = schedule.ExpiryDate,
-                IsActive = schedule.IsActive,
-                Courses = schedule.ScheduleCourses
-                    .OrderBy(sc => sc.DepartureTime)
-                    .Select(sc => new ScheduleCourseDto
-                    {
-                        Id = sc.Id,
-                        RouteId = sc.RouteId,
-                        BusLineNumber = sc.Route.BusLine.LineNumber,
-                        Direction = sc.Route.Direction,
-                        DepartureTime = sc.DepartureTime.ToTimeSpan()
-                    })
-                    .ToList()
-            };
-
-            return result;
-        }
-
-        public override async Task<bool> DeleteAsync(int id)
-        {
-            var schedule = await _context.Schedules
-                .Include(s => s.ScheduleCourses)
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (schedule == null)
-            {
-                return false;
-            }
-
-            _context.Schedules.Remove(schedule);
-            await _context.SaveChangesAsync();
-            return true;
+            return entity != null ? MapToModel(entity) : null;
         }
     }
 }

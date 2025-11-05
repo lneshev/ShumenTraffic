@@ -7,7 +7,7 @@ namespace ShumenTraffic.Web.Services.Interfaces
     /// <summary>
     /// Service interface for Route operations.
     /// </summary>
-    public interface IRouteModelService : IBaseModelService<RouteModel>
+    public interface IRouteModelService
     {
         /// <summary>
         /// Get all routes, optionally filtered by bus line.
@@ -16,6 +16,20 @@ namespace ShumenTraffic.Web.Services.Interfaces
         /// <param name="includeInactive">Include inactive routes</param>
         /// <returns>List of route DTOs</returns>
         Task<IEnumerable<RouteModel>> GetAllAsync(int? busLineId = null, bool includeInactive = false);
+
+        /// <summary>
+        /// Get route by ID.
+        /// </summary>
+        /// <param name="id">Route ID</param>
+        /// <returns>Route DTO or null if not found</returns>
+        Task<RouteModel> GetByIdAsync(int id);
+
+        /// <summary>
+        /// Delete route by ID.
+        /// </summary>
+        /// <param name="id">Route ID</param>
+        /// <returns>True if deleted, false if not found</returns>
+        Task<bool> DeleteAsync(int id);
 
         /// <summary>
         /// Create a new route with stops.

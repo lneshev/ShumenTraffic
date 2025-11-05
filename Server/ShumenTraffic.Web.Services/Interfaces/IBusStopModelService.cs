@@ -7,7 +7,7 @@ namespace ShumenTraffic.Web.Services.Interfaces
     /// <summary>
     /// Service interface for Bus Stop operations.
     /// </summary>
-    public interface IBusStopModelService : IBaseModelService<BusStopDto>
+    public interface IBusStopModelService : IBaseModelService<BusStopModel>
     {
         /// <summary>
         /// Get all bus stops, optionally filtered by zone.
@@ -15,14 +15,14 @@ namespace ShumenTraffic.Web.Services.Interfaces
         /// <param name="zoneId">Filter by zone ID (optional)</param>
         /// <param name="includeInactive">Include inactive bus stops</param>
         /// <returns>List of bus stop DTOs</returns>
-        Task<IEnumerable<BusStopDto>> GetAllAsync(int? zoneId = null, bool includeInactive = false);
+        Task<IEnumerable<BusStopModel>> GetAllAsync(int? zoneId = null, bool includeInactive = false);
 
         /// <summary>
         /// Create a new bus stop.
         /// </summary>
         /// <param name="dto">Create bus stop DTO</param>
         /// <returns>Created bus stop DTO or null if validation fails</returns>
-        Task<(BusStopDto dto, string error)> CreateAsync(CreateBusStopDto dto);
+        Task<(BusStopModel dto, string error)> CreateAsync(CreateBusStopDto dto);
 
         /// <summary>
         /// Update an existing bus stop.
@@ -30,6 +30,6 @@ namespace ShumenTraffic.Web.Services.Interfaces
         /// <param name="id">Bus stop ID</param>
         /// <param name="dto">Update bus stop DTO</param>
         /// <returns>Updated bus stop DTO or null if not found/validation fails</returns>
-        Task<(BusStopDto dto, string error)> UpdateAsync(int id, UpdateBusStopDto dto);
+        Task<(BusStopModel dto, string error)> UpdateAsync(int id, UpdateBusStopDto dto);
     }
 }

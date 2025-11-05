@@ -12,7 +12,7 @@ namespace ShumenTraffic.Web.Services.Services
     /// <summary>
     /// Service for Zone operations.
     /// </summary>
-    public class ZoneModelService : BaseModelService<Zone, ZoneDto>, IZoneModelService
+    public class ZoneModelService : BaseModelService<Zone, ZoneModel>, IZoneModelService
     {
         public ZoneModelService(AppDbContext context) : base(context)
         {
@@ -39,9 +39,9 @@ namespace ShumenTraffic.Web.Services.Services
             return await query.FirstOrDefaultAsync(z => z.Id == id);
         }
 
-        protected override ZoneDto MapToDto(Zone entity)
+        protected override ZoneModel MapToDto(Zone entity)
         {
-            return new ZoneDto
+            return new ZoneModel
             {
                 Id = entity.Id,
                 Name = entity.Name,
@@ -50,7 +50,7 @@ namespace ShumenTraffic.Web.Services.Services
             };
         }
 
-        public override async Task<IEnumerable<ZoneDto>> GetAllAsync(bool includeInactive = false)
+        public override async Task<IEnumerable<ZoneModel>> GetAllAsync(bool includeInactive = false)
         {
             var query = _context.Zones.AsQueryable();
 
@@ -61,7 +61,7 @@ namespace ShumenTraffic.Web.Services.Services
 
             var zones = await query
                 .OrderBy(z => z.Name)
-                .Select(z => new ZoneDto
+                .Select(z => new ZoneModel
                 {
                     Id = z.Id,
                     Name = z.Name,
@@ -73,11 +73,11 @@ namespace ShumenTraffic.Web.Services.Services
             return zones;
         }
 
-        public override async Task<ZoneDto> GetByIdAsync(int id)
+        public override async Task<ZoneModel> GetByIdAsync(int id)
         {
             var zone = await _context.Zones
                 .Where(z => z.Id == id)
-                .Select(z => new ZoneDto
+                .Select(z => new ZoneModel
                 {
                     Id = z.Id,
                     Name = z.Name,
@@ -89,7 +89,7 @@ namespace ShumenTraffic.Web.Services.Services
             return zone;
         }
 
-        public async Task<ZoneDto> CreateAsync(CreateZoneDto dto)
+        public async Task<ZoneModel> CreateAsync(CreateZoneDto dto)
         {
             var zone = new Zone
             {
@@ -101,7 +101,7 @@ namespace ShumenTraffic.Web.Services.Services
             _context.Zones.Add(zone);
             await _context.SaveChangesAsync();
 
-            return new ZoneDto
+            return new ZoneModel
             {
                 Id = zone.Id,
                 Name = zone.Name,
@@ -110,7 +110,7 @@ namespace ShumenTraffic.Web.Services.Services
             };
         }
 
-        public async Task<ZoneDto> UpdateAsync(int id, UpdateZoneDto dto)
+        public async Task<ZoneModel> UpdateAsync(int id, UpdateZoneDto dto)
         {
             var zone = await _context.Zones.FindAsync(id);
 
@@ -129,7 +129,7 @@ namespace ShumenTraffic.Web.Services.Services
             _context.Zones.Update(zone);
             await _context.SaveChangesAsync();
 
-            return new ZoneDto
+            return new ZoneModel
             {
                 Id = zone.Id,
                 Name = zone.Name,

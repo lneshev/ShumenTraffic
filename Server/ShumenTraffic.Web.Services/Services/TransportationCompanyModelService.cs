@@ -12,7 +12,7 @@ namespace ShumenTraffic.Web.Services.Services
     /// <summary>
     /// Service for Transportation Company operations.
     /// </summary>
-    public class TransportationCompanyModelService : BaseModelService<TransportationCompany, TransportationCompanyDto>, ITransportationCompanyModelService
+    public class TransportationCompanyModelService : BaseModelService<TransportationCompany, TransportationCompanyModel>, ITransportationCompanyModelService
     {
         public TransportationCompanyModelService(AppDbContext context) : base(context)
         {
@@ -39,9 +39,9 @@ namespace ShumenTraffic.Web.Services.Services
             return await query.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        protected override TransportationCompanyDto MapToDto(TransportationCompany entity)
+        protected override TransportationCompanyModel MapToDto(TransportationCompany entity)
         {
-            return new TransportationCompanyDto
+            return new TransportationCompanyModel
             {
                 Id = entity.Id,
                 Name = entity.Name,
@@ -50,7 +50,7 @@ namespace ShumenTraffic.Web.Services.Services
             };
         }
 
-        public override async Task<IEnumerable<TransportationCompanyDto>> GetAllAsync(bool includeInactive = false)
+        public override async Task<IEnumerable<TransportationCompanyModel>> GetAllAsync(bool includeInactive = false)
         {
             var query = _context.TransportationCompanies.AsQueryable();
 
@@ -61,7 +61,7 @@ namespace ShumenTraffic.Web.Services.Services
 
             var companies = await query
                 .OrderBy(c => c.Name)
-                .Select(c => new TransportationCompanyDto
+                .Select(c => new TransportationCompanyModel
                 {
                     Id = c.Id,
                     Name = c.Name,
@@ -73,11 +73,11 @@ namespace ShumenTraffic.Web.Services.Services
             return companies;
         }
 
-        public override async Task<TransportationCompanyDto> GetByIdAsync(int id)
+        public override async Task<TransportationCompanyModel> GetByIdAsync(int id)
         {
             var company = await _context.TransportationCompanies
                 .Where(c => c.Id == id)
-                .Select(c => new TransportationCompanyDto
+                .Select(c => new TransportationCompanyModel
                 {
                     Id = c.Id,
                     Name = c.Name,
@@ -101,7 +101,7 @@ namespace ShumenTraffic.Web.Services.Services
             return await query.AnyAsync();
         }
 
-        public async Task<(TransportationCompanyDto dto, string error)> CreateAsync(CreateTransportationCompanyDto dto)
+        public async Task<(TransportationCompanyModel dto, string error)> CreateAsync(CreateTransportationCompanyDto dto)
         {
             // Check if transportation company already exists
             if (await NameExistsAsync(dto.Name))
@@ -119,7 +119,7 @@ namespace ShumenTraffic.Web.Services.Services
             _context.TransportationCompanies.Add(company);
             await _context.SaveChangesAsync();
 
-            var result = new TransportationCompanyDto
+            var result = new TransportationCompanyModel
             {
                 Id = company.Id,
                 Name = company.Name,
@@ -130,7 +130,7 @@ namespace ShumenTraffic.Web.Services.Services
             return (result, null);
         }
 
-        public async Task<(TransportationCompanyDto dto, string error)> UpdateAsync(int id, UpdateTransportationCompanyDto dto)
+        public async Task<(TransportationCompanyModel dto, string error)> UpdateAsync(int id, UpdateTransportationCompanyDto dto)
         {
             var company = await _context.TransportationCompanies.FindAsync(id);
 
@@ -160,7 +160,7 @@ namespace ShumenTraffic.Web.Services.Services
             _context.TransportationCompanies.Update(company);
             await _context.SaveChangesAsync();
 
-            var result = new TransportationCompanyDto
+            var result = new TransportationCompanyModel
             {
                 Id = company.Id,
                 Name = company.Name,

@@ -12,7 +12,7 @@ namespace ShumenTraffic.Web.Services.Services
     /// <summary>
     /// Service for Route operations.
     /// </summary>
-    public class RouteModelService : BaseModelService<Route, RouteDto>, IRouteModelService
+    public class RouteModelService : BaseModelService<Route, RouteModel>, IRouteModelService
     {
         public RouteModelService(AppDbContext context) : base(context)
         {
@@ -42,9 +42,9 @@ namespace ShumenTraffic.Web.Services.Services
             return await query.FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        protected override RouteDto MapToDto(Route entity)
+        protected override RouteModel MapToDto(Route entity)
         {
-            return new RouteDto
+            return new RouteModel
             {
                 Id = entity.Id,
                 BusLineId = entity.BusLineId,
@@ -68,7 +68,7 @@ namespace ShumenTraffic.Web.Services.Services
             };
         }
 
-        public async Task<IEnumerable<RouteDto>> GetAllAsync(int? busLineId = null, bool includeInactive = false)
+        public async Task<IEnumerable<RouteModel>> GetAllAsync(int? busLineId = null, bool includeInactive = false)
         {
             var query = _context.Routes
                 .Include(r => r.BusLine)
@@ -89,7 +89,7 @@ namespace ShumenTraffic.Web.Services.Services
             var routes = await query
                 .OrderBy(r => r.BusLineId)
                 .ThenBy(r => r.Direction)
-                .Select(r => new RouteDto
+                .Select(r => new RouteModel
                 {
                     Id = r.Id,
                     BusLineId = r.BusLineId,
@@ -116,14 +116,14 @@ namespace ShumenTraffic.Web.Services.Services
             return routes;
         }
 
-        public override async Task<RouteDto> GetByIdAsync(int id)
+        public override async Task<RouteModel> GetByIdAsync(int id)
         {
             var route = await _context.Routes
                 .Include(r => r.BusLine)
                 .Include(r => r.RouteStops)
                 .ThenInclude(rs => rs.BusStop)
                 .Where(r => r.Id == id)
-                .Select(r => new RouteDto
+                .Select(r => new RouteModel
                 {
                     Id = r.Id,
                     BusLineId = r.BusLineId,
@@ -150,7 +150,7 @@ namespace ShumenTraffic.Web.Services.Services
             return route;
         }
 
-        public async Task<(RouteDto dto, string error)> CreateAsync(CreateRouteDto dto)
+        public async Task<(RouteModel dto, string error)> CreateAsync(CreateRouteDto dto)
         {
             // Verify bus line exists
             var busLine = await _context.BusLines.FindAsync(dto.BusLineId);
@@ -205,7 +205,7 @@ namespace ShumenTraffic.Web.Services.Services
                 .ThenInclude(rs => rs.BusStop)
                 .FirstAsync(r => r.Id == route.Id);
 
-            var result = new RouteDto
+            var result = new RouteModel
             {
                 Id = createdRoute.Id,
                 BusLineId = createdRoute.BusLineId,
@@ -231,7 +231,7 @@ namespace ShumenTraffic.Web.Services.Services
             return (result, null);
         }
 
-        public async Task<RouteDto> UpdateAsync(int id, UpdateRouteDto dto)
+        public async Task<RouteModel> UpdateAsync(int id, UpdateRouteDto dto)
         {
             var route = await _context.Routes
                 .Include(r => r.BusLine)
@@ -254,7 +254,7 @@ namespace ShumenTraffic.Web.Services.Services
             _context.Routes.Update(route);
             await _context.SaveChangesAsync();
 
-            var result = new RouteDto
+            var result = new RouteModel
             {
                 Id = route.Id,
                 BusLineId = route.BusLineId,

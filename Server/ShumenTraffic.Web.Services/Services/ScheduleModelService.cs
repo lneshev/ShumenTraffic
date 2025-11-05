@@ -13,7 +13,7 @@ namespace ShumenTraffic.Web.Services.Services
     /// <summary>
     /// Service for Schedule operations.
     /// </summary>
-    public class ScheduleModelService : BaseModelService<Schedule, ScheduleDto>, IScheduleModelService
+    public class ScheduleModelService : BaseModelService<Schedule, ScheduleModel>, IScheduleModelService
     {
         public ScheduleModelService(AppDbContext context) : base(context)
         {
@@ -43,9 +43,9 @@ namespace ShumenTraffic.Web.Services.Services
             return await query.FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        protected override ScheduleDto MapToDto(Schedule entity)
+        protected override ScheduleModel MapToDto(Schedule entity)
         {
-            return new ScheduleDto
+            return new ScheduleModel
             {
                 Id = entity.Id,
                 DayType = entity.DayType,
@@ -66,7 +66,7 @@ namespace ShumenTraffic.Web.Services.Services
             };
         }
 
-        public async Task<IEnumerable<ScheduleDto>> GetAllAsync(string dayType = null, bool includeInactive = false)
+        public async Task<IEnumerable<ScheduleModel>> GetAllAsync(string dayType = null, bool includeInactive = false)
         {
             var query = _context.Schedules
                 .Include(s => s.ScheduleCourses)
@@ -87,7 +87,7 @@ namespace ShumenTraffic.Web.Services.Services
             var schedules = await query
                 .OrderBy(s => s.DayType)
                 .ThenBy(s => s.EffectiveDate)
-                .Select(s => new ScheduleDto
+                .Select(s => new ScheduleModel
                 {
                     Id = s.Id,
                     DayType = s.DayType,
@@ -111,14 +111,14 @@ namespace ShumenTraffic.Web.Services.Services
             return schedules;
         }
 
-        public override async Task<ScheduleDto> GetByIdAsync(int id)
+        public override async Task<ScheduleModel> GetByIdAsync(int id)
         {
             var schedule = await _context.Schedules
                 .Include(s => s.ScheduleCourses)
                 .ThenInclude(sc => sc.Route)
                 .ThenInclude(r => r.BusLine)
                 .Where(s => s.Id == id)
-                .Select(s => new ScheduleDto
+                .Select(s => new ScheduleModel
                 {
                     Id = s.Id,
                     DayType = s.DayType,
@@ -142,7 +142,7 @@ namespace ShumenTraffic.Web.Services.Services
             return schedule;
         }
 
-        public async Task<(ScheduleDto dto, string error)> CreateAsync(CreateScheduleDto dto)
+        public async Task<(ScheduleModel dto, string error)> CreateAsync(CreateScheduleDto dto)
         {
             // Verify routes exist
             var routeIds = dto.Courses.Select(c => c.RouteId).Distinct().ToList();
@@ -184,7 +184,7 @@ namespace ShumenTraffic.Web.Services.Services
                 .ThenInclude(r => r.BusLine)
                 .FirstAsync(s => s.Id == schedule.Id);
 
-            var result = new ScheduleDto
+            var result = new ScheduleModel
             {
                 Id = createdSchedule.Id,
                 DayType = createdSchedule.DayType,
@@ -207,7 +207,7 @@ namespace ShumenTraffic.Web.Services.Services
             return (result, null);
         }
 
-        public async Task<ScheduleDto> UpdateAsync(int id, UpdateScheduleDto dto)
+        public async Task<ScheduleModel> UpdateAsync(int id, UpdateScheduleDto dto)
         {
             var schedule = await _context.Schedules
                 .Include(s => s.ScheduleCourses)
@@ -228,7 +228,7 @@ namespace ShumenTraffic.Web.Services.Services
             _context.Schedules.Update(schedule);
             await _context.SaveChangesAsync();
 
-            var result = new ScheduleDto
+            var result = new ScheduleModel
             {
                 Id = schedule.Id,
                 DayType = schedule.DayType,

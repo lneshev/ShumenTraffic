@@ -5,7 +5,7 @@ namespace ShumenTraffic.Web.Core.Models
     /// <summary>
     /// DTO for Transportation Company.
     /// </summary>
-    public class TransportationCompanyDto
+    public class TransportationCompanyModel
     {
         /// <summary>
         /// Company ID.

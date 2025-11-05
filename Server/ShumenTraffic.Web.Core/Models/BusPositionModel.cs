@@ -6,7 +6,7 @@ namespace ShumenTraffic.Web.Core.Models
     /// <summary>
     /// DTO for current bus position.
     /// </summary>
-    public class BusPositionDto
+    public class BusPositionModel
     {
         /// <summary>
         /// Bus ID (unique identifier for the bus).

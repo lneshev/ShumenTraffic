@@ -39,7 +39,7 @@ namespace ShumenTraffic.Web.Core.Models
     /// <summary>
     /// DTO for Schedule.
     /// </summary>
-    public class ScheduleDto
+    public class ScheduleModel
     {
         /// <summary>
         /// Schedule ID.

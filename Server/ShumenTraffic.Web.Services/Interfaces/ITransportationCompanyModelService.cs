@@ -6,14 +6,14 @@ namespace ShumenTraffic.Web.Services.Interfaces
     /// <summary>
     /// Service interface for Transportation Company operations.
     /// </summary>
-    public interface ITransportationCompanyModelService : IBaseModelService<TransportationCompanyDto>
+    public interface ITransportationCompanyModelService : IBaseModelService<TransportationCompanyModel>
     {
         /// <summary>
         /// Create a new transportation company.
         /// </summary>
         /// <param name="dto">Create transportation company DTO</param>
         /// <returns>Created company DTO or null if validation fails</returns>
-        Task<(TransportationCompanyDto dto, string error)> CreateAsync(CreateTransportationCompanyDto dto);
+        Task<(TransportationCompanyModel dto, string error)> CreateAsync(CreateTransportationCompanyDto dto);
 
         /// <summary>
         /// Update an existing transportation company.
@@ -21,7 +21,7 @@ namespace ShumenTraffic.Web.Services.Interfaces
         /// <param name="id">Company ID</param>
         /// <param name="dto">Update transportation company DTO</param>
         /// <returns>Updated company DTO or null if not found/validation fails</returns>
-        Task<(TransportationCompanyDto dto, string error)> UpdateAsync(int id, UpdateTransportationCompanyDto dto);
+        Task<(TransportationCompanyModel dto, string error)> UpdateAsync(int id, UpdateTransportationCompanyDto dto);
 
         /// <summary>
         /// Check if a transportation company with the given name exists.

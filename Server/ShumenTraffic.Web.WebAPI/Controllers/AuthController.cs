@@ -30,7 +30,7 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         /// <returns>Login response with user info and roles</returns>
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequestModel request)
         {
             if (!ModelState.IsValid)
             {
@@ -77,7 +77,7 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
             // Get user roles
             var roles = await _userManager.GetRolesAsync(user);
 
-            var response = new LoginResponse
+            var response = new LoginResponseModel
             {
                 UserId = user.Id,
                 Username = user.UserName,
@@ -117,7 +117,7 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            var response = new LoginResponse
+            var response = new LoginResponseModel
             {
                 UserId = user.Id,
                 Username = user.UserName,

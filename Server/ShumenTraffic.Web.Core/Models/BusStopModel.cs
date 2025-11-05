@@ -5,7 +5,7 @@ namespace ShumenTraffic.Web.Core.Models
     /// <summary>
     /// DTO for Bus Stop.
     /// </summary>
-    public class BusStopDto
+    public class BusStopModel
     {
         /// <summary>
         /// Bus stop ID.

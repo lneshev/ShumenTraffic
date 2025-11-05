@@ -5,7 +5,7 @@ namespace ShumenTraffic.Web.Core.Models.Auth
     /// <summary>
     /// Login request DTO.
     /// </summary>
-    public class LoginRequest
+    public class LoginRequestModel
     {
         /// <summary>
         /// Username or email.

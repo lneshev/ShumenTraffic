@@ -80,7 +80,7 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         /// <summary>
         /// Calculate bus position based on schedule and route geometry.
         /// </summary>
-        private async Task<BusPositionDto> CalculatePositionFromSchedule(Route route, string busId, TimeSpan currentTime)
+        private async Task<BusPositionModel> CalculatePositionFromSchedule(Route route, string busId, TimeSpan currentTime)
         {
             // Get all schedules for today (we'll use all day types for now)
             var today = DateTimeOffset.UtcNow.Date;
@@ -176,7 +176,7 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
                 }
             }
 
-            return new BusPositionDto
+            return new BusPositionModel
             {
                 BusId = busId,
                 RouteId = route.Id,

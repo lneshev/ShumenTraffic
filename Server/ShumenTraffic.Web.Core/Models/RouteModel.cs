@@ -54,7 +54,7 @@ namespace ShumenTraffic.Web.Core.Models
     /// <summary>
     /// DTO for Route.
     /// </summary>
-    public class RouteDto
+    public class RouteModel
     {
         /// <summary>
         /// Route ID.

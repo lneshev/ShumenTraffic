@@ -6,9 +6,9 @@ namespace ShumenTraffic.Web.Core.Models
     /// <summary>
     /// DTO for Bus Line.
     /// </summary>
-    public class BusLineDto
+    public class BusLineModel
     {
-        public BusLineDto()
+        public BusLineModel()
         {
             TransportationCompanyIds = new List<int>();
             TransportationCompanyNames = new List<string>();

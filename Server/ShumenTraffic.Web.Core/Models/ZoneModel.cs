@@ -5,7 +5,7 @@ namespace ShumenTraffic.Web.Core.Models
     /// <summary>
     /// DTO for Zone.
     /// </summary>
-    public class ZoneDto
+    public class ZoneModel
     {
         /// <summary>
         /// Zone ID.

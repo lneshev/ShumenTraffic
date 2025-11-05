@@ -12,7 +12,7 @@ namespace ShumenTraffic.Web.Services.Services
     /// <summary>
     /// Service for Bus Stop operations.
     /// </summary>
-    public class BusStopModelService : BaseModelService<BusStop, BusStopDto>, IBusStopModelService
+    public class BusStopModelService : BaseModelService<BusStop, BusStopModel>, IBusStopModelService
     {
         public BusStopModelService(AppDbContext context) : base(context)
         {
@@ -39,9 +39,9 @@ namespace ShumenTraffic.Web.Services.Services
             return await query.FirstOrDefaultAsync(b => b.Id == id);
         }
 
-        protected override BusStopDto MapToDto(BusStop entity)
+        protected override BusStopModel MapToDto(BusStop entity)
         {
-            return new BusStopDto
+            return new BusStopModel
             {
                 Id = entity.Id,
                 Name = entity.Name,
@@ -53,7 +53,7 @@ namespace ShumenTraffic.Web.Services.Services
             };
         }
 
-        public async Task<IEnumerable<BusStopDto>> GetAllAsync(int? zoneId = null, bool includeInactive = false)
+        public async Task<IEnumerable<BusStopModel>> GetAllAsync(int? zoneId = null, bool includeInactive = false)
         {
             var query = _context.BusStops.Include(b => b.Zone).AsQueryable();
 
@@ -69,7 +69,7 @@ namespace ShumenTraffic.Web.Services.Services
 
             var busStops = await query
                 .OrderBy(b => b.Name)
-                .Select(b => new BusStopDto
+                .Select(b => new BusStopModel
                 {
                     Id = b.Id,
                     Name = b.Name,
@@ -84,12 +84,12 @@ namespace ShumenTraffic.Web.Services.Services
             return busStops;
         }
 
-        public override async Task<BusStopDto> GetByIdAsync(int id)
+        public override async Task<BusStopModel> GetByIdAsync(int id)
         {
             var busStop = await _context.BusStops
                 .Include(b => b.Zone)
                 .Where(b => b.Id == id)
-                .Select(b => new BusStopDto
+                .Select(b => new BusStopModel
                 {
                     Id = b.Id,
                     Name = b.Name,
@@ -104,7 +104,7 @@ namespace ShumenTraffic.Web.Services.Services
             return busStop;
         }
 
-        public async Task<(BusStopDto dto, string error)> CreateAsync(CreateBusStopDto dto)
+        public async Task<(BusStopModel dto, string error)> CreateAsync(CreateBusStopDto dto)
         {
             // Verify zone exists
             var zone = await _context.Zones.FindAsync(dto.ZoneId);
@@ -125,7 +125,7 @@ namespace ShumenTraffic.Web.Services.Services
             _context.BusStops.Add(busStop);
             await _context.SaveChangesAsync();
 
-            var result = new BusStopDto
+            var result = new BusStopModel
             {
                 Id = busStop.Id,
                 Name = busStop.Name,
@@ -139,7 +139,7 @@ namespace ShumenTraffic.Web.Services.Services
             return (result, null);
         }
 
-        public async Task<(BusStopDto dto, string error)> UpdateAsync(int id, UpdateBusStopDto dto)
+        public async Task<(BusStopModel dto, string error)> UpdateAsync(int id, UpdateBusStopDto dto)
         {
             var busStop = await _context.BusStops.Include(b => b.Zone).FirstOrDefaultAsync(b => b.Id == id);
 
@@ -169,7 +169,7 @@ namespace ShumenTraffic.Web.Services.Services
             _context.BusStops.Update(busStop);
             await _context.SaveChangesAsync();
 
-            var result = new BusStopDto
+            var result = new BusStopModel
             {
                 Id = busStop.Id,
                 Name = busStop.Name,

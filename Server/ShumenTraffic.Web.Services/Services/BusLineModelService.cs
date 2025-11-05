@@ -12,7 +12,7 @@ namespace ShumenTraffic.Web.Services.Services
     /// <summary>
     /// Service for Bus Line operations.
     /// </summary>
-    public class BusLineModelService : BaseModelService<BusLine, BusLineDto>, IBusLineModelService
+    public class BusLineModelService : BaseModelService<BusLine, BusLineModel>, IBusLineModelService
     {
         public BusLineModelService(AppDbContext context) : base(context)
         {
@@ -39,9 +39,9 @@ namespace ShumenTraffic.Web.Services.Services
             return await query.FirstOrDefaultAsync(l => l.Id == id);
         }
 
-        protected override BusLineDto MapToDto(BusLine entity)
+        protected override BusLineModel MapToDto(BusLine entity)
         {
-            return new BusLineDto
+            return new BusLineModel
             {
                 Id = entity.Id,
                 LineNumber = entity.LineNumber,
@@ -52,7 +52,7 @@ namespace ShumenTraffic.Web.Services.Services
             };
         }
 
-        public override async Task<IEnumerable<BusLineDto>> GetAllAsync(bool includeInactive = false)
+        public override async Task<IEnumerable<BusLineModel>> GetAllAsync(bool includeInactive = false)
         {
             var query = _context.BusLines.AsQueryable();
 
@@ -63,7 +63,7 @@ namespace ShumenTraffic.Web.Services.Services
 
             var busLines = await query
                 .OrderBy(l => l.LineNumber)
-                .Select(l => new BusLineDto
+                .Select(l => new BusLineModel
                 {
                     Id = l.Id,
                     LineNumber = l.LineNumber,
@@ -77,11 +77,11 @@ namespace ShumenTraffic.Web.Services.Services
             return busLines;
         }
 
-        public override async Task<BusLineDto> GetByIdAsync(int id)
+        public override async Task<BusLineModel> GetByIdAsync(int id)
         {
             var busLine = await _context.BusLines
                 .Where(l => l.Id == id)
-                .Select(l => new BusLineDto
+                .Select(l => new BusLineModel
                 {
                     Id = l.Id,
                     LineNumber = l.LineNumber,
@@ -107,7 +107,7 @@ namespace ShumenTraffic.Web.Services.Services
             return await query.AnyAsync();
         }
 
-        public async Task<(BusLineDto dto, string error)> CreateAsync(CreateBusLineDto dto)
+        public async Task<(BusLineModel dto, string error)> CreateAsync(CreateBusLineDto dto)
         {
             // Check if line number already exists
             if (await LineNumberExistsAsync(dto.LineNumber))
@@ -132,7 +132,7 @@ namespace ShumenTraffic.Web.Services.Services
             _context.BusLines.Add(busLine);
             await _context.SaveChangesAsync();
 
-            var result = new BusLineDto
+            var result = new BusLineModel
             {
                 Id = busLine.Id,
                 LineNumber = busLine.LineNumber,
@@ -145,7 +145,7 @@ namespace ShumenTraffic.Web.Services.Services
             return (result, null);
         }
 
-        public async Task<(BusLineDto dto, string error)> UpdateAsync(int id, UpdateBusLineDto dto)
+        public async Task<(BusLineModel dto, string error)> UpdateAsync(int id, UpdateBusLineDto dto)
         {
             var busLine = await _context.BusLines.FindAsync(id);
 
@@ -175,7 +175,7 @@ namespace ShumenTraffic.Web.Services.Services
             _context.BusLines.Update(busLine);
             await _context.SaveChangesAsync();
 
-            var result = new BusLineDto
+            var result = new BusLineModel
             {
                 Id = busLine.Id,
                 LineNumber = busLine.LineNumber,

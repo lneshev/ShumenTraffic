@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MoravianStar.Settings;
+using MoravianStar.WebAPI.Attributes;
+using MoravianStar.WebAPI.Extensions;
 using MoravianStar.WebAPI.Transformers;
 using ShumenTraffic.Common.Core.Configuration;
 using ShumenTraffic.Common.Services.Interfaces;
@@ -17,7 +20,6 @@ using ShumenTraffic.Persistence.DbContexts;
 using ShumenTraffic.Web.Services.Interfaces;
 using ShumenTraffic.Web.Services.Services;
 using ShumenTraffic.Web.WebAPI.Infrastructure.Constants;
-using ShumenTraffic.Web.WebAPI.Infrastructure.Filters;
 using ShumenTraffic.Web.WebAPI.Infrastructure.Middlewares;
 using System;
 using System.Threading.Tasks;
@@ -46,7 +48,7 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddControllers(options =>
             {
                 options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
-                options.Filters.Add<ValidationFilter>();
+                options.Filters.Add<ValidateModelStateAttribute>();
             })
             .AddControllersAsServices();
 
@@ -161,6 +163,12 @@ namespace ShumenTraffic.Web.WebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMoravianStar(env, () =>
+            {
+                Settings.RegisterDefaultExceptionMiddleware = false;
+                Settings.DefaultDbContextType = typeof(AppDbContext);
+            });
 
             // Add exception handling middleware
             app.UseMiddleware<ExceptionHandlingMiddleware>();

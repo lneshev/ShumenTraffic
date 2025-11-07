@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import api from '@/lib/api';
 
 export default function AdminLoginPage() {
   const [username, setUsername] = useState('');
@@ -22,7 +23,7 @@ export default function AdminLoginPage() {
       await login(username, password);
       router.push('/admin');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      setError(err instanceof api.ApiError ? err.message : 'Login failed');
     } finally {
       setIsLoading(false);
     }

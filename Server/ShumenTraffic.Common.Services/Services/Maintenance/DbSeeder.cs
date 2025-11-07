@@ -31,7 +31,9 @@ namespace ShumenTraffic.Common.Services.Services.Maintenance
                     Id = id,
                     UserName = adminEmail,
                     Email = adminEmail,
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    LockoutEnabled = false
                 };
 
                 var identityResult = userManager.CreateAsync(adminUser).Result;

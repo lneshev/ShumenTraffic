@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MoravianStar.WebAPI.Attributes;
 using ShumenTraffic.Web.Core.Models.Auth;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AuthController : BaseController
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -30,14 +32,9 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         /// <returns>Login response with user info and roles</returns>
         [HttpPost("login")]
         [AllowAnonymous]
+        [ExecuteInTransactionAsync]
         public async Task<IActionResult> Login([FromBody] LoginRequestModel request)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return BadRequest("Validation failed", errors);
-            }
-
             // Find user by username or email
             var user = await _userManager.FindByNameAsync(request.Username)
                     ?? await _userManager.FindByEmailAsync(request.Username);
@@ -45,12 +42,6 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
             if (user == null)
             {
                 return BadRequest("Login failed", "Invalid username or password");
-            }
-
-            // Check if user is locked out
-            if (await _userManager.IsLockedOutAsync(user))
-            {
-                return BadRequest("Login failed", "User account is locked out");
             }
 
             // Attempt sign in
@@ -74,16 +65,7 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
                 return BadRequest("Login failed", "Invalid username or password");
             }
 
-            // Get user roles
-            var roles = await _userManager.GetRolesAsync(user);
-
-            var response = new LoginResponseModel
-            {
-                UserId = user.Id,
-                Username = user.UserName,
-                Email = user.Email,
-                Roles = roles.ToList()
-            };
+            var response = await CreateLoginResponseModel(user);
 
             return Ok(response, "Login successful");
         }
@@ -93,7 +75,6 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         /// </summary>
         /// <returns>Success message</returns>
         [HttpPost("logout")]
-        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -105,7 +86,6 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         /// </summary>
         /// <returns>Current user info</returns>
         [HttpGet("me")]
-        [Authorize]
         public async Task<IActionResult> GetCurrentUser()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -115,6 +95,13 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
                 return NotFound("User not found", "Current user not found");
             }
 
+            var response = await CreateLoginResponseModel(user);
+
+            return Ok(response, "User information retrieved successfully");
+        }
+
+        private async Task<LoginResponseModel> CreateLoginResponseModel(IdentityUser user)
+        {
             var roles = await _userManager.GetRolesAsync(user);
 
             var response = new LoginResponseModel
@@ -125,7 +112,7 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
                 Roles = roles.ToList()
             };
 
-            return Ok(response, "User information retrieved successfully");
+            return response;
         }
     }
 }

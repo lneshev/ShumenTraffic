@@ -2,7 +2,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
+using ShumenTraffic.Common.Core.Resources;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ShumenTraffic.Persistence.DbContexts
 {
@@ -51,12 +56,6 @@ namespace ShumenTraffic.Persistence.DbContexts
             base.OnModelCreating(modelBuilder);
 
             // TransportationCompany configuration
-            modelBuilder.Entity<TransportationCompany>()
-                .HasKey(x => x.Id);
-            modelBuilder.Entity<TransportationCompany>()
-                .Property(x => x.Name)
-                .IsRequired()
-                .HasMaxLength(255);
             modelBuilder.Entity<TransportationCompany>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
@@ -179,6 +178,56 @@ namespace ShumenTraffic.Persistence.DbContexts
                 .HasIndex(x => x.TransportationCompanyId);
             modelBuilder.Entity<TransportationCompanyBusLine>()
                 .HasIndex(x => x.BusLineId);
+        }
+
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            OnBeforeSaving();
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            OnBeforeSaving();
+            return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        private void OnBeforeSaving()
+        {
+            if (Database.CurrentTransaction == null)
+            {
+                throw new InvalidOperationException(Strings.SavingDataToDBWithoutATransactionIsNotAllowed);
+            }
+
+            var entries = ChangeTracker.Entries();
+
+            foreach (var entry in entries)
+            {
+                if (entry.State != EntityState.Unchanged)
+                {
+                    if (entry.Entity is ITrackableEntityBase trackable)
+                    {
+                        switch (entry.State)
+                        {
+                            case EntityState.Added:
+                                trackable.CreatedAt = trackable.CreatedAt == DateTimeOffset.MinValue ? DateTimeOffset.UtcNow : trackable.CreatedAt;
+                                break;
+                            case EntityState.Modified:
+                                trackable.UpdatedAt = DateTimeOffset.UtcNow;
+                                break;
+                            case EntityState.Deleted:
+                                trackable.UpdatedAt = DateTimeOffset.UtcNow;
+                                break;
+                        }
+                    }
+
+                    if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+                    {
+                        var validationContext = new ValidationContext(entry.Entity);
+                        Validator.ValidateObject(entry.Entity, validationContext, true);
+                    }
+                }
+            }
         }
     }
 }

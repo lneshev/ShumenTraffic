@@ -6,4 +6,8 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ShumenTraffic.Common.Core\ShumenTraffic.Common.Core.csproj" />
+  </ItemGroup>
+
 </Project>

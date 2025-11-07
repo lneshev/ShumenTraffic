@@ -8,15 +8,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MoravianStar.Dao;
 using MoravianStar.Settings;
 using MoravianStar.WebAPI.Attributes;
 using MoravianStar.WebAPI.Extensions;
+using MoravianStar.WebAPI.Swagger;
 using MoravianStar.WebAPI.Transformers;
 using ShumenTraffic.Common.Core.Configuration;
+using ShumenTraffic.Common.Core.Entities;
 using ShumenTraffic.Common.Services.Interfaces;
 using ShumenTraffic.Common.Services.Services;
 using ShumenTraffic.Common.Services.Services.Maintenance;
 using ShumenTraffic.Persistence.DbContexts;
+using ShumenTraffic.Web.Core.Models;
 using ShumenTraffic.Web.Services.Interfaces;
 using ShumenTraffic.Web.Services.Services;
 using ShumenTraffic.Web.WebAPI.Infrastructure.Constants;
@@ -129,7 +133,13 @@ namespace ShumenTraffic.Web.WebAPI
 
             // Add Swagger
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options =>
+            {
+                options.DocumentFilter<HideInDocsFilter>();
+            });
+
+            // Add Moravian Star services
+            services.AddScoped<IDbTransaction<AppDbContext>, DbTransaction<AppDbContext>>();
 
             // Add Application Services
             services.AddTransient<IDbUpdater, DbUpdater>();
@@ -138,7 +148,7 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddScoped<IBusLineService, BusLineService>();
             services.AddScoped<IBusStopService, BusStopService>();
             services.AddScoped<IZoneService, ZoneService>();
-            services.AddScoped<ITransportationCompanyService, TransportationCompanyService>();
+            services.AddTransient<IEntityValidated<TransportationCompany>, TransportationCompanyEntityValidated>();
             services.AddScoped<IRouteService, RouteService>();
             services.AddScoped<IScheduleService, ScheduleService>();
 
@@ -146,7 +156,7 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddScoped<IBusLineModelService, BusLineModelService>();
             services.AddScoped<IBusStopModelService, BusStopModelService>();
             services.AddScoped<IZoneModelService, ZoneModelService>();
-            services.AddScoped<ITransportationCompanyModelService, TransportationCompanyModelService>();
+            services.AddTransient<IModelsMappingService<TransportationCompanyModel, TransportationCompany>, TransportationCompanyModelsMappingService>();
             services.AddScoped<IRouteModelService, RouteModelService>();
             services.AddScoped<IScheduleModelService, ScheduleModelService>();
         }

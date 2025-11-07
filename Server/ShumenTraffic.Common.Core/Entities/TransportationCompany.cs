@@ -1,22 +1,19 @@
-using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShumenTraffic.Common.Core.Entities
 {
     /// <summary>
     /// Represents a transportation company operating bus lines.
     /// </summary>
-    public class TransportationCompany
+    public class TransportationCompany : TrackableEntityBase<int>
     {
-        /// <summary>
-        /// Primary key identifier.
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// Company name.
         /// </summary>
-        public required string Name { get; set; }
+        [Required]
+        [MaxLength(255)]
+        public string Name { get; set; }
 
         /// <summary>
         /// Company description.
@@ -27,16 +24,6 @@ namespace ShumenTraffic.Common.Core.Entities
         /// Indicates if the company is active.
         /// </summary>
         public bool IsActive { get; set; } = true;
-
-        /// <summary>
-        /// Timestamp when the record was created.
-        /// </summary>
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
-
-        /// <summary>
-        /// Timestamp when the record was last updated.
-        /// </summary>
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
         // Navigation properties
         /// <summary>

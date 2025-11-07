@@ -1,9 +1,10 @@
 'use client';
 
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
 import api from '@/lib/api';
+import PageResult from '@/types/common/PageResult';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 interface Company {
   id: number;
@@ -27,10 +28,10 @@ function CompaniesPage() {
   const fetchCompanies = async () => {
     try {
       setIsLoading(true);
-      const data = await api.get<Company[]>('/transportation-companies');
-      setCompanies(data);
+      const data = await api.get<PageResult<Company>>('/transportation-companies');
+      setCompanies(data.items);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error loading companies');
+      setError(err instanceof api.ApiError ? err.message : 'Error loading companies');
     } finally {
       setIsLoading(false);
     }
@@ -106,6 +107,7 @@ function CompaniesPage() {
                 onChange={(e) => setFormData({ name: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
                 required
+                maxLength={255}
               />
             </div>
             <button

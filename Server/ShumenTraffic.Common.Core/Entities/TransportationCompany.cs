@@ -1,3 +1,4 @@
+using ShumenTraffic.Common.Core.Constants.Security;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -12,7 +13,7 @@ namespace ShumenTraffic.Common.Core.Entities
         /// Company name.
         /// </summary>
         [Required]
-        [MaxLength(255)]
+        [MaxLength(TransportationCompanyConstants.NameMaxLength)]
         public string Name { get; set; }
 
         /// <summary>

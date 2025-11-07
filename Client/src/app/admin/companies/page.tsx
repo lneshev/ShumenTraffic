@@ -9,11 +9,17 @@ import { useEffect, useState } from 'react';
 interface Company {
   id: number;
   name: string;
+  description?: string;
   isActive: boolean;
 }
 
 function CompaniesPage() {
-  const initialFormData = { name: '' };
+  const initialFormData: Company = {
+    id: 0,
+    name: '',
+    description: undefined,
+    isActive: true
+  };
 
   const [companies, setCompanies] = useState<Company[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -104,7 +110,7 @@ function CompaniesPage() {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ name: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
                 required
                 maxLength={255}

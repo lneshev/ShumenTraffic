@@ -1,10 +1,11 @@
 using MoravianStar.Dao;
+using ShumenTraffic.Common.Core.Constants.Security;
 using System.ComponentModel.DataAnnotations;
 
 namespace ShumenTraffic.Web.Core.Models
 {
     /// <summary>
-    /// DTO for Transportation Company.
+    /// Model for Transportation Company.
     /// </summary>
     public class TransportationCompanyModel : ModelBase<int>
     {
@@ -12,7 +13,7 @@ namespace ShumenTraffic.Web.Core.Models
         /// Company name.
         /// </summary>
         [Required]
-        [MaxLength(255)]
+        [MaxLength(TransportationCompanyConstants.NameMaxLength)]
         public string Name { get; set; }
 
         /// <summary>

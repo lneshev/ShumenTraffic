@@ -42,11 +42,11 @@ namespace ShumenTraffic.Common.Core.Entities
         /// <summary>
         /// The schedule this course belongs to.
         /// </summary>
-        public Schedule Schedule { get; set; }
+        public virtual Schedule Schedule { get; set; }
 
         /// <summary>
         /// The route this course uses.
         /// </summary>
-        public Route Route { get; set; }
+        public virtual Route Route { get; set; }
     }
 }

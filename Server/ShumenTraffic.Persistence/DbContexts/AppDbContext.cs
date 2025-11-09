@@ -66,12 +66,6 @@ namespace ShumenTraffic.Persistence.DbContexts
 
             // BusLine configuration
             modelBuilder.Entity<BusLine>()
-                .HasKey(x => x.Id);
-            modelBuilder.Entity<BusLine>()
-                .Property(x => x.LineNumber)
-                .IsRequired()
-                .HasMaxLength(50);
-            modelBuilder.Entity<BusLine>()
                 .HasMany(x => x.TransportationCompanyBusLines)
                 .WithOne(x => x.BusLine)
                 .HasForeignKey(x => x.BusLineId);

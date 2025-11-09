@@ -1,3 +1,4 @@
+using MoravianStar.Dao;
 using System;
 
 namespace ShumenTraffic.Common.Core.Entities
@@ -5,7 +6,7 @@ namespace ShumenTraffic.Common.Core.Entities
     /// <summary>
     /// Junction table for the many-to-many relationship between TransportationCompany and BusLine.
     /// </summary>
-    public class TransportationCompanyBusLine
+    public class TransportationCompanyBusLine : IEntityBase
     {
         /// <summary>
         /// Foreign key to the transportation company.
@@ -21,12 +22,16 @@ namespace ShumenTraffic.Common.Core.Entities
         /// <summary>
         /// The transportation company.
         /// </summary>
-        public TransportationCompany TransportationCompany { get; set; }
+        public virtual TransportationCompany TransportationCompany { get; set; }
 
         /// <summary>
         /// The bus line.
         /// </summary>
-        public BusLine BusLine { get; set; }
+        public virtual BusLine BusLine { get; set; }
+
+        public bool IsNew()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
-

@@ -3,19 +3,24 @@
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import api from '@/lib/api';
-
-interface BusLine {
-  id: number;
-  lineNumber: string;
-  transportationCompanyId: number;
-  isActive: boolean;
-}
+import { ApiError } from '@/lib/api';
+import PageResult from '@/types/common/PageResult';
+import EntityMultiselect from '@/components/EntityMultiselect';
+import TransportationCompanyModel from '@/types/TransportationCompanyModel';
+import BusLinesService from '@/services/BusLinesService';
+import BusLineModel from '@/types/BusLineModel';
 
 function BusLinesPage() {
-  const initialFormData = { lineNumber: '', transportationCompanyId: 1 };
+  const initialFormData: BusLineModel = {
+    id: 0,
+    lineNumber: '',
+    description: '',
+    transportationCompanyIds: [],
+    transportationCompanyNames: [],
+    isActive: true
+  };
 
-  const [busLines, setBusLines] = useState<BusLine[]>([]);
+  const [busLines, setBusLines] = useState<BusLineModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -28,10 +33,10 @@ function BusLinesPage() {
   const fetchBusLines = async () => {
     try {
       setIsLoading(true);
-      const data = await api.get<BusLine[]>('/bus-lines');
-      setBusLines(data);
+      const data = await BusLinesService.read(undefined, [{ field: 'LineNumber', dir: 'asc' }]);
+      setBusLines(data.items);
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error loading bus lines');
+      setError(err instanceof ApiError ? err.message : 'Error loading bus lines');
     } finally {
       setIsLoading(false);
     }
@@ -41,11 +46,11 @@ function BusLinesPage() {
     e.preventDefault();
     try {
       setError('');
-      await api.post('/bus-lines', formData);
+      await BusLinesService.create(formData);
       toggleShowForm(false);
       fetchBusLines();
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error creating bus line');
+      setError(err instanceof ApiError ? err.message : 'Error creating bus line');
     }
   };
 
@@ -53,10 +58,10 @@ function BusLinesPage() {
     if (!confirm('Are you sure?')) return;
     try {
       setError('');
-      await api.delete(`/bus-lines/${id}`);
+      await BusLinesService.delete(id);
       fetchBusLines();
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error deleting bus line');
+      setError(err instanceof ApiError ? err.message : 'Error deleting bus line');
     }
   };
 
@@ -108,6 +113,29 @@ function BusLinesPage() {
                 onChange={(e) => setFormData({ ...formData, lineNumber: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
                 required
+                maxLength={50}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Transportation companies
+              </label>
+              <EntityMultiselect
+                value={formData.transportationCompanyIds}
+                onChange={(e) => setFormData({ ...formData, transportationCompanyIds: e.map(x => x.value) })}
+                placeholder="Select..."
+                url="/api/transportation-companies"
+                sorts={[
+                  { field: "name", dir: "asc" }
+                ]}
+                parseData={(data: PageResult<TransportationCompanyModel>) =>
+                  data.items.map((item, i) => {
+                    return {
+                      value: item.id,
+                      label: item.name
+                    };
+                  })
+                }
               />
             </div>
             <button
@@ -133,6 +161,9 @@ function BusLinesPage() {
                     Line Number
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
+                    Transportation Companies
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Status
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
@@ -148,6 +179,9 @@ function BusLinesPage() {
                   >
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
                       {line.lineNumber}
+                    </td>
+                    <td className="py-3 px-4">
+                      {line.transportationCompanyNames.join(', ')}
                     </td>
                     <td className="py-3 px-4">
                       <span

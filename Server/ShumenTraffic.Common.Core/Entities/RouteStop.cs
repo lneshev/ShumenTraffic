@@ -58,11 +58,11 @@ namespace ShumenTraffic.Common.Core.Entities
         /// <summary>
         /// The route this stop belongs to.
         /// </summary>
-        public Route Route { get; set; }
+        public virtual Route Route { get; set; }
 
         /// <summary>
         /// The bus stop at this location.
         /// </summary>
-        public BusStop BusStop { get; set; }
+        public virtual BusStop BusStop { get; set; }
     }
 }

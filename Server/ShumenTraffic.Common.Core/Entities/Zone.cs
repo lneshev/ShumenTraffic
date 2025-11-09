@@ -42,6 +42,6 @@ namespace ShumenTraffic.Common.Core.Entities
         /// <summary>
         /// Collection of bus stops in this zone.
         /// </summary>
-        public ICollection<BusStop> BusStops { get; set; } = new List<BusStop>();
+        public virtual ICollection<BusStop> BusStops { get; set; } = new List<BusStop>();
     }
 }

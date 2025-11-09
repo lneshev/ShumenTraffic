@@ -30,6 +30,6 @@ namespace ShumenTraffic.Common.Core.Entities
         /// <summary>
         /// Collection of bus lines operated by this company (many-to-many).
         /// </summary>
-        public ICollection<TransportationCompanyBusLine> TransportationCompanyBusLines { get; set; } = new List<TransportationCompanyBusLine>();
+        public virtual ICollection<TransportationCompanyBusLine> TransportationCompanyBusLines { get; set; } = new List<TransportationCompanyBusLine>();
     }
 }

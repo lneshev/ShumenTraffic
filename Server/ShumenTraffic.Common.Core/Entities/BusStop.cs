@@ -57,11 +57,11 @@ namespace ShumenTraffic.Common.Core.Entities
         /// <summary>
         /// The zone this bus stop belongs to.
         /// </summary>
-        public Zone Zone { get; set; }
+        public virtual Zone Zone { get; set; }
 
         /// <summary>
         /// Collection of route stops that include this bus stop.
         /// </summary>
-        public ICollection<RouteStop> RouteStops { get; set; } = new List<RouteStop>();
+        public virtual ICollection<RouteStop> RouteStops { get; set; } = new List<RouteStop>();
     }
 }

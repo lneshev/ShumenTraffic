@@ -47,16 +47,16 @@ namespace ShumenTraffic.Common.Core.Entities
         /// <summary>
         /// The bus line this route belongs to.
         /// </summary>
-        public BusLine BusLine { get; set; }
+        public virtual BusLine BusLine { get; set; }
 
         /// <summary>
         /// Collection of stops on this route.
         /// </summary>
-        public ICollection<RouteStop> RouteStops { get; set; } = new List<RouteStop>();
+        public virtual ICollection<RouteStop> RouteStops { get; set; } = new List<RouteStop>();
 
         /// <summary>
         /// Collection of courses (trips/departures) that use this route.
         /// </summary>
-        public ICollection<ScheduleCourse> ScheduleCourses { get; set; } = new List<ScheduleCourse>();
+        public virtual ICollection<ScheduleCourse> ScheduleCourses { get; set; } = new List<ScheduleCourse>();
     }
 }

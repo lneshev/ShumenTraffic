@@ -49,6 +49,6 @@ namespace ShumenTraffic.Common.Core.Entities
         /// Collection of courses (trips/departures) for this schedule.
         /// Each course specifies which route it uses.
         /// </summary>
-        public ICollection<ScheduleCourse> ScheduleCourses { get; set; } = new List<ScheduleCourse>();
+        public virtual ICollection<ScheduleCourse> ScheduleCourses { get; set; } = new List<ScheduleCourse>();
     }
 }

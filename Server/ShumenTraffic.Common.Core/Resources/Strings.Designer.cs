@@ -61,6 +61,15 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A bus line with line number &apos;{0}&apos; already exists..
+        /// </summary>
+        public static string BusLineWithLineNumberAlreadyExists {
+            get {
+                return ResourceManager.GetString("BusLineWithLineNumberAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Saving data to a database without a transaction is not allowed. First open a database transaction and then save&amp;commit the changes..
         /// </summary>
         public static string SavingDataToDBWithoutATransactionIsNotAllowed {

@@ -1,4 +1,5 @@
 using ShumenTraffic.Common.Core.Entities;
+using ShumenTraffic.Common.Core.Filters;
 using ShumenTraffic.Common.Services.Interfaces;
 using ShumenTraffic.Web.Core.Models;
 using ShumenTraffic.Web.Services.Interfaces;
@@ -70,10 +71,8 @@ namespace ShumenTraffic.Web.Services.Services
         public async Task<(RouteModel dto, string error)> CreateAsync(CreateRouteDto dto)
         {
             // Verify bus line exists
-            if (!await _busLineService.ExistsAsync(dto.BusLineId))
-            {
-                return (null, $"Bus line with ID {dto.BusLineId} does not exist");
-            }
+            // TODO: Change to use ExistsAsync once available in MoravianStar
+            var busLine = await MoravianStar.Dao.Persistence.ForEntity<BusLine, int>().GetAsync(dto.BusLineId);
 
             // Verify bus stops exist (if provided)
             var busStopIds = dto.Stops.Where(s => s.BusStopId.HasValue).Select(s => s.BusStopId.Value).ToList();

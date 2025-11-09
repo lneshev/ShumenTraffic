@@ -3,25 +3,19 @@
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import api from '@/lib/api';
 import PageResult from '@/types/common/PageResult';
+import TransportationCompanyModel from '@/types/TransportationCompanyModel';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-interface Company {
-  id: number;
-  name: string;
-  description?: string;
-  isActive: boolean;
-}
-
 function CompaniesPage() {
-  const initialFormData: Company = {
+  const initialFormData: TransportationCompanyModel = {
     id: 0,
     name: '',
     description: undefined,
     isActive: true
   };
 
-  const [companies, setCompanies] = useState<Company[]>([]);
+  const [companies, setCompanies] = useState<TransportationCompanyModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -34,7 +28,7 @@ function CompaniesPage() {
   const fetchCompanies = async () => {
     try {
       setIsLoading(true);
-      const data = await api.get<PageResult<Company>>('/transportation-companies');
+      const data = await api.get<PageResult<TransportationCompanyModel>>('/transportation-companies');
       setCompanies(data.items);
     } catch (err) {
       setError(err instanceof api.ApiError ? err.message : 'Error loading companies');

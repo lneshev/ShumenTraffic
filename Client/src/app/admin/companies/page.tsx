@@ -58,6 +58,7 @@ function CompaniesPage() {
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure?')) return;
     try {
+      setError('');
       await api.delete(`/transportation-companies/${id}`);
       fetchCompanies();
     } catch (err) {

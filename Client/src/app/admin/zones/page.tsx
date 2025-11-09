@@ -51,6 +51,7 @@ function ZonesPage() {
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure?')) return;
     try {
+      setError('');
       await api.delete(`/zones/${id}`);
       fetchZones();
     } catch (err) {

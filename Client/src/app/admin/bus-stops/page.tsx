@@ -54,6 +54,7 @@ function BusStopsPage() {
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure?')) return;
     try {
+      setError('');
       await api.delete(`/bus-stops/${id}`);
       fetchBusStops();
     } catch (err) {

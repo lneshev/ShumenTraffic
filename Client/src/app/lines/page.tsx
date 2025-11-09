@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
+import PageResult from '@/types/common/PageResult';
 
 interface BusLine {
   id: number;
@@ -49,10 +50,10 @@ export default function LinesPage() {
   useEffect(() => {
     const fetchBusLines = async () => {
       try {
-        const data = await api.get<BusLine[]>('/bus-lines');
-        setBusLines(data);
-        if (data.length > 0) {
-          setSelectedLineId(data[0].id);
+        const data = await api.get<PageResult<BusLine>>('/bus-lines');
+        setBusLines(data.items);
+        if (data.items.length > 0) {
+          setSelectedLineId(data.items[0].id);
         }
       } catch (error) {
         console.error('Failed to fetch bus lines:', error);

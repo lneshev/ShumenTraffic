@@ -149,6 +149,7 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddScoped<IBusStopService, BusStopService>();
             services.AddScoped<IZoneService, ZoneService>();
             services.AddTransient<IEntityValidated<TransportationCompany>, TransportationCompanyEntityValidated>();
+            services.AddTransient<IEntityDeleting<TransportationCompany>, TransportationCompanyEntityDeleting>();
             services.AddTransient<IEntityValidated<BusLine>, BusLineEntityValidated>();
             services.AddTransient<IEntityDeleting<BusLine>, BusLineEntityDeleting>();
             services.AddScoped<IRouteService, RouteService>();

@@ -86,5 +86,14 @@ namespace ShumenTraffic.Common.Core.Resources {
                 return ResourceManager.GetString("TransportationCompanyWithNameAlreadyExists", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not allowed to delete transportation company: &apos;{0}&apos;, because it has bus lines..
+        /// </summary>
+        public static string YouAreNotAllowedToDeleteTransportationCompany {
+            get {
+                return ResourceManager.GetString("YouAreNotAllowedToDeleteTransportationCompany", resourceCulture);
+            }
+        }
     }
 }

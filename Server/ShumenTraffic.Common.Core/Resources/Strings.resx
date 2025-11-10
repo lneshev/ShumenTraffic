@@ -126,4 +126,7 @@
   <data name="BusLineWithLineNumberAlreadyExists" xml:space="preserve">
     <value>A bus line with line number '{0}' already exists.</value>
   </data>
+  <data name="YouAreNotAllowedToDeleteTransportationCompany" xml:space="preserve">
+    <value>You are not allowed to delete transportation company: '{0}', because it has bus lines.</value>
+  </data>
 </root>

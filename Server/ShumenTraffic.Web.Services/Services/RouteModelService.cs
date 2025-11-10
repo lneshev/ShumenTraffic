@@ -1,5 +1,5 @@
+using MoravianStar.Dao;
 using ShumenTraffic.Common.Core.Entities;
-using ShumenTraffic.Common.Core.Filters;
 using ShumenTraffic.Common.Services.Interfaces;
 using ShumenTraffic.Web.Core.Models;
 using ShumenTraffic.Web.Services.Interfaces;
@@ -72,7 +72,7 @@ namespace ShumenTraffic.Web.Services.Services
         {
             // Verify bus line exists
             // TODO: Change to use ExistsAsync once available in MoravianStar
-            var busLine = await MoravianStar.Dao.Persistence.ForEntity<BusLine, int>().GetAsync(dto.BusLineId);
+            var busLine = await Persistence.ForEntity<BusLine, int>().GetAsync(dto.BusLineId);
 
             // Verify bus stops exist (if provided)
             var busStopIds = dto.Stops.Where(s => s.BusStopId.HasValue).Select(s => s.BusStopId.Value).ToList();

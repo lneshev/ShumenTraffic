@@ -12,13 +12,8 @@ namespace ShumenTraffic.Common.Services.Services
     {
         public async Task DeletingAsync(TransportationCompany entity, IDictionary<string, object> additionalParameters = null)
         {
-            await Task.CompletedTask;
-
-            bool hasBusLines = await MoravianStar.Dao.Persistence.ForEntity<TransportationCompanyBusLine>().ExistAsync(new TransportationCompanyBusLineFilter()
-            {
-                TransportationCompanyId = entity.Id
-            });
-
+            var blFilter = new TransportationCompanyBusLineFilter() { TransportationCompanyId = entity.Id };
+            var hasBusLines = await Persistence.ForEntity<TransportationCompanyBusLine>().ExistAsync(blFilter);
             if (hasBusLines)
             {
                 throw new BusinessException(string.Format(Strings.YouAreNotAllowedToDeleteTransportationCompany, entity.Name));

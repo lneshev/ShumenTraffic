@@ -13,8 +13,8 @@ namespace ShumenTraffic.Common.Services.Services
         public async Task ValidatedAsync(BusLine entity, BusLine originalEntity, IDictionary<string, object> additionalParameters = null)
         {
             var blFilter = new BusLineFilter() { LineNumberEquals = entity.LineNumber, ExcludeIds = new List<int>() { entity.Id } };
-            var blExists = await MoravianStar.Dao.Persistence.ForEntity<BusLine>().ExistAsync(blFilter);
-            if (blExists)
+            var blExist = await Persistence.ForEntity<BusLine>().ExistAsync(blFilter);
+            if (blExist)
             {
                 throw new EntityNotUniqueException(string.Format(Strings.BusLineWithLineNumberAlreadyExists, entity.LineNumber));
             }

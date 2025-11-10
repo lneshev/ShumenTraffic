@@ -69,7 +69,7 @@ namespace ShumenTraffic.Web.Services.Services
                     pair.Entity.TransportationCompanyBusLines.Add(new TransportationCompanyBusLine()
                     {
                         TransportationCompanyId = transportCompanyId,
-                        TransportationCompany = await MoravianStar.Dao.Persistence.ForEntity<TransportationCompany, int>().GetAsync(transportCompanyId)
+                        TransportationCompany = await Persistence.ForEntity<TransportationCompany, int>().GetAsync(transportCompanyId)
                     });
                 }
             }

@@ -12,7 +12,7 @@ namespace ShumenTraffic.Common.Services.Services
         {
             foreach (var transportCompanyBusLine in entity.TransportationCompanyBusLines.ToList())
             {
-                await MoravianStar.Dao.Persistence.ForEntity<TransportationCompanyBusLine>().DeleteAsync(transportCompanyBusLine);
+                await Persistence.ForEntity<TransportationCompanyBusLine>().DeleteAsync(transportCompanyBusLine);
             }
         }
     }

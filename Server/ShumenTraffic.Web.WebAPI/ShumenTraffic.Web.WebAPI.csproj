@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ShumenTraffic.Common.Services\ShumenTraffic.Common.Services.csproj" />
-    <ProjectReference Include="..\ShumenTraffic.Persistence\ShumenTraffic.Persistence.csproj" />
+    <ProjectReference Include="..\ShumenTraffic.Common.DataAccess\ShumenTraffic.Common.DataAccess.csproj" />
     <ProjectReference Include="..\ShumenTraffic.Web.Services\ShumenTraffic.Web.Services.csproj" />
   </ItemGroup>
 

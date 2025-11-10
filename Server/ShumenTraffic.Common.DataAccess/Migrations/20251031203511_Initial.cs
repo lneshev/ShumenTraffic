@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 #nullable disable
 
-namespace ShumenTraffic.Persistence.Migrations
+namespace ShumenTraffic.Common.DataAccess.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

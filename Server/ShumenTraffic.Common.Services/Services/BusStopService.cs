@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
+using ShumenTraffic.Common.DataAccess.DbContexts;
 using ShumenTraffic.Common.Services.Interfaces;
-using ShumenTraffic.Persistence.DbContexts;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

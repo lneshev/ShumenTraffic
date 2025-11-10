@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities;
-using ShumenTraffic.Persistence.DbContexts;
+using ShumenTraffic.Common.DataAccess.DbContexts;
 using ShumenTraffic.Web.Core.Models;
 using System;
 using System.Linq;

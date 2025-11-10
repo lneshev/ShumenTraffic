@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShumenTraffic.Persistence.DbContexts;
+using ShumenTraffic.Common.DataAccess.DbContexts;
 using System.Threading.Tasks;
 
 namespace ShumenTraffic.Common.Services.Services.Maintenance

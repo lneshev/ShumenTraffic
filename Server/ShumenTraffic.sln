@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShumenTraffic.Web.WebAPI", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShumenTraffic.Common.Core", "ShumenTraffic.Common.Core\ShumenTraffic.Common.Core.csproj", "{5BFFF529-F4B1-42BF-BE27-84D831BE26B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShumenTraffic.Persistence", "ShumenTraffic.Persistence\ShumenTraffic.Persistence.csproj", "{05330451-7347-44B3-A20D-B1127BACA801}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShumenTraffic.Common.DataAccess", "ShumenTraffic.Common.DataAccess\ShumenTraffic.Common.DataAccess.csproj", "{05330451-7347-44B3-A20D-B1127BACA801}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShumenTraffic.Common.Services", "ShumenTraffic.Common.Services\ShumenTraffic.Common.Services.csproj", "{77452749-68B5-46F6-B5EE-5CF6989E000B}"
 EndProject

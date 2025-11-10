@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Persistence.DbContexts
+namespace ShumenTraffic.Common.DataAccess.DbContexts
 {
     /// <summary>
     /// Entity Framework Core DbContext for ShumenTraffic application.

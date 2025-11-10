@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ShumenTraffic.Common.Core\ShumenTraffic.Common.Core.csproj" />
-    <ProjectReference Include="..\ShumenTraffic.Persistence\ShumenTraffic.Persistence.csproj" />
+    <ProjectReference Include="..\ShumenTraffic.Common.DataAccess\ShumenTraffic.Common.DataAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>

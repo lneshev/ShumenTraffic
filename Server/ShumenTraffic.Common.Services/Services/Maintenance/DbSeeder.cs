@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using MoravianStar.Exceptions;
 using ShumenTraffic.Common.Core.Configuration;
 using ShumenTraffic.Common.Core.Constants.Security;
-using ShumenTraffic.Persistence.DbContexts;
+using ShumenTraffic.Common.DataAccess.DbContexts;
 using System;
 using System.Threading.Tasks;
 

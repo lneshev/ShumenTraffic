@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
-using ShumenTraffic.Persistence.DbContexts;
+using ShumenTraffic.Common.DataAccess.DbContexts;
 using System;
 
 #nullable disable
 
-namespace ShumenTraffic.Persistence.Migrations
+namespace ShumenTraffic.Common.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20251031203511_Initial")]

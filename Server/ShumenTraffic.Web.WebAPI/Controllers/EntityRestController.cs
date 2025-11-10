@@ -2,7 +2,7 @@
 using MoravianStar.Dao;
 using MoravianStar.WebAPI.Attributes;
 using MoravianStar.WebAPI.Helpers;
-using ShumenTraffic.Persistence.DbContexts;
+using ShumenTraffic.Common.DataAccess.DbContexts;
 using ShumenTraffic.Web.Core.DTOs;
 using ShumenTraffic.Web.WebAPI.Infrastructure.Constants;
 using System.Collections.Generic;

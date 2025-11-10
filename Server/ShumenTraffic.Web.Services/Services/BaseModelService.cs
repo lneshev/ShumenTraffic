@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using ShumenTraffic.Persistence.DbContexts;
+using ShumenTraffic.Common.DataAccess.DbContexts;
 using ShumenTraffic.Web.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;

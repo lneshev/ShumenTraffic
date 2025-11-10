@@ -123,7 +123,7 @@ function AdminDashboard() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             Recent Activity
           </h2>
-          <div className="bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div className="bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800">

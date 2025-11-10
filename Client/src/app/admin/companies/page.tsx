@@ -1,8 +1,8 @@
 'use client';
 
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import api from '@/lib/api';
-import PageResult from '@/types/common/PageResult';
+import { ApiError } from '@/lib/api';
+import TransportationCompanyService from '@/services/TransportationCompanyService';
 import TransportationCompanyModel from '@/types/TransportationCompanyModel';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -28,10 +28,10 @@ function CompaniesPage() {
   const fetchCompanies = async () => {
     try {
       setIsLoading(true);
-      const data = await api.get<PageResult<TransportationCompanyModel>>('/transportation-companies');
+      const data = await TransportationCompanyService.read(undefined, [{ field: 'Name', dir: 'asc' }]);
       setCompanies(data.items);
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error loading companies');
+      setError(err instanceof ApiError ? err.message : 'Error loading companies');
     } finally {
       setIsLoading(false);
     }
@@ -41,11 +41,11 @@ function CompaniesPage() {
     e.preventDefault();
     try {
       setError('');
-      await api.post('/transportation-companies', formData);
+      await TransportationCompanyService.create(formData);
       toggleShowForm(false);
       fetchCompanies();
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error creating company');
+      setError(err instanceof ApiError ? err.message : 'Error creating company');
     }
   };
 
@@ -53,10 +53,10 @@ function CompaniesPage() {
     if (!confirm('Are you sure?')) return;
     try {
       setError('');
-      await api.delete(`/transportation-companies/${id}`);
+      await TransportationCompanyService.delete(id);
       fetchCompanies();
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error deleting company');
+      setError(err instanceof ApiError ? err.message : 'Error deleting company');
     }
   };
 
@@ -126,7 +126,7 @@ function CompaniesPage() {
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
         ) : (
-          <div className="bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div className="bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800">

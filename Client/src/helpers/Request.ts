@@ -1,4 +1,5 @@
 import string from "@/helpers/StringUtility";
+import { ApiError } from "@/lib/api";
 import ApiResponse from "@/types/common/ApiResponse";
 
 export async function getRequest(url: string, responseHandler: (value: any) => any, keepalive = false) {
@@ -69,13 +70,13 @@ async function makeRequest(method: string, url: string, body: object | null, res
     return await fetch(url, requestOptions)
         .then(async (response) => {
             const text = await response.text();
-            const result = !string.isNullOrEmpty(text) ? (JSON.parse(text) as ApiResponse<any>).data : null;
+            const result = !string.isNullOrEmpty(text) ? (JSON.parse(text) as ApiResponse<any>) : null;
 
             return new Promise(function (resolve, reject) {
-                if (response.ok) {
-                    resolve(result);
+                if (response.ok && result?.success) {
+                    resolve(result?.data);
                 } else {
-                    reject(result);
+                    reject(new ApiError(result?.message || `Request failed with status ${response.status}`, response.status, result?.errors));
                 }
             });
         })

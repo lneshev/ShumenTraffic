@@ -1,3 +1,5 @@
+using ElmahCore.Mvc;
+using ElmahCore.Sql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,13 +11,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MoravianStar.Dao;
+using MoravianStar.Extensions;
 using MoravianStar.Settings;
 using MoravianStar.WebAPI.Attributes;
 using MoravianStar.WebAPI.Extensions;
 using MoravianStar.WebAPI.Swagger;
 using MoravianStar.WebAPI.Transformers;
 using ShumenTraffic.Common.Core.Configuration;
+using ShumenTraffic.Common.Core.Constants.Security;
 using ShumenTraffic.Common.Core.Entities;
+using ShumenTraffic.Common.Core.Enums.Maintenance;
+using ShumenTraffic.Common.Core.Resources;
 using ShumenTraffic.Common.DataAccess.DbContexts;
 using ShumenTraffic.Common.Services.Interfaces;
 using ShumenTraffic.Common.Services.Services;
@@ -26,17 +32,18 @@ using ShumenTraffic.Web.Services.Services;
 using ShumenTraffic.Web.WebAPI.Infrastructure.Constants;
 using ShumenTraffic.Web.WebAPI.Infrastructure.Middlewares;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ShumenTraffic.Web.WebAPI
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
+        private readonly IConfiguration configuration;
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.configuration = configuration;
         }
 
         /// <summary>
@@ -45,8 +52,8 @@ namespace ShumenTraffic.Web.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             // Configure options
-            services.Configure<ConsumersConfiguration>(Configuration.GetSection(nameof(ConsumersConfiguration)));
-            services.Configure<UsersConfiguration>(Configuration.GetSection(nameof(UsersConfiguration)));
+            services.Configure<ConsumersConfiguration>(configuration.GetSection(nameof(ConsumersConfiguration)));
+            services.Configure<UsersConfiguration>(configuration.GetSection(nameof(UsersConfiguration)));
 
             // Add Controllers with validation filter
             services.AddControllers(options =>
@@ -64,7 +71,7 @@ namespace ShumenTraffic.Web.WebAPI
             });
 
             // Add CORS
-            var consumersConfig = Configuration.GetSection(nameof(ConsumersConfiguration)).Get<ConsumersConfiguration>();
+            var consumersConfig = configuration.GetSection(nameof(ConsumersConfiguration)).Get<ConsumersConfiguration>();
             services.AddCors(options =>
             {
                 options.AddPolicy(CorsPolicyConstants.Default, policy =>
@@ -77,8 +84,14 @@ namespace ShumenTraffic.Web.WebAPI
                 });
             });
 
+            services
+                .AddDbContextPool<LogDbContext>(options =>
+                {
+                    options.UseSqlServer(configuration.GetConnectionString("Log"));
+                });
+
             // Add DbContext
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("App");
             services.AddDbContext<AppDbContext>(options =>
             {
                 options
@@ -129,6 +142,23 @@ namespace ShumenTraffic.Web.WebAPI
                     context.Response.StatusCode = 403;
                     return Task.CompletedTask;
                 };
+            });
+
+            // Add Elmah for error logging
+            services.AddElmah<SqlErrorLog>(options =>
+            {
+                options.OnError = async (httpContext, error) =>
+                {
+                    if (error.Exception != null)
+                    {
+                        error.StatusCode = error.Exception.GetHttpStatusCode();
+                    }
+                    await Task.CompletedTask;
+                };
+                options.ConnectionString = configuration.GetConnectionString("Log");
+                options.SqlServerDatabaseSchemaName = "dbo";
+                options.SqlServerDatabaseTableName = "Elmah";
+                options.OnPermissionCheck = (context) => context.User.Identity.IsAuthenticated && context.User.IsInRole(RoleConstants.SuperAdminRoleName);
             });
 
             // Add Swagger
@@ -191,6 +221,7 @@ namespace ShumenTraffic.Web.WebAPI
             app.UseCors(CorsPolicyConstants.Default);
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseElmah();
 
             app.UseEndpoints(endpoints =>
             {
@@ -205,7 +236,11 @@ namespace ShumenTraffic.Web.WebAPI
                 {
                     var serviceProvider = scope.ServiceProvider;
                     var dbUpdaterService = serviceProvider.GetRequiredService<IDbUpdater>();
-                    dbUpdaterService.CreateAndUpdateAsync().GetAwaiter().GetResult();
+                    var result = dbUpdaterService.CreateAndUpdateAllAsync().GetAwaiter().GetResult();
+                    if (result.State != DbsUpdateState.Success)
+                    {
+                        throw new AggregateException(string.Format(Strings.OneOrMoreDatabasesCouldNotBeUpdated, result.State), result.Results.Where(x => x.Exception != null).Select(x => x.Exception));
+                    }
                 }
             }
         }

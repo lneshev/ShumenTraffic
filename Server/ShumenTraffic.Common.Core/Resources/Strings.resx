@@ -129,4 +129,7 @@
   <data name="YouAreNotAllowedToDeleteTransportationCompany" xml:space="preserve">
     <value>You are not allowed to delete transportation company: '{0}', because it has bus lines.</value>
   </data>
+  <data name="OneOrMoreDatabasesCouldNotBeUpdated" xml:space="preserve">
+    <value>One or more databases could not be updated. Main status: {0}.</value>
+  </data>
 </root>

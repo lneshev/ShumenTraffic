@@ -55,6 +55,8 @@ namespace ShumenTraffic.Common.DataAccess.DbContexts
 
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CS_AS");
+
             // TransportationCompany configuration
             modelBuilder.Entity<TransportationCompany>()
                 .HasIndex(x => x.Name)

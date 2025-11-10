@@ -70,6 +70,15 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to One or more databases could not be updated. Main status: {0}..
+        /// </summary>
+        public static string OneOrMoreDatabasesCouldNotBeUpdated {
+            get {
+                return ResourceManager.GetString("OneOrMoreDatabasesCouldNotBeUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Saving data to a database without a transaction is not allowed. First open a database transaction and then save&amp;commit the changes..
         /// </summary>
         public static string SavingDataToDBWithoutATransactionIsNotAllowed {

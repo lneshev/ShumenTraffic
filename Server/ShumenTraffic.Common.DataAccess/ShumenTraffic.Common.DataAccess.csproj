@@ -20,4 +20,8 @@
     <ProjectReference Include="..\ShumenTraffic.Common.Core\ShumenTraffic.Common.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

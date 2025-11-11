@@ -20,8 +20,8 @@ namespace ShumenTraffic.Web.Services.Services
                 LineNumber = x.LineNumber,
                 Description = x.Description,
                 IsActive = x.IsActive,
-                TransportationCompanyIds = x.TransportationCompanyBusLines.Select(x => x.TransportationCompanyId).ToList(),
-                TransportationCompanyNames = x.TransportationCompanyBusLines.Select(x => x.TransportationCompany.Name).ToList()
+                TransportationCompanyIds = x.TransportationCompanyBusLines.OrderBy(x => x.TransportationCompany.Name).Select(x => x.TransportationCompanyId).ToList(),
+                TransportationCompanyNames = x.TransportationCompanyBusLines.OrderBy(x => x.TransportationCompany.Name).Select(x => x.TransportationCompany.Name).ToList()
             };
         }
 

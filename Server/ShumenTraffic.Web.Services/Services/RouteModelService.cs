@@ -69,8 +69,11 @@ namespace ShumenTraffic.Web.Services.Services
         public async Task<(RouteModel dto, string error)> CreateAsync(CreateRouteDto dto)
         {
             // Verify bus line exists
-            // TODO: Change to use ExistsAsync once available in MoravianStar
-            var busLine = await Persistence.ForEntity<BusLine, int>().GetAsync(dto.BusLineId);
+            var busLineExists = await Persistence.ForEntity<BusLine, int>().ExistsAsync(dto.BusLineId);
+            if(!busLineExists)
+            {
+                return (null, $"Bus line with ID {dto.BusLineId} does not exist");
+            }
 
             // Verify bus stops exist (if provided)
             var busStopIds = dto.Stops.Where(s => s.BusStopId.HasValue).Select(s => s.BusStopId.Value).ToList();

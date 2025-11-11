@@ -92,6 +92,20 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         }
 
         /// <summary>
+        /// Checks if an entity exists.
+        /// </summary>
+        /// <param name="id">The target Id.</param>
+        /// <returns><see langword="True"/> if the entity exists, otherwise <see langword="false"/>.</returns>
+        [NonInvokable]
+        [HttpGet(RoutingConstants.ActionId)]
+        public virtual async Task<ActionResult<ApiResponse<bool>>> Exists([FromRoute] TId id)
+        {
+            bool data = await helper.ExistsAsync(id);
+            var result = ApiResponse<bool>.SuccessResponse(data);
+            return result;
+        }
+
+        /// <summary>
         /// Creates and saves an entity, based on a <typeparamref name="TModel"/>.
         /// </summary>
         /// <param name="model">The model containing the input data of the entity, that will be created.</param>

@@ -15,13 +15,11 @@ namespace ShumenTraffic.Web.Services.Services
     public class RouteModelService : IRouteModelService
     {
         private readonly IRouteService _routeService;
-        private readonly IBusLineService _busLineService;
         private readonly IBusStopService _busStopService;
 
-        public RouteModelService(IRouteService routeService, IBusLineService busLineService, IBusStopService busStopService)
+        public RouteModelService(IRouteService routeService, IBusStopService busStopService)
         {
             _routeService = routeService;
-            _busLineService = busLineService;
             _busStopService = busStopService;
         }
 

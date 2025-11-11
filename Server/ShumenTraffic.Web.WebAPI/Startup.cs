@@ -175,22 +175,20 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddTransient<IDbUpdater, DbUpdater>();
 
             // Add Domain Services (Common Layer)
-            services.AddScoped<IBusLineService, BusLineService>();
-            services.AddScoped<IBusStopService, BusStopService>();
-            services.AddScoped<IZoneService, ZoneService>();
             services.AddTransient<IEntityValidated<TransportationCompany>, TransportationCompanyEntityValidated>();
             services.AddTransient<IEntityDeleting<TransportationCompany>, TransportationCompanyEntityDeleting>();
             services.AddTransient<IEntityValidated<BusLine>, BusLineEntityValidated>();
             services.AddTransient<IEntityDeleting<BusLine>, BusLineEntityDeleting>();
+            services.AddScoped<IZoneService, ZoneService>();
+            services.AddScoped<IBusStopService, BusStopService>();
             services.AddScoped<IRouteService, RouteService>();
             services.AddScoped<IScheduleService, ScheduleService>();
 
             // Add Application Services (Web Layer)
-            services.AddScoped<IBusLineModelService, BusLineModelService>();
-            services.AddScoped<IBusStopModelService, BusStopModelService>();
-            services.AddScoped<IZoneModelService, ZoneModelService>();
             services.AddTransient<IModelsMappingService<TransportationCompanyModel, TransportationCompany>, TransportationCompanyModelsMappingService>();
             services.AddTransient<IModelsMappingService<BusLineModel, BusLine>, BusLineModelsMappingService>();
+            services.AddScoped<IZoneModelService, ZoneModelService>();
+            services.AddScoped<IBusStopModelService, BusStopModelService>();
             services.AddScoped<IRouteModelService, RouteModelService>();
             services.AddScoped<IScheduleModelService, ScheduleModelService>();
         }

@@ -27,7 +27,7 @@ interface OptionType {
     data?: any;
 }
 
-export default function EntityMultiselect(props: EntityMultiselectProps) {
+const EntityMultiselect = (props: EntityMultiselectProps) => {
     const [selectedItems, setSelectedItems] = useState<OptionType[]>([]);
     const [data, setData] = useState<OptionType[]>([]);
     const [isDataLoading, setIsDataLoading] = useState(false);
@@ -40,9 +40,9 @@ export default function EntityMultiselect(props: EntityMultiselectProps) {
         if (string.isNullOrEmpty(props.url)) {
             throw new Error("'url' is not defined. It should be a non-empty string.");
         }
-    }, [props.parseData, props.url]);
+    }, [props.url]);
 
-    const readData = useCallback(async () => {
+    const readData = async () => {
         if (!isDataLoaded) {
             try {
                 setIsDataLoading(true);
@@ -62,12 +62,12 @@ export default function EntityMultiselect(props: EntityMultiselectProps) {
                 props.onRequestEnd?.();
             }
         }
-    }, [isDataLoaded, props.url, props.filter, props.sorts, props.parseData, props.onRequestStart, props.onDataBound, props.onRequestEnd]);
+    };
 
     const handleChange = useCallback((e: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
-        let items = e ? JSON.parse(JSON.stringify(e)) : [];
+        let items = e ? e as OptionType[] : [];
 
-        // This check is needed, because there is a bug in "Select" component.
+        // This check is needed, because there is a bug in "Select" component (found in version 3).
         // When you have cleared the value and keep pressing "Backspace", the onChange event is raised.
         const hasChange = selectedItems.length !== 0 || items.length !== 0;
 
@@ -75,7 +75,7 @@ export default function EntityMultiselect(props: EntityMultiselectProps) {
             setSelectedItems(items);
             props.onChange?.(items);
         }
-    }, [selectedItems, props.onChange]);
+    }, [selectedItems]);
 
     const filterOption = ({ label }: OptionType, searchString: string) => {
         return (!string.isNullOrEmpty(label) ? label : "").toLowerCase().includes(searchString.toLowerCase());
@@ -113,7 +113,7 @@ export default function EntityMultiselect(props: EntityMultiselectProps) {
     // componentDidMount and componentDidUpdate equivalent - watch for value changes
     useEffect(() => {
         initSelectedItems();
-    }, [props.value]);
+    }, [props.value, data]);
 
     return (
         <div className="react-select-dropdown">
@@ -130,15 +130,11 @@ export default function EntityMultiselect(props: EntityMultiselectProps) {
                 closeMenuOnSelect={false}
                 isDisabled={props.isDisabled}
                 classNamePrefix="react-select-dropdown"
-            />
-            <input
-                type="text"
-                value={selectedItems && selectedItems.length > 0 ? "true" : ""}
-                onChange={() => { }}
                 required={props.required}
-                className="hidden"
             />
             {props.children}
         </div>
     );
-}
+};
+
+export default EntityMultiselect;

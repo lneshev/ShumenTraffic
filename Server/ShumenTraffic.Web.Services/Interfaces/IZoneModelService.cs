@@ -1,4 +1,4 @@
-using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Core.Models.Zones;
 using System.Threading.Tasks;
 
 namespace ShumenTraffic.Web.Services.Interfaces

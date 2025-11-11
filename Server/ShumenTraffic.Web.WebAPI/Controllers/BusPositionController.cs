@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShumenTraffic.Common.Core.Entities;
+using ShumenTraffic.Common.Core.Entities.Routes;
 using ShumenTraffic.Common.DataAccess.DbContexts;
-using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Core.Models.Routes;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

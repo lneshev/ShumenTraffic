@@ -1,4 +1,4 @@
-using ShumenTraffic.Common.Core.Entities;
+using ShumenTraffic.Common.Core.Entities.BusStops;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -47,4 +47,3 @@ namespace ShumenTraffic.Common.Services.Interfaces
         Task<BusStop> UpdateAsync(int id, string name = null, int? zoneId = null, decimal? latitude = null, decimal? longitude = null, bool? isActive = null);
     }
 }
-

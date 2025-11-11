@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Core.Models.BusStops;
 using ShumenTraffic.Web.Services.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;

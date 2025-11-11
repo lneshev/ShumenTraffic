@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MoravianStar.WebAPI.Attributes;
-using ShumenTraffic.Web.Core.Models.Auth;
+using ShumenTraffic.Web.Core.Models.Authentication;
 using System.Linq;
 using System.Threading.Tasks;
 

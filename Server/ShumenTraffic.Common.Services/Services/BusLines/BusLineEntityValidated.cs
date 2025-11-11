@@ -1,0 +1,23 @@
+using MoravianStar.Dao;
+using MoravianStar.Exceptions;
+using ShumenTraffic.Common.Core.Entities.BusLines;
+using ShumenTraffic.Common.Core.Filters.BusLines;
+using ShumenTraffic.Common.Core.Resources;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace ShumenTraffic.Common.Services.Services.BusLines
+{
+    public class BusLineEntityValidated : IEntityValidated<BusLine>
+    {
+        public async Task ValidatedAsync(BusLine entity, BusLine originalEntity, IDictionary<string, object> additionalParameters = null)
+        {
+            var blFilter = new BusLineFilter() { LineNumberEquals = entity.LineNumber, ExcludeIds = new List<int>() { entity.Id } };
+            var blExist = await Persistence.ForEntity<BusLine>().ExistAsync(blFilter);
+            if (blExist)
+            {
+                throw new EntityNotUniqueException(string.Format(Strings.BusLineWithLineNumberAlreadyExists, entity.LineNumber));
+            }
+        }
+    }
+}

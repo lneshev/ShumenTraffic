@@ -11,8 +11,4 @@
     <ProjectReference Include="..\ShumenTraffic.Common.DataAccess\ShumenTraffic.Common.DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>

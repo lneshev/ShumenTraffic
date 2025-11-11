@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MoravianStar.Dao;
-using ShumenTraffic.Common.Core.Entities;
-using ShumenTraffic.Common.Core.Filters;
+using ShumenTraffic.Common.Core.Entities.TransportationCompanies;
+using ShumenTraffic.Common.Core.Filters.TransportationCompanies;
 using ShumenTraffic.Web.Core.DTOs;
-using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Core.Models.TransportationCompanies;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

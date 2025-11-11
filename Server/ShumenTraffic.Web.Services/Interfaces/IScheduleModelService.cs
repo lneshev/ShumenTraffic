@@ -1,4 +1,4 @@
-using ShumenTraffic.Web.Core.Models;
+using ShumenTraffic.Web.Core.Models.Schedules;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

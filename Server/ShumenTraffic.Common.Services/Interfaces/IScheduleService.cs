@@ -1,4 +1,4 @@
-using ShumenTraffic.Common.Core.Entities;
+using ShumenTraffic.Common.Core.Entities.Schedules;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

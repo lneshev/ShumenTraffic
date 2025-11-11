@@ -221,7 +221,7 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.BusLine", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.BusLines.BusLine", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -251,7 +251,7 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.ToTable("BusLines");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.BusStop", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.BusStops.BusStop", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -297,7 +297,7 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.ToTable("BusStops");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Route", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Routes.Route", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -330,7 +330,7 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.ToTable("Routes");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.RouteStop", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Routes.RouteStop", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -373,7 +373,7 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.ToTable("RouteStops");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Schedule", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Schedules.Schedule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -406,7 +406,7 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.ToTable("Schedules");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.ScheduleCourse", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Schedules.ScheduleCourse", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -438,7 +438,7 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.ToTable("ScheduleCourses");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.TransportationCompany", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.TransportationCompanies.TransportationCompany", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -471,7 +471,7 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.ToTable("TransportationCompanies");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.TransportationCompanyBusLine", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.TransportationCompanies.TransportationCompanyBusLine", b =>
                 {
                     b.Property<int>("TransportationCompanyId")
                         .HasColumnType("int");
@@ -488,7 +488,7 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.ToTable("TransportationCompanyBusLines");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Zone", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Zones.Zone", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -572,9 +572,9 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.BusStop", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.BusStops.BusStop", b =>
                 {
-                    b.HasOne("ShumenTraffic.Common.Core.Entities.Zone", "Zone")
+                    b.HasOne("ShumenTraffic.Common.Core.Entities.Zones.Zone", "Zone")
                         .WithMany("BusStops")
                         .HasForeignKey("ZoneId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -583,9 +583,9 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.Navigation("Zone");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Route", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Routes.Route", b =>
                 {
-                    b.HasOne("ShumenTraffic.Common.Core.Entities.BusLine", "BusLine")
+                    b.HasOne("ShumenTraffic.Common.Core.Entities.BusLines.BusLine", "BusLine")
                         .WithMany("Routes")
                         .HasForeignKey("BusLineId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -594,13 +594,13 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.Navigation("BusLine");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.RouteStop", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Routes.RouteStop", b =>
                 {
-                    b.HasOne("ShumenTraffic.Common.Core.Entities.BusStop", "BusStop")
+                    b.HasOne("ShumenTraffic.Common.Core.Entities.BusStops.BusStop", "BusStop")
                         .WithMany("RouteStops")
                         .HasForeignKey("BusStopId");
 
-                    b.HasOne("ShumenTraffic.Common.Core.Entities.Route", "Route")
+                    b.HasOne("ShumenTraffic.Common.Core.Entities.Routes.Route", "Route")
                         .WithMany("RouteStops")
                         .HasForeignKey("RouteId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -611,15 +611,15 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.Navigation("Route");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.ScheduleCourse", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Schedules.ScheduleCourse", b =>
                 {
-                    b.HasOne("ShumenTraffic.Common.Core.Entities.Route", "Route")
+                    b.HasOne("ShumenTraffic.Common.Core.Entities.Routes.Route", "Route")
                         .WithMany("ScheduleCourses")
                         .HasForeignKey("RouteId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ShumenTraffic.Common.Core.Entities.Schedule", "Schedule")
+                    b.HasOne("ShumenTraffic.Common.Core.Entities.Schedules.Schedule", "Schedule")
                         .WithMany("ScheduleCourses")
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -630,15 +630,15 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.Navigation("Schedule");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.TransportationCompanyBusLine", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.TransportationCompanies.TransportationCompanyBusLine", b =>
                 {
-                    b.HasOne("ShumenTraffic.Common.Core.Entities.BusLine", "BusLine")
+                    b.HasOne("ShumenTraffic.Common.Core.Entities.BusLines.BusLine", "BusLine")
                         .WithMany("TransportationCompanyBusLines")
                         .HasForeignKey("BusLineId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ShumenTraffic.Common.Core.Entities.TransportationCompany", "TransportationCompany")
+                    b.HasOne("ShumenTraffic.Common.Core.Entities.TransportationCompanies.TransportationCompany", "TransportationCompany")
                         .WithMany("TransportationCompanyBusLines")
                         .HasForeignKey("TransportationCompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -649,36 +649,36 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
                     b.Navigation("TransportationCompany");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.BusLine", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.BusLines.BusLine", b =>
                 {
                     b.Navigation("Routes");
 
                     b.Navigation("TransportationCompanyBusLines");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.BusStop", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.BusStops.BusStop", b =>
                 {
                     b.Navigation("RouteStops");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Route", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Routes.Route", b =>
                 {
                     b.Navigation("RouteStops");
 
                     b.Navigation("ScheduleCourses");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Schedule", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Schedules.Schedule", b =>
                 {
                     b.Navigation("ScheduleCourses");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.TransportationCompany", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.TransportationCompanies.TransportationCompany", b =>
                 {
                     b.Navigation("TransportationCompanyBusLines");
                 });
 
-            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Zone", b =>
+            modelBuilder.Entity("ShumenTraffic.Common.Core.Entities.Zones.Zone", b =>
                 {
                     b.Navigation("BusStops");
                 });

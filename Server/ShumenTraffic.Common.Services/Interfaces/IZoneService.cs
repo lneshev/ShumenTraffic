@@ -1,4 +1,4 @@
-using ShumenTraffic.Common.Core.Entities;
+using ShumenTraffic.Common.Core.Entities.Zones;
 using System.Threading.Tasks;
 
 namespace ShumenTraffic.Common.Services.Interfaces

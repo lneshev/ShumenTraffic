@@ -17,6 +17,7 @@ interface EntityMultiselectProps<TId extends Id> {
   onDataBound?: (data: OptionType<TId>[]) => void;
   onRequestEnd?: () => void;
   onChange?: (options: OptionType<TId>[]) => void;
+  onOpen?: () => void;
   placeholder?: string;
   isDisabled?: boolean;
   required?: boolean;
@@ -41,6 +42,7 @@ export default function EntityMultiselect<TId extends Id>({
   onDataBound,
   onRequestEnd,
   onChange,
+  onOpen,
   placeholder,
   isDisabled = false,
   required = false,
@@ -100,6 +102,7 @@ export default function EntityMultiselect<TId extends Id>({
     if (!hasFetchedRef.current) {
       await fetchOptions();
     }
+    onOpen?.();
   };
 
   useEffect(() => {

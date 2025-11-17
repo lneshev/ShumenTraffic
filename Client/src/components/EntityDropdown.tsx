@@ -1,226 +1,163 @@
-// UNDER DEVELOPMENT!!!
-
-import React, { useState, useEffect, useCallback, useImperativeHandle, forwardRef } from "react";
-import Select from "react-select";
+import React, { useState, useEffect, useCallback, useImperativeHandle, forwardRef, useRef } from "react";
+import Select, { FilterOptionOption } from "react-select";
 import CreatableSelect from "react-select/creatable";
-import { authorisedGetRequest, getQueryString } from "@/helpers/Request";
+import { authorisedGetRequest, getQueryString, getRequest } from "@/helpers/Request";
 import string from "@/helpers/StringUtility";
+import Id from "@/types/common/Id";
+import Sort from "@/types/common/Sort";
 
-interface OptionType {
-    value: any;
+interface EntityDropdownProps<TId extends Id> {
+    parseData: (data: any) => OptionType<TId>[];
+    url: string;
+    isAuthorizedRequest?: boolean;
+    filter?: Record<string, any>;
+    sorts?: Sort[];
+    value?: TId;
+    autoBind?: boolean;
+    onRequestStart?: () => void;
+    onDataBound?: (data: OptionType<TId>[]) => void;
+    onRequestEnd?: () => void;
+    onChange?: (item: OptionType<TId> | null) => void;
+    onOpen?: () => void;
+    placeholder?: string;
+    isDisabled?: boolean;
+    required?: boolean;
+    children?: React.ReactNode;
+    // Creatable props
+    creatable?: boolean;
+    formatCreateLabel?: (inputValue: string) => string;
+    onCreate?: (inputValue: string) => void;
+}
+
+interface OptionType<TId extends Id> {
+    value: TId;
     label: string;
     data?: any;
 }
 
-interface EntityDropdownProps {
-    parseData: (data: any) => OptionType[];
-    url: string;
-    filter?: any;
-    sorts?: any;
-    value?: any;
-    autoBind?: boolean;
-    doNotCacheValue?: boolean;
-    onChange?: (item: OptionType | null) => void;
-    onDataBound?: (data: OptionType[]) => void;
-    onCascade?: (item: OptionType | null) => void;
-    onOpen?: () => void;
-    onCreate?: (inputValue: string) => void;
-    creatable?: boolean;
-    placeholder?: string;
-    formatCreateLabel?: (inputValue: string) => string;
-    isDisabled?: boolean;
-    required?: boolean;
-    children?: React.ReactNode;
-}
+export default function EntityDropdown<TId extends Id>({
+    parseData,
+    url,
+    isAuthorizedRequest = false,
+    filter,
+    sorts = [],
+    value,
+    autoBind = false,
+    onRequestStart,
+    onDataBound,
+    onRequestEnd,
+    onChange,
+    onOpen,
+    placeholder,
+    isDisabled = false,
+    required = false,
+    children,
+    // Creatable props
+    creatable = false,
+    formatCreateLabel,
+    onCreate,
+}: EntityDropdownProps<TId>) {
+    const [options, setOptions] = useState<OptionType<TId>[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const hasFetchedRef = useRef(false);
 
-export interface EntityDropdownRef {
-    reload: () => Promise<void>;
-}
+    const fetchOptions = async () => {
+        if (hasFetchedRef.current) {
+            return;
+        }
 
-const EntityDropdown = forwardRef<EntityDropdownRef, EntityDropdownProps>((props, ref) => {
-    const {
-        parseData,
-        url,
-        filter,
-        sorts,
-        value,
-        autoBind,
-        doNotCacheValue,
-        onChange,
-        onDataBound,
-        onCascade,
-        onOpen,
-        onCreate,
-        creatable,
-        placeholder,
-        formatCreateLabel,
-        isDisabled,
-        required,
-        children,
-    } = props;
+        try {
+            setIsLoading(true);
+            setError(null);
+            hasFetchedRef.current = true;
+            onRequestStart?.();
 
-    const [selectedItem, setSelectedItem] = useState<OptionType | null>(null);
-    const [data, setData] = useState<OptionType[]>([]);
-    const [isDataLoading, setIsDataLoading] = useState(false);
-    const [isDataLoaded, setIsDataLoaded] = useState(false);
+            const queryString = getQueryString(filter, sorts);
+            const fullUrl = `${process.env.NEXT_PUBLIC_WEB_API_BASE_URL}${url}${queryString}`;
 
-    // Validate props on mount
+            let data;
+            if (isAuthorizedRequest) {
+                data = await authorisedGetRequest(fullUrl, (result) => result);
+            }
+            else {
+                data = await getRequest(fullUrl, (result) => result);
+            }
+            const parsedData = parseData(data);
+            setOptions(parsedData);
+            onDataBound?.(parsedData);
+        } catch (err) {
+            setError('Error loading options');
+            hasFetchedRef.current = false; // Allow retry on error
+        } finally {
+            setIsLoading(false);
+            onRequestEnd?.();
+        }
+    };
+
+    const handleChange = (item: OptionType<TId> | null) => {
+        onChange?.(item);
+    };
+
+    const filterOption = ({ label }: FilterOptionOption<OptionType<TId>>, searchString: string) => {
+        return (!string.isNullOrEmpty(label) ? label : "").toLowerCase().includes(searchString.toLowerCase());
+    };
+
+    const selectedOption = options.find(option => value && value === option.value);
+
+    const handleMenuOpen = async () => {
+        // Fetch options when menu opens for the first time (if not already fetched)
+        if (!hasFetchedRef.current) {
+            await fetchOptions();
+        }
+        onOpen?.();
+    };
+
     useEffect(() => {
-        if (typeof parseData !== "function") {
-            throw new Error(
-                "'parseData' is not defined. It should be a function, which returns an array of objects, where each object has at least properties 'value' and 'label'."
-            );
+        // Fetch immediately if autoBind is true or if there are preselected values
+        if (autoBind || !!value) {
+            fetchOptions();
         }
-        if (string.isNullOrEmpty(url)) {
-            throw new Error("'url' is not defined. It should be a non-empty string.");
-        }
-    }, [parseData, url]);
-
-    const readData = useCallback(async () => {
-        if (!isDataLoaded) {
-            setIsDataLoading(true);
-
-            const responseData = await authorisedGetRequest(
-                process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `${url}${getQueryString(filter, sorts)}`,
-                (result) => {
-                    return result;
-                }
-            );
-            const parsedData = parseData(responseData);
-
-            setData(parsedData);
-            setIsDataLoaded(true);
-            setIsDataLoading(false);
-
-            if (typeof onDataBound === "function") {
-                onDataBound(parsedData);
-            }
-        }
-    }, [isDataLoaded, url, filter, sorts, parseData, onDataBound]);
-
-    const handleChange = useCallback((item: OptionType | null) => {
-        // This check is needed, because there is a bug in "Select" component.
-        // When you have cleared the value and keep pressing "Backspace", the onChange event is raised.
-        setSelectedItem((prevSelectedItem) => {
-            const hasChange = prevSelectedItem !== item;
-
-            if (hasChange) {
-                if (!doNotCacheValue) {
-                    // Update state
-                }
-
-                if (typeof onChange === "function") {
-                    onChange(item);
-                }
-
-                return doNotCacheValue ? prevSelectedItem : item;
-            }
-
-            return prevSelectedItem;
-        });
-    }, [doNotCacheValue, onChange]);
-
-    const filterOption = useCallback(
-        ({ label }: OptionType, searchString: string) => {
-            return (!string.isNullOrEmpty(label) ? label : "").toLowerCase().includes(searchString.toLowerCase());
-        },
-        []
-    );
-
-    const initSelectedItem = useCallback(async () => {
-        if (value || (!!autoBind && !isDataLoaded)) {
-            await readData();
-
-            if (!doNotCacheValue) {
-                const foundItem = data.find((x) => x.value === value);
-                if (foundItem) {
-                    setSelectedItem(foundItem);
-                }
-            }
-        } else {
-            if (!doNotCacheValue) {
-                setSelectedItem(null);
-            }
-        }
-        if (typeof onCascade === "function") {
-            onCascade(selectedItem);
-        }
-    }, [value, autoBind, isDataLoaded, doNotCacheValue, data, readData, onCascade, selectedItem]);
-
-    const reload = useCallback(async () => {
-        setIsDataLoaded(false);
-        await initSelectedItem();
-    }, [initSelectedItem]);
-
-    // Expose reload method via ref
-    useImperativeHandle(ref, () => ({
-        reload,
-    }));
-
-    // componentDidMount equivalent
-    useEffect(() => {
-        initSelectedItem();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    // componentDidUpdate equivalent - watch for value changes
-    useEffect(() => {
-        initSelectedItem();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value]);
-
-    const handleMenuOpen = useCallback(() => {
-        readData();
-        if (typeof onOpen === "function") {
-            onOpen();
-        }
-    }, [readData, onOpen]);
+    }, []); // Only run on mount
 
     return (
         <div className="react-select-dropdown">
             {creatable ? (
                 <CreatableSelect
-                    options={data}
-                    value={selectedItem}
+                    options={options}
+                    value={selectedOption}
                     onChange={handleChange}
-                    onMenuOpen={readData}
-                    isLoading={isDataLoading}
+                    onMenuOpen={handleMenuOpen}
+                    isLoading={isLoading}
                     placeholder={placeholder}
+                    noOptionsMessage={() => !!error ? (<span className='text-red-600 dark:text-red-400'>Error loading options</span>) : "No options"}
                     filterOption={filterOption}
-                    isClearable
+                    isClearable={true}
+                    isDisabled={isDisabled}
+                    required={required}
+                    classNamePrefix="react-select-dropdown"
+                    // Createable props
                     createOptionPosition="first"
                     formatCreateLabel={formatCreateLabel}
                     onCreateOption={onCreate}
-                    isDisabled={isDisabled}
-                    classNamePrefix="react-select-dropdown"
                 />
             ) : (
                 <Select
-                    options={data}
-                    value={selectedItem}
+                    options={options}
+                    value={selectedOption}
                     onChange={handleChange}
                     onMenuOpen={handleMenuOpen}
-                    isLoading={isDataLoading}
+                    isLoading={isLoading}
                     placeholder={placeholder}
+                    noOptionsMessage={() => !!error ? (<span className='text-red-600 dark:text-red-400'>Error loading options</span>) : "No options"}
                     filterOption={filterOption}
-                    isClearable
+                    isClearable={true}
                     isDisabled={isDisabled}
+                    required={required}
                     classNamePrefix="react-select-dropdown"
                 />
             )}
-
-            <input
-                type="text"
-                value={selectedItem ? selectedItem.value : ""}
-                onChange={() => { }}
-                required={required}
-                className="hidden"
-            />
             {children}
         </div>
     );
-});
-
-EntityDropdown.displayName = "EntityDropdown";
-
-export default EntityDropdown;
+};

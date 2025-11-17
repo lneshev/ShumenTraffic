@@ -1,140 +1,133 @@
-import { authorisedGetRequest, getQueryString } from "@/helpers/Request";
-import { Ref, useCallback, useEffect, useImperativeHandle, useState } from "react";
-import Select, { ActionMeta, MultiValue } from "react-select";
-import string from "@/helpers/StringUtility";
+import { useState, useEffect, useRef } from 'react';
+import Select, { FilterOptionOption } from 'react-select';
+import { getRequest, authorisedGetRequest, getQueryString } from '@/helpers/Request';
+import string from '@/helpers/StringUtility';
+import Id from '@/types/common/Id';
+import Sort from '@/types/common/Sort';
 
-interface EntityMultiselectProps {
-    parseData: (data: any) => OptionType[];
-    url: string;
-    filter?: Record<string, any>;
-    sorts?: { field: string, dir: number | "asc" | "desc" }[];
-    value?: any[];
-    autoBind?: boolean;
-    onRequestStart?: () => void;
-    onDataBound?: (data: OptionType[]) => void;
-    onRequestEnd?: () => void;
-    onChange?: (items: OptionType[]) => void;
-    placeholder?: string;
-    isDisabled?: boolean;
-    required?: boolean;
-    children?: React.ReactNode;
-    ref?: Ref<unknown> | undefined;
+interface EntityMultiselectProps<TId extends Id> {
+  parseData: (data: any) => OptionType<TId>[];
+  url: string;
+  isAuthorizedRequest?: boolean;
+  filter?: Record<string, any>;
+  sorts?: Sort[];
+  value?: TId[];
+  autoBind?: boolean;
+  onRequestStart?: () => void;
+  onDataBound?: (data: OptionType<TId>[]) => void;
+  onRequestEnd?: () => void;
+  onChange?: (options: OptionType<TId>[]) => void;
+  placeholder?: string;
+  isDisabled?: boolean;
+  required?: boolean;
+  children?: React.ReactNode;
 }
 
-interface OptionType {
-    value: any;
-    label: string;
-    data?: any;
+interface OptionType<TId extends Id> {
+  value: TId;
+  label: string;
+  data?: any;
 }
 
-const EntityMultiselect = (props: EntityMultiselectProps) => {
-    const [selectedItems, setSelectedItems] = useState<OptionType[]>([]);
-    const [data, setData] = useState<OptionType[]>([]);
-    const [isDataLoading, setIsDataLoading] = useState(false);
-    const [isDataLoaded, setIsDataLoaded] = useState(false);
+export default function EntityMultiselect<TId extends Id>({
+  parseData,
+  url,
+  isAuthorizedRequest = false,
+  filter,
+  sorts = [],
+  value,
+  autoBind = false,
+  onRequestStart,
+  onDataBound,
+  onRequestEnd,
+  onChange,
+  placeholder,
+  isDisabled = false,
+  required = false,
+  children
+}: EntityMultiselectProps<TId>) {
+  const [options, setOptions] = useState<OptionType<TId>[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const hasFetchedRef = useRef(false);
 
-    useEffect(() => {
-        if (typeof props.parseData !== "function") {
-            throw new Error("'parseData' is not defined. It should be a function, which returns an array of objects, where each object has at least properties 'value' and 'label'.");
-        }
-        if (string.isNullOrEmpty(props.url)) {
-            throw new Error("'url' is not defined. It should be a non-empty string.");
-        }
-    }, [props.url]);
+  const fetchOptions = async () => {
+    if (hasFetchedRef.current) {
+      return;
+    }
 
-    const readData = async () => {
-        if (!isDataLoaded) {
-            try {
-                setIsDataLoading(true);
-                props.onRequestStart?.();
+    try {
+      setIsLoading(true);
+      setError(null);
+      hasFetchedRef.current = true;
+      onRequestStart?.();
 
-                const data = await authorisedGetRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `${props.url}${getQueryString(props.filter, props.sorts)}`, result => {
-                    return result;
-                });
-                const parsedData = props.parseData(data);
+      const queryString = getQueryString(filter, sorts);
+      const fullUrl = `${process.env.NEXT_PUBLIC_WEB_API_BASE_URL}${url}${queryString}`;
 
-                setData(parsedData);
-                setIsDataLoaded(true);
-                setIsDataLoading(false);
-                props.onDataBound?.(parsedData);
-            }
-            finally {
-                props.onRequestEnd?.();
-            }
-        }
-    };
+      let data;
+      if (isAuthorizedRequest) {
+        data = await authorisedGetRequest(fullUrl, (result) => result);
+      }
+      else {
+        data = await getRequest(fullUrl, (result) => result);
+      }
+      const parsedData = parseData(data);
+      setOptions(parsedData);
+      onDataBound?.(parsedData);
+    } catch (err) {
+      setError('Error loading options');
+      hasFetchedRef.current = false; // Allow retry on error
+    } finally {
+      setIsLoading(false);
+      onRequestEnd?.();
+    }
+  };
 
-    const handleChange = useCallback((e: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
-        let items = e ? e as OptionType[] : [];
+  const handleChange = (newValue: readonly OptionType<TId>[] | null) => {
+    const items = newValue ? [...newValue] : [];
+    onChange?.(items);
+  };
 
-        // This check is needed, because there is a bug in "Select" component (found in version 3).
-        // When you have cleared the value and keep pressing "Backspace", the onChange event is raised.
-        const hasChange = selectedItems.length !== 0 || items.length !== 0;
+  const filterOption = ({ label }: FilterOptionOption<OptionType<TId>>, searchString: string) => {
+    return (!string.isNullOrEmpty(label) ? label : "").toLowerCase().includes(searchString.toLowerCase());
+  };
 
-        if (hasChange) {
-            setSelectedItems(items);
-            props.onChange?.(items);
-        }
-    }, [selectedItems]);
+  const selectedOptions = options.filter(option => value && value.includes(option.value));
 
-    const filterOption = ({ label }: OptionType, searchString: string) => {
-        return (!string.isNullOrEmpty(label) ? label : "").toLowerCase().includes(searchString.toLowerCase());
-    };
+  const handleMenuOpen = async () => {
+    // Fetch options when menu opens for the first time (if not already fetched)
+    if (!hasFetchedRef.current) {
+      await fetchOptions();
+    }
+  };
 
-    const initSelectedItems = useCallback(async () => {
-        if ((props.value && props.value.length > 0) || (!!props.autoBind && !isDataLoaded)) {
-            await readData();
-            let selectedItems = [];
-            if (props.value) {
-                for (let i = 0; i < props.value.length; i++) {
-                    const item = props.value[i];
-                    const foundItem = data.find(x => x.value === item);
-                    if (typeof foundItem !== "undefined" && foundItem !== null) {
-                        selectedItems.push(foundItem);
-                    }
-                }
-            }
-            setSelectedItems(selectedItems);
-        }
-        else {
-            setSelectedItems([]);
-        }
-    }, [props.value, props.autoBind, isDataLoaded, data, readData]);
+  useEffect(() => {
+    // Fetch immediately if autoBind is true or if there are preselected values
+    if (autoBind || (value && value.length > 0)) {
+      fetchOptions();
+    }
+  }, []); // Only run on mount
 
-    const reload = useCallback(async () => {
-        setIsDataLoaded(false);
-        await initSelectedItems();
-    }, [initSelectedItems]);
-
-    useImperativeHandle(props.ref, () => ({
-        reload
-    }));
-
-    // componentDidMount and componentDidUpdate equivalent - watch for value changes
-    useEffect(() => {
-        initSelectedItems();
-    }, [props.value, data]);
-
-    return (
-        <div className="react-select-dropdown">
-            <Select
-                isMulti
-                options={data}
-                value={selectedItems}
-                onChange={handleChange}
-                onMenuOpen={readData}
-                isLoading={isDataLoading}
-                placeholder={props.placeholder}
-                filterOption={filterOption}
-                isClearable
-                closeMenuOnSelect={false}
-                isDisabled={props.isDisabled}
-                classNamePrefix="react-select-dropdown"
-                required={props.required}
-            />
-            {props.children}
-        </div>
-    );
-};
-
-export default EntityMultiselect;
+  return (
+    <div className="react-select-dropdown">
+      <Select
+        isMulti
+        options={options}
+        value={selectedOptions}
+        onChange={handleChange}
+        onMenuOpen={handleMenuOpen}
+        isLoading={isLoading}
+        placeholder={placeholder}
+        noOptionsMessage={() => !!error ? (<span className='text-red-600 dark:text-red-400'>Error loading options</span>) : "No options"}
+        filterOption={filterOption}
+        isClearable={true}
+        closeMenuOnSelect={false}
+        isDisabled={isDisabled}
+        required={required}
+        classNamePrefix="react-select-dropdown"
+      />
+      {children}
+    </div>
+  );
+}

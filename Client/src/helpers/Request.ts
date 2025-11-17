@@ -1,6 +1,7 @@
 import string from "@/helpers/StringUtility";
 import { ApiError } from "@/lib/api";
 import ApiResponse from "@/types/common/ApiResponse";
+import Sort from "@/types/common/Sort";
 
 export async function getRequest(url: string, responseHandler: (value: any) => any, keepalive = false) {
     return await makeRequest("GET", url, null, responseHandler, false, keepalive);
@@ -83,7 +84,7 @@ async function makeRequest(method: string, url: string, body: object | null, res
         .then(responseHandler);
 }
 
-export function getQueryString(filter: Record<string, any> = {}, sorts: { field: string, dir: number | "asc" | "desc" }[] = [], pageNumber?: number, pageSize?: number) {
+export function getQueryString(filter: Record<string, any> = {}, sorts: Sort[] = [], pageNumber?: number, pageSize?: number) {
     // Prepare filter
     let filterString = "";
 

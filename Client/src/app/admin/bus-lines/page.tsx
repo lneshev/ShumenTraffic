@@ -15,7 +15,7 @@ function BusLinesPage() {
     id: 0,
     lineNumber: '',
     description: '',
-    transportationCompanyIds: [],
+    transportationCompanyIds: [1],
     transportationCompanyNames: [],
     isActive: true
   };

@@ -1,5 +1,6 @@
-export default interface BusLineModel {
-    id: number;
+import ModelBase from "./common/ModelBase";
+
+export default interface BusLineModel extends ModelBase<number> {
     lineNumber: string;
     description?: string;
     transportationCompanyIds: number[];

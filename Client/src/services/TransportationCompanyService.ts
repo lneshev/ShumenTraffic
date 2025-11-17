@@ -6,9 +6,10 @@ import {
 } from "@/helpers/Request";
 import TransportationCompanyModel from "@/types/TransportationCompanyModel";
 import PageResult from "@/types/common/PageResult";
+import Sort from "@/types/common/Sort";
 
 export default {
-    async read(filter: Record<string, any> = {}, sorts: { field: string; dir: number | "asc" | "desc" }[] = [], pageNumber?: number, pageSize?: number): Promise<PageResult<TransportationCompanyModel>> {
+    async read(filter: Record<string, any> = {}, sorts: Sort[] = [], pageNumber?: number, pageSize?: number): Promise<PageResult<TransportationCompanyModel>> {
         return await getRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/transportation-companies${getQueryString(filter, sorts, pageNumber, pageSize)}`, result => {
             return result;
         });

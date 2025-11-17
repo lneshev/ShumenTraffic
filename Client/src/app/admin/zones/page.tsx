@@ -3,18 +3,19 @@
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import api from '@/lib/api';
-
-interface Zone {
-  id: number;
-  name: string;
-  isActive: boolean;
-}
+import api, { ApiError } from '@/lib/api';
+import ZoneModel from '@/types/ZoneModel';
+import ZoneService from '@/services/ZoneService';
 
 function ZonesPage() {
-  const initialFormData = { name: '' };
+  const initialFormData = {
+    id: 0,
+    name: '',
+    description: undefined,
+    isActive: true
+  };
 
-  const [zones, setZones] = useState<Zone[]>([]);
+  const [zones, setZones] = useState<ZoneModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -27,10 +28,10 @@ function ZonesPage() {
   const fetchZones = async () => {
     try {
       setIsLoading(true);
-      const data = await api.get<Zone[]>('/zones');
-      setZones(data);
+      const data = await ZoneService.read(undefined, [{ field: 'Name', dir: 'asc' }]);
+      setZones(data.items);
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error loading zones');
+      setError(err instanceof ApiError ? err.message : 'Error loading zones');
     } finally {
       setIsLoading(false);
     }
@@ -40,11 +41,11 @@ function ZonesPage() {
     e.preventDefault();
     try {
       setError('');
-      await api.post('/zones', formData);
+      await ZoneService.create(formData);
       toggleShowForm(false);
       fetchZones();
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error creating zone');
+      setError(err instanceof ApiError ? err.message : 'Error creating zone');
     }
   };
 
@@ -52,10 +53,10 @@ function ZonesPage() {
     if (!confirm('Are you sure?')) return;
     try {
       setError('');
-      await api.delete(`/zones/${id}`);
+      await ZoneService.delete(id);
       fetchZones();
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error deleting zone');
+      setError(err instanceof ApiError ? err.message : 'Error deleting zone');
     }
   };
 
@@ -104,9 +105,10 @@ function ZonesPage() {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ name: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
                 required
+                maxLength={255}
               />
             </div>
             <button

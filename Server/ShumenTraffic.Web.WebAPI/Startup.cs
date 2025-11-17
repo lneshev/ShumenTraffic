@@ -21,6 +21,7 @@ using ShumenTraffic.Common.Core.Configuration;
 using ShumenTraffic.Common.Core.Constants.Security;
 using ShumenTraffic.Common.Core.Entities.BusLines;
 using ShumenTraffic.Common.Core.Entities.TransportationCompanies;
+using ShumenTraffic.Common.Core.Entities.Zones;
 using ShumenTraffic.Common.Core.Enums.Maintenance;
 using ShumenTraffic.Common.Core.Resources;
 using ShumenTraffic.Common.DataAccess.DbContexts;
@@ -31,9 +32,9 @@ using ShumenTraffic.Common.Services.Services.Maintenance;
 using ShumenTraffic.Common.Services.Services.Routes;
 using ShumenTraffic.Common.Services.Services.Schedules;
 using ShumenTraffic.Common.Services.Services.TransportationCompanies;
-using ShumenTraffic.Common.Services.Services.Zones;
 using ShumenTraffic.Web.Core.Models.BusLines;
 using ShumenTraffic.Web.Core.Models.TransportationCompanies;
+using ShumenTraffic.Web.Core.Models.Zones;
 using ShumenTraffic.Web.Services.Interfaces;
 using ShumenTraffic.Web.Services.Services.BusLines;
 using ShumenTraffic.Web.Services.Services.BusStops;
@@ -191,7 +192,7 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddTransient<IEntityDeleting<TransportationCompany>, TransportationCompanyEntityDeleting>();
             services.AddTransient<IEntityValidated<BusLine>, BusLineEntityValidated>();
             services.AddTransient<IEntityDeleting<BusLine>, BusLineEntityDeleting>();
-            services.AddScoped<IZoneService, ZoneService>();
+            services.AddTransient<IEntityValidated<Zone>, ZoneEntityValidated>();
             services.AddScoped<IBusStopService, BusStopService>();
             services.AddScoped<IRouteService, RouteService>();
             services.AddScoped<IScheduleService, ScheduleService>();
@@ -199,7 +200,7 @@ namespace ShumenTraffic.Web.WebAPI
             // Add Application Services (Web Layer)
             services.AddTransient<IModelsMappingService<TransportationCompanyModel, TransportationCompany>, TransportationCompanyModelsMappingService>();
             services.AddTransient<IModelsMappingService<BusLineModel, BusLine>, BusLineModelsMappingService>();
-            services.AddScoped<IZoneModelService, ZoneModelService>();
+            services.AddTransient<IModelsMappingService<ZoneModel, Zone>, ZoneModelMappingService>();
             services.AddScoped<IBusStopModelService, BusStopModelService>();
             services.AddScoped<IRouteModelService, RouteModelService>();
             services.AddScoped<IScheduleModelService, ScheduleModelService>();

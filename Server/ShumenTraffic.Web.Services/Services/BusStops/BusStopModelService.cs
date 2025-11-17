@@ -1,4 +1,6 @@
+using MoravianStar.Dao;
 using ShumenTraffic.Common.Core.Entities.BusStops;
+using ShumenTraffic.Common.Core.Entities.Zones;
 using ShumenTraffic.Common.Services.Interfaces;
 using ShumenTraffic.Web.Core.Models.BusStops;
 using ShumenTraffic.Web.Services.Interfaces;
@@ -14,12 +16,10 @@ namespace ShumenTraffic.Web.Services.Services.BusStops
     public class BusStopModelService : IBusStopModelService
     {
         private readonly IBusStopService _busStopService;
-        private readonly IZoneService _zoneService;
 
-        public BusStopModelService(IBusStopService busStopService, IZoneService zoneService)
+        public BusStopModelService(IBusStopService busStopService)
         {
             _busStopService = busStopService;
-            _zoneService = zoneService;
         }
 
         private BusStopModel MapToModel(BusStop entity)
@@ -56,7 +56,7 @@ namespace ShumenTraffic.Web.Services.Services.BusStops
         public async Task<(BusStopModel dto, string error)> CreateAsync(CreateBusStopDto dto)
         {
             // Verify zone exists
-            if (!await _zoneService.ExistsAsync(dto.ZoneId))
+            if (!await Persistence.ForEntity<Zone, int>().ExistsAsync(dto.ZoneId))
             {
                 return (null, $"Zone with ID {dto.ZoneId} does not exist");
             }
@@ -74,7 +74,7 @@ namespace ShumenTraffic.Web.Services.Services.BusStops
         public async Task<(BusStopModel dto, string error)> UpdateAsync(int id, UpdateBusStopDto dto)
         {
             // Verify zone exists if provided
-            if (dto.ZoneId.HasValue && !await _zoneService.ExistsAsync(dto.ZoneId.Value))
+            if (dto.ZoneId.HasValue && !await Persistence.ForEntity<Zone, int>().ExistsAsync(dto.ZoneId.Value))
             {
                 return (null, $"Zone with ID {dto.ZoneId} does not exist");
             }

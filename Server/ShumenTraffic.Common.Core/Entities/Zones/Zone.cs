@@ -1,23 +1,21 @@
+using ShumenTraffic.Common.Core.Constants.Zones;
 using ShumenTraffic.Common.Core.Entities.BusStops;
-using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShumenTraffic.Common.Core.Entities.Zones
 {
     /// <summary>
     /// Represents a geographical zone or neighborhood.
     /// </summary>
-    public class Zone
+    public class Zone : TrackableEntityBase<int>
     {
-        /// <summary>
-        /// Primary key identifier.
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// Zone name.
         /// </summary>
-        public required string Name { get; set; }
+        [Required]
+        [MaxLength(ZoneConstants.NameMaxLength)]
+        public string Name { get; set; }
 
         /// <summary>
         /// Zone description.
@@ -28,16 +26,6 @@ namespace ShumenTraffic.Common.Core.Entities.Zones
         /// Indicates if the zone is active.
         /// </summary>
         public bool IsActive { get; set; } = true;
-
-        /// <summary>
-        /// Timestamp when the record was created.
-        /// </summary>
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
-
-        /// <summary>
-        /// Timestamp when the record was last updated.
-        /// </summary>
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
         // Navigation properties
         /// <summary>

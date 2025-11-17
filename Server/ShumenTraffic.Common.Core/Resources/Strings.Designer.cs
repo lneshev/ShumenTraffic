@@ -104,5 +104,14 @@ namespace ShumenTraffic.Common.Core.Resources {
                 return ResourceManager.GetString("YouAreNotAllowedToDeleteTransportationCompany", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A zone with name &apos;{0}&apos; already exists..
+        /// </summary>
+        public static string ZoneWithNameAlreadyExists {
+            get {
+                return ResourceManager.GetString("ZoneWithNameAlreadyExists", resourceCulture);
+            }
+        }
     }
 }

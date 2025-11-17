@@ -132,4 +132,7 @@
   <data name="OneOrMoreDatabasesCouldNotBeUpdated" xml:space="preserve">
     <value>One or more databases could not be updated. Main status: {0}.</value>
   </data>
+  <data name="ZoneWithNameAlreadyExists" xml:space="preserve">
+    <value>A zone with name '{0}' already exists.</value>
+  </data>
 </root>

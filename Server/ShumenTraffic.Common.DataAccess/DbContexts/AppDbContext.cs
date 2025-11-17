@@ -84,12 +84,6 @@ namespace ShumenTraffic.Common.DataAccess.DbContexts
 
             // Zone configuration
             modelBuilder.Entity<Zone>()
-                .HasKey(x => x.Id);
-            modelBuilder.Entity<Zone>()
-                .Property(x => x.Name)
-                .IsRequired()
-                .HasMaxLength(255);
-            modelBuilder.Entity<Zone>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
             modelBuilder.Entity<Zone>()

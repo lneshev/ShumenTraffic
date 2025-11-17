@@ -6,7 +6,7 @@ using ShumenTraffic.Common.Core.Resources;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Common.Services.Services.TransportationCompanies
+namespace ShumenTraffic.Common.Services.Services.Zones
 {
     public class ZoneEntityValidated : IEntityValidated<Zone>
     {

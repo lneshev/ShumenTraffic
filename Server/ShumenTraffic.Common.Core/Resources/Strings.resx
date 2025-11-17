@@ -135,4 +135,10 @@
   <data name="ZoneWithNameAlreadyExists" xml:space="preserve">
     <value>A zone with name '{0}' already exists.</value>
   </data>
+  <data name="YouAreNotAllowedToDeleteZone" xml:space="preserve">
+    <value>You are not allowed to delete zone: '{0}', because it has bus stops.</value>
+  </data>
+  <data name="BusStopWithNameAlreadyExists" xml:space="preserve">
+    <value>A bus stop with name '{0}' already exists.</value>
+  </data>
 </root>

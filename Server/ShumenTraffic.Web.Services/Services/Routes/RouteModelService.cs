@@ -1,5 +1,6 @@
 using MoravianStar.Dao;
 using ShumenTraffic.Common.Core.Entities.BusLines;
+using ShumenTraffic.Common.Core.Entities.BusStops;
 using ShumenTraffic.Common.Core.Entities.Routes;
 using ShumenTraffic.Common.Services.Interfaces;
 using ShumenTraffic.Web.Core.Models.Routes;
@@ -16,12 +17,10 @@ namespace ShumenTraffic.Web.Services.Services.Routes
     public class RouteModelService : IRouteModelService
     {
         private readonly IRouteService _routeService;
-        private readonly IBusStopService _busStopService;
 
-        public RouteModelService(IRouteService routeService, IBusStopService busStopService)
+        public RouteModelService(IRouteService routeService)
         {
             _routeService = routeService;
-            _busStopService = busStopService;
         }
 
         private RouteModel MapToModel(Route entity)
@@ -80,7 +79,7 @@ namespace ShumenTraffic.Web.Services.Services.Routes
             var busStopIds = dto.Stops.Where(s => s.BusStopId.HasValue).Select(s => s.BusStopId.Value).ToList();
             foreach (var busStopId in busStopIds)
             {
-                if (!await _busStopService.ExistsAsync(busStopId))
+                if (!await Persistence.ForEntity<BusStop, int>().ExistsAsync(busStopId))
                 {
                     return (null, "One or more bus stops do not exist");
                 }

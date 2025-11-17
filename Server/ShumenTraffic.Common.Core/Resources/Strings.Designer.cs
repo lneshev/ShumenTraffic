@@ -70,6 +70,15 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A bus stop with name &apos;{0}&apos; already exists..
+        /// </summary>
+        public static string BusStopWithNameAlreadyExists {
+            get {
+                return ResourceManager.GetString("BusStopWithNameAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to One or more databases could not be updated. Main status: {0}..
         /// </summary>
         public static string OneOrMoreDatabasesCouldNotBeUpdated {
@@ -102,6 +111,15 @@ namespace ShumenTraffic.Common.Core.Resources {
         public static string YouAreNotAllowedToDeleteTransportationCompany {
             get {
                 return ResourceManager.GetString("YouAreNotAllowedToDeleteTransportationCompany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not allowed to delete zone: &apos;{0}&apos;, because it has bus stops..
+        /// </summary>
+        public static string YouAreNotAllowedToDeleteZone {
+            get {
+                return ResourceManager.GetString("YouAreNotAllowedToDeleteZone", resourceCulture);
             }
         }
         

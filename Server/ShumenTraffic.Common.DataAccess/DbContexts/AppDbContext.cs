@@ -93,12 +93,6 @@ namespace ShumenTraffic.Common.DataAccess.DbContexts
 
             // BusStop configuration
             modelBuilder.Entity<BusStop>()
-                .HasKey(x => x.Id);
-            modelBuilder.Entity<BusStop>()
-                .Property(x => x.Name)
-                .IsRequired()
-                .HasMaxLength(255);
-            modelBuilder.Entity<BusStop>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
             modelBuilder.Entity<BusStop>()

@@ -3,21 +3,24 @@
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import api from '@/lib/api';
-
-interface BusStop {
-  id: number;
-  name: string;
-  latitude: number;
-  longitude: number;
-  zoneId?: number;
-  isActive: boolean;
-}
+import { ApiError } from '@/lib/api';
+import BusStopModel from '@/types/BusStopModel';
+import BusStopService from '@/services/BusStopService';
+import ZoneModel from '@/types/ZoneModel';
+import EntityDropdown from '@/components/EntityDropdown';
+import PageResult from '@/types/common/PageResult';
 
 function BusStopsPage() {
-  const initialFormData = { name: '', latitude: 43.2732, longitude: 26.5622, zoneId: 1 };
+  const initialFormData: BusStopModel = {
+    id: 0,
+    name: '',
+    latitude: 43.2732,
+    longitude: 26.5622,
+    zoneId: undefined,
+    isActive: true
+  };
 
-  const [busStops, setBusStops] = useState<BusStop[]>([]);
+  const [busStops, setBusStops] = useState<BusStopModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -30,10 +33,10 @@ function BusStopsPage() {
   const fetchBusStops = async () => {
     try {
       setIsLoading(true);
-      const data = await api.get<BusStop[]>('/bus-stops');
-      setBusStops(data);
+      const data = await BusStopService.read(undefined, [{ field: 'Name', dir: 'asc' }]);
+      setBusStops(data.items);
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error loading bus stops');
+      setError(err instanceof ApiError ? err.message : 'Error loading bus stops');
     } finally {
       setIsLoading(false);
     }
@@ -43,11 +46,11 @@ function BusStopsPage() {
     e.preventDefault();
     try {
       setError('');
-      await api.post('/bus-stops', formData);
+      await BusStopService.create(formData);
       toggleShowForm(false);
       fetchBusStops();
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error creating bus stop');
+      setError(err instanceof ApiError ? err.message : 'Error creating bus stop');
     }
   };
 
@@ -55,10 +58,10 @@ function BusStopsPage() {
     if (!confirm('Are you sure?')) return;
     try {
       setError('');
-      await api.delete(`/bus-stops/${id}`);
+      await BusStopService.delete(id);
       fetchBusStops();
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error deleting bus stop');
+      setError(err instanceof ApiError ? err.message : 'Error deleting bus stop');
     }
   };
 
@@ -109,6 +112,30 @@ function BusStopsPage() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                required
+                maxLength={255}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Zone
+              </label>
+              <EntityDropdown
+                value={formData.zoneId}
+                onChange={(e) => setFormData({ ...formData, zoneId: e?.value })}
+                placeholder="Select..."
+                url="/api/zones"
+                sorts={[
+                  { field: "name", dir: "asc" }
+                ]}
+                parseData={(data: PageResult<ZoneModel>) =>
+                  data.items.map((item, i) => {
+                    return {
+                      value: item.id,
+                      label: item.name
+                    };
+                  })
+                }
                 required
               />
             </div>

@@ -1,9 +1,11 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { useState, useEffect } from 'react';
 import api from '@/lib/api';
+import BusStopService from '@/services/BusStopService';
+import BusStopModel from '@/types/BusStopModel';
 import PageResult from '@/types/common/PageResult';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 
 interface BusLine {
   id: number;
@@ -24,13 +26,6 @@ interface RouteStop {
   estimatedMinutesFromStart: number;
 }
 
-interface BusStop {
-  id: number;
-  name: string;
-  latitude: number;
-  longitude: number;
-}
-
 // Dynamically import Map to avoid SSR issues
 const Map = dynamic(() => import('@/components/Map').then(mod => ({ default: mod.Map })), {
   ssr: false,
@@ -43,7 +38,7 @@ export default function LinesPage() {
   const [selectedDirection, setSelectedDirection] = useState<number>(0);
   const [routes, setRoutes] = useState<Route[]>([]);
   const [routeStops, setRouteStops] = useState<RouteStop[]>([]);
-  const [busStops, setBusStops] = useState<BusStop[]>([]);
+  const [busStops, setBusStops] = useState<BusStopModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch bus lines on mount
@@ -103,8 +98,8 @@ export default function LinesPage() {
   useEffect(() => {
     const fetchBusStops = async () => {
       try {
-        const data = await api.get<BusStop[]>('/bus-stops');
-        setBusStops(data);
+        const data = await BusStopService.read();
+        setBusStops(data.items);
       } catch (error) {
         console.error('Failed to fetch bus stops:', error);
       }
@@ -217,4 +212,3 @@ export default function LinesPage() {
     </div>
   );
 }
-

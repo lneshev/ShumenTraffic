@@ -1,3 +1,5 @@
+using NetTopologySuite.Geometries;
+using ShumenTraffic.Common.Core.Attributes;
 using ShumenTraffic.Common.Core.Constants.BusStops;
 using ShumenTraffic.Common.Core.Entities.Routes;
 using ShumenTraffic.Common.Core.Entities.Zones;
@@ -24,14 +26,11 @@ namespace ShumenTraffic.Common.Core.Entities.BusStops
         public string Description { get; set; }
 
         /// <summary>
-        /// GPS latitude coordinate (WGS84).
+        /// Bus stop's GPS location
         /// </summary>
-        public decimal Latitude { get; set; }
-
-        /// <summary>
-        /// GPS longitude coordinate (WGS84).
-        /// </summary>
-        public decimal Longitude { get; set; }
+        [Required]
+        [PointRange]
+        public Point Location { get; set; }
 
         /// <summary>
         /// Indicates if the bus stop is active.

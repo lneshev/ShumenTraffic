@@ -9,12 +9,14 @@
   <ItemGroup>
     <PackageReference Include="ElmahCore" Version="2.1.2" />
     <PackageReference Include="ElmahCore.Sql" Version="2.1.2" />
+    <PackageReference Include="Giserver.NetTopologySuite.Swagger.Swashbuckle" Version="1.0.1-beta" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MoravianStar.WebAPI" Version="1.45.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+    <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="4.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>

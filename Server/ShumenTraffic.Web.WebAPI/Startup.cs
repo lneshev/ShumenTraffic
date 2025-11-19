@@ -1,5 +1,7 @@
 using ElmahCore.Mvc;
 using ElmahCore.Sql;
+using Giserver.NetTopologySuite.Serialize;
+using Giserver.NetTopologySuite.Swagger.Swashbuckle;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -15,8 +17,10 @@ using MoravianStar.Extensions;
 using MoravianStar.Settings;
 using MoravianStar.WebAPI.Attributes;
 using MoravianStar.WebAPI.Extensions;
+using MoravianStar.WebAPI.JsonConverters;
 using MoravianStar.WebAPI.Swagger;
 using MoravianStar.WebAPI.Transformers;
+using NetTopologySuite.IO;
 using ShumenTraffic.Common.Core.Configuration;
 using ShumenTraffic.Common.Core.Constants.Security;
 using ShumenTraffic.Common.Core.Entities.BusLines;
@@ -77,7 +81,15 @@ namespace ShumenTraffic.Web.WebAPI
                 options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
                 options.Filters.Add<ValidateModelStateAttribute>();
             })
-            .AddControllersAsServices();
+            .AddControllersAsServices()
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.Converters.Add(new CustomStringTypeJsonConverter());
+                foreach (var geoJsonConverter in GeoJsonSerializer.CreateDefault().Converters)
+                {
+                    options.SerializerSettings.Converters.Add(geoJsonConverter);
+                }
+            });
 
             services.Configure<ApiBehaviorOptions>(options =>
             {
@@ -114,6 +126,7 @@ namespace ShumenTraffic.Web.WebAPI
                     .UseSqlServer(connectionString, x =>
                     {
                         x.MigrationsAssembly(typeof(AppDbContext).Assembly);
+                        x.UseNetTopologySuite();
                     })
                     .UseAsyncSeeding(async (appDbContext, storeOperationPerformed, ct) =>
                     {
@@ -182,7 +195,9 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddSwaggerGen(options =>
             {
                 options.DocumentFilter<HideInDocsFilter>();
+                options.AddGeometry(GeoSerializeType.Geojson);
             });
+            services.AddSwaggerGenNewtonsoftSupport();
 
             // Add Moravian Star services
             services.AddScoped<IDbTransaction<AppDbContext>, DbTransaction<AppDbContext>>();

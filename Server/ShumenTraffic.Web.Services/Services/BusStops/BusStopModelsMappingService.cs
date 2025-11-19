@@ -21,8 +21,7 @@ namespace ShumenTraffic.Web.Services.Services.BusStops
                 Name = x.Name,
                 ZoneId = x.ZoneId,
                 ZoneName = x.Zone.Name,
-                Latitude = x.Latitude,
-                Longitude = x.Longitude,
+                Location = x.Location,
                 IsActive = x.IsActive
             };
         }
@@ -43,8 +42,7 @@ namespace ShumenTraffic.Web.Services.Services.BusStops
                 pair.Entity.Name = pair.Model.Name;
                 pair.Entity.ZoneId = pair.Model.ZoneId;
                 pair.Entity.Zone = await Persistence.ForEntity<Zone, int>().GetAsync(pair.Entity.ZoneId);
-                pair.Entity.Latitude = pair.Model.Latitude;
-                pair.Entity.Longitude = pair.Model.Longitude;
+                pair.Entity.Location = pair.Model.Location;
                 pair.Entity.IsActive = pair.Model.IsActive;
             }
 

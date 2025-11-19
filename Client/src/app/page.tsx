@@ -1,17 +1,11 @@
 'use client';
 
-import Link from "next/link";
-import dynamic from 'next/dynamic';
-import { useState, useEffect } from 'react';
 import { BusStopSearch } from '@/components/BusStopSearch';
-import api from '@/lib/api';
-
-interface BusStop {
-  id: number;
-  name: string;
-  latitude: number;
-  longitude: number;
-}
+import BusStopService from "@/services/BusStopService";
+import BusStopModel from "@/types/BusStopModel";
+import dynamic from 'next/dynamic';
+import Link from "next/link";
+import { useEffect, useState } from 'react';
 
 // Dynamically import Map to avoid SSR issues
 const Map = dynamic(() => import('@/components/Map').then(mod => ({ default: mod.Map })), {
@@ -20,15 +14,15 @@ const Map = dynamic(() => import('@/components/Map').then(mod => ({ default: mod
 });
 
 export default function Home() {
-  const [selectedStop, setSelectedStop] = useState<BusStop | null>(null);
-  const [busStops, setBusStops] = useState<BusStop[]>([]);
+  const [selectedStop, setSelectedStop] = useState<BusStopModel | null>(null);
+  const [busStops, setBusStops] = useState<BusStopModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchBusStops = async () => {
       try {
-        const data = await api.get<BusStop[]>('/bus-stops');
-        setBusStops(data);
+        const data = await BusStopService.read();
+        setBusStops(data.items);
       } catch (error) {
         console.error('Failed to fetch bus stops:', error);
       } finally {
@@ -68,7 +62,7 @@ export default function Home() {
                   {selectedStop.name}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Coordinates: {selectedStop.latitude.toFixed(6)}, {selectedStop.longitude.toFixed(6)}
+                  Coordinates: {selectedStop.location.latitude}, {selectedStop.location.longitude}
                 </p>
               </div>
             )}

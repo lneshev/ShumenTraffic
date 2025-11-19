@@ -1,24 +1,18 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import api from '@/lib/api';
-
-interface BusStop {
-  id: number;
-  name: string;
-  latitude: number;
-  longitude: number;
-}
+import BusStopService from '@/services/BusStopService';
+import BusStopModel from '@/types/BusStopModel';
+import { useEffect, useRef, useState } from 'react';
 
 interface BusStopSearchProps {
-  onSelectStop: (stop: BusStop) => void;
+  onSelectStop: (stop: BusStopModel) => void;
   selectedStopId?: number;
 }
 
 export function BusStopSearch({ onSelectStop, selectedStopId }: BusStopSearchProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [busStops, setBusStops] = useState<BusStop[]>([]);
-  const [filteredStops, setFilteredStops] = useState<BusStop[]>([]);
+  const [busStops, setBusStops] = useState<BusStopModel[]>([]);
+  const [filteredStops, setFilteredStops] = useState<BusStopModel[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -28,8 +22,8 @@ export function BusStopSearch({ onSelectStop, selectedStopId }: BusStopSearchPro
     const fetchBusStops = async () => {
       try {
         setIsLoading(true);
-        const data = await api.get<BusStop[]>('/bus-stops');
-        setBusStops(data);
+        const data = await BusStopService.read();
+        setBusStops(data.items);
       } catch (error) {
         console.error('Failed to fetch bus stops:', error);
       } finally {
@@ -66,7 +60,7 @@ export function BusStopSearch({ onSelectStop, selectedStopId }: BusStopSearchPro
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelectStop = (stop: BusStop) => {
+  const handleSelectStop = (stop: BusStopModel) => {
     onSelectStop(stop);
     setSearchTerm(stop.name);
     setIsOpen(false);
@@ -104,7 +98,7 @@ export function BusStopSearch({ onSelectStop, selectedStopId }: BusStopSearchPro
             >
               <p className="font-medium text-gray-900 dark:text-white">{stop.name}</p>
               <p className="text-xs text-gray-600 dark:text-gray-400">
-                {stop.latitude.toFixed(6)}, {stop.longitude.toFixed(6)}
+                {stop.location.latitude}, {stop.location.longitude}
               </p>
             </button>
           ))}
@@ -122,4 +116,3 @@ export function BusStopSearch({ onSelectStop, selectedStopId }: BusStopSearchPro
     </div>
   );
 }
-

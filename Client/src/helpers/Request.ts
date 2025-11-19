@@ -1,6 +1,7 @@
 import string from "@/helpers/StringUtility";
 import { ApiError } from "@/lib/api";
 import ApiResponse from "@/types/common/ApiResponse";
+import { enhanceGeoJSON } from "@/types/common/GeoJSON";
 import Sort from "@/types/common/Sort";
 
 export async function getRequest(url: string, responseHandler: (value: any) => any, keepalive = false) {
@@ -75,7 +76,7 @@ async function makeRequest(method: string, url: string, body: object | null, res
 
             return new Promise(function (resolve, reject) {
                 if (response.ok && result?.success) {
-                    resolve(result?.data);
+                    resolve(enhanceGeoJSON(result?.data));
                 } else {
                     reject(new ApiError(result?.message || `Request failed with status ${response.status}`, response.status, result?.errors));
                 }

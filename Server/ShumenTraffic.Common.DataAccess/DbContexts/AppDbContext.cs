@@ -9,6 +9,7 @@ using ShumenTraffic.Common.Core.Entities.Schedules;
 using ShumenTraffic.Common.Core.Entities.TransportationCompanies;
 using ShumenTraffic.Common.Core.Entities.Zones;
 using ShumenTraffic.Common.Core.Resources;
+using ShumenTraffic.Common.DataAccess.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -96,11 +97,9 @@ namespace ShumenTraffic.Common.DataAccess.DbContexts
                 .HasIndex(x => x.Name)
                 .IsUnique();
             modelBuilder.Entity<BusStop>()
-                .Property(x => x.Latitude)
-                .HasPrecision(10, 8);
-            modelBuilder.Entity<BusStop>()
-                .Property(x => x.Longitude)
-                .HasPrecision(11, 8);
+                .Property(x => x.Location)
+                .HasColumnType("geography")
+                .HasScale(6);
             modelBuilder.Entity<BusStop>()
                 .HasIndex(x => x.ZoneId);
             modelBuilder.Entity<BusStop>()

@@ -1,22 +1,23 @@
 'use client';
 
-import { ProtectedRoute } from '@/components/ProtectedRoute';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { ApiError } from '@/lib/api';
-import BusStopModel from '@/types/BusStopModel';
-import BusStopService from '@/services/BusStopService';
-import ZoneModel from '@/types/ZoneModel';
 import EntityDropdown from '@/components/EntityDropdown';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ApiError } from '@/lib/api';
+import BusStopService from '@/services/BusStopService';
+import BusStopModel from '@/types/BusStopModel';
+import { GeoPoint } from '@/types/common/GeoJSON';
 import PageResult from '@/types/common/PageResult';
+import ZoneModel from '@/types/ZoneModel';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 function BusStopsPage() {
   const initialFormData: BusStopModel = {
     id: 0,
     name: '',
-    latitude: 43.2732,
-    longitude: 26.5622,
-    zoneId: undefined,
+    zoneId: 0,
+    zoneName: '',
+    location: new GeoPoint(43.276666, 26.936666),
     isActive: true
   };
 
@@ -122,7 +123,7 @@ function BusStopsPage() {
               </label>
               <EntityDropdown
                 value={formData.zoneId}
-                onChange={(e) => setFormData({ ...formData, zoneId: e?.value })}
+                onChange={(e) => setFormData({ ...formData, zoneId: e ? e.value : 0 })}
                 placeholder="Select..."
                 url="/api/zones"
                 sorts={[
@@ -146,9 +147,13 @@ function BusStopsPage() {
                 </label>
                 <input
                   type="number"
-                  step="0.00000001"
-                  value={formData.latitude}
-                  onChange={(e) => setFormData({ ...formData, latitude: parseFloat(e.target.value) })}
+                  step="0.000001"
+                  value={formData.location.latitude}
+                  onChange={(e) => setFormData((prev) => {
+                    const updated = { ...prev };
+                    updated.location.latitude = parseFloat(e.target.value);
+                    return updated;
+                  })}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
                   required
                 />
@@ -159,9 +164,13 @@ function BusStopsPage() {
                 </label>
                 <input
                   type="number"
-                  step="0.00000001"
-                  value={formData.longitude}
-                  onChange={(e) => setFormData({ ...formData, longitude: parseFloat(e.target.value) })}
+                  step="0.000001"
+                  value={formData.location.longitude}
+                  onChange={(e) => setFormData((prev) => {
+                    const updated = { ...prev };
+                    updated.location.longitude = parseFloat(e.target.value);
+                    return updated;
+                  })}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
                   required
                 />
@@ -213,10 +222,10 @@ function BusStopsPage() {
                       {stop.name}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white text-xs">
-                      {stop.latitude.toFixed(6)}
+                      {stop.location.latitude}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white text-xs">
-                      {stop.longitude.toFixed(6)}
+                      {stop.location.longitude}
                     </td>
                     <td className="py-3 px-4">
                       <span

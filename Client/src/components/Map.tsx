@@ -1,19 +1,13 @@
 'use client';
 
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import BusStopModel from '@/types/BusStopModel';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useState } from 'react';
-
-interface BusStop {
-  id: number;
-  name: string;
-  latitude: number;
-  longitude: number;
-}
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 
 interface MapProps {
-  busStops: BusStop[];
+  busStops: BusStopModel[];
   selectedStopId?: number;
 }
 
@@ -70,14 +64,14 @@ export function Map({ busStops, selectedStopId }: MapProps) {
       {busStops.map((stop) => (
         <Marker
           key={stop.id}
-          position={[stop.latitude, stop.longitude]}
+          position={[stop.location.latitude, stop.location.longitude]}
           icon={selectedStopId === stop.id ? selectedIcon : defaultIcon}
         >
           <Popup>
             <div className="text-sm">
               <p className="font-semibold text-gray-900">{stop.name}</p>
               <p className="text-gray-600 text-xs">
-                {stop.latitude.toFixed(6)}, {stop.longitude.toFixed(6)}
+                {stop.location.latitude}, {stop.location.longitude}
               </p>
             </div>
           </Popup>
@@ -86,4 +80,3 @@ export function Map({ busStops, selectedStopId }: MapProps) {
     </MapContainer>
   );
 }
-

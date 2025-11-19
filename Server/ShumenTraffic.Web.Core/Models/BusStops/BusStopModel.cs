@@ -1,4 +1,6 @@
 using MoravianStar.Dao;
+using NetTopologySuite.Geometries;
+using ShumenTraffic.Common.Core.Attributes;
 using ShumenTraffic.Common.Core.Constants.BusStops;
 using System.ComponentModel.DataAnnotations;
 
@@ -28,18 +30,11 @@ namespace ShumenTraffic.Web.Core.Models.BusStops
         public string ZoneName { get; set; }
 
         /// <summary>
-        /// Latitude coordinate (WGS84/EPSG:4326).
+        /// Bus stop's GPS location
         /// </summary>
         [Required]
-        [Range(-90, 90, ErrorMessage = "Latitude must be between -90 and 90")]
-        public decimal Latitude { get; set; }
-
-        /// <summary>
-        /// Longitude coordinate (WGS84/EPSG:4326).
-        /// </summary>
-        [Required]
-        [Range(-180, 180, ErrorMessage = "Longitude must be between -180 and 180")]
-        public decimal Longitude { get; set; }
+        [PointRange]
+        public Point Location { get; set; }
 
         /// <summary>
         /// Whether the bus stop is active.

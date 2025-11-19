@@ -1,9 +1,10 @@
+import { GeoPoint } from "./common/GeoJSON";
 import ModelBase from "./common/ModelBase";
 
-export default interface BusStop extends ModelBase<number> {
+export default interface BusStopModel extends ModelBase<number> {
     name: string;
-    latitude: number;
-    longitude: number;
-    zoneId?: number;
+    zoneId: number;
+    zoneName: string;
+    location: GeoPoint;
     isActive: boolean;
 }

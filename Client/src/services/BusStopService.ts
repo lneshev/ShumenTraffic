@@ -1,6 +1,7 @@
 import {
     authorisedDeleteRequest,
     authorisedPostRequest,
+    authorisedPutRequest,
     getQueryString,
     getRequest
 } from "@/helpers/Request";
@@ -16,6 +17,11 @@ export default {
     },
     async create(model: BusStopModel): Promise<BusStopModel> {
         return await authorisedPostRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/bus-stops`, model, result => {
+            return result;
+        });
+    },
+    async update(id: number, model: BusStopModel): Promise<BusStopModel> {
+        return await authorisedPutRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/bus-stops/${id}`, model, result => {
             return result;
         });
     },

@@ -1,15 +1,24 @@
 'use client';
 
 import EntityDropdown from '@/components/EntityDropdown';
+import MapLoader from '@/components/MapLoader';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import MapMode from '@/enums/MapMode';
 import { ApiError } from '@/lib/api';
 import BusStopService from '@/services/BusStopService';
 import BusStopModel from '@/types/BusStopModel';
 import { GeoPoint } from '@/types/common/GeoJSON';
 import PageResult from '@/types/common/PageResult';
 import ZoneModel from '@/types/ZoneModel';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+
+// Dynamically import Map to avoid SSR issues
+const Map = dynamic(() => import('@/components/Map').then(mod => ({ default: mod.Map })), {
+  ssr: false,
+  loading: () => <MapLoader />
+});
 
 function BusStopsPage() {
   const initialFormData: BusStopModel = {
@@ -72,6 +81,60 @@ function BusStopsPage() {
     setShowForm(show);
   }
 
+  const handleBusStopDragEnd = async (stop: BusStopModel, newLat: number, newLng: number) => {
+    try {
+      setError('');
+      let updatedStop = {
+        ...stop,
+        location: new GeoPoint(newLat, newLng)
+      };
+      updatedStop = await BusStopService.update(stop.id, updatedStop);
+      setBusStops(prev => prev.map(x => x.id === stop.id ? updatedStop : x));
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Error updating bus stop location');
+      fetchBusStops(); // Revert to original position
+    }
+  }
+
+  const handleBusStopNameChange = async (stop: BusStopModel, newName: string) => {
+    const updatedStop = {
+      ...stop,
+      name: newName
+    };
+    setBusStops(prev => prev.map(x => x.id === stop.id ? updatedStop : x));
+  }
+
+  const handleBusStopSave = async (stop: BusStopModel, e: Event) => {
+    try {
+      setError('');
+      const updatedStop = await BusStopService.update(stop.id, stop);
+      setBusStops(prev => prev.map(x => x.id === stop.id ? updatedStop : x));
+    } catch (err) {
+      e.preventDefault();
+      setError(err instanceof ApiError ? err.message : 'Error updating bus stop');
+    }
+  }
+
+  const handleBusStopDelete = async (stop: BusStopModel, e: Event) => {
+    if (!confirm('Are you sure?')) {
+      e.preventDefault();
+      return;
+    }
+    try {
+      setError('');
+      await BusStopService.delete(stop.id);
+      setBusStops(prev => prev.filter(x => x.id !== stop.id));
+    } catch (err) {
+      e.preventDefault();
+      setError(err instanceof ApiError ? err.message : 'Error deleting bus stop');
+    }
+  }
+
+  const handleBusStopCancel = async (stop: BusStopModel) => {
+    setError('');
+    await fetchBusStops(); // Revert to original position
+  }
+
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -92,6 +155,20 @@ function BusStopsPage() {
             <p className="text-red-800 dark:text-red-200">{error}</p>
           </div>
         )}
+
+        <div className="grid grid-cols-1 gap-6 h-[600px]">
+          <div className="lg:col-span-2 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+            <Map
+              busStops={busStops}
+              mode={MapMode.Edit}
+              onBusStopDragEnd={handleBusStopDragEnd}
+              onBusStopNameChange={handleBusStopNameChange}
+              onBusStopSave={handleBusStopSave}
+              onBusStopDelete={handleBusStopDelete}
+              onBusStopCancel={handleBusStopCancel}
+            />
+          </div>
+        </div>
 
         {/* Add Bus Stop Button */}
         <button
@@ -263,4 +340,3 @@ export default function BusStopsPageWrapper() {
     </ProtectedRoute>
   );
 }
-

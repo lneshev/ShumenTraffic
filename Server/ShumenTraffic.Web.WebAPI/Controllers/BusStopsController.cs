@@ -27,6 +27,11 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
             return base.Post(model);
         }
 
+        public override Task<ActionResult<ApiResponse<BusStopModel>>> Put([FromRoute] int id, [FromBody] BusStopModel model)
+        {
+            return base.Put(id, model);
+        }
+
         public override Task<ActionResult<ApiResponse<BusStopModel>>> Delete([FromRoute] int id)
         {
             return base.Delete(id);

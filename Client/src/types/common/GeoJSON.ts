@@ -21,7 +21,20 @@ function enhancePoint(p: Point): GeoPoint {
 
 export function enhanceGeoJSON<T extends object>(obj: T): T {
     if (Array.isArray(obj)) {
-        return obj.map(enhanceGeoJSON) as any;
+        return obj.map((item: any) => {
+            if (Array.isArray(item)) {
+                // recurse into nested array
+                return enhanceGeoJSON(item);
+            }
+
+            if (item && typeof item === "object") {
+                // recurse into objects
+                return enhanceGeoJSON(item);
+            }
+
+            // primitive → copy as-is
+            return item;
+        }) as any;
     }
 
     const copy: any = { ...obj };

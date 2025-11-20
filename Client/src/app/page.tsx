@@ -1,6 +1,7 @@
 'use client';
 
 import { BusStopSearch } from '@/components/BusStopSearch';
+import MapLoader from '@/components/MapLoader';
 import BusStopService from "@/services/BusStopService";
 import BusStopModel from "@/types/BusStopModel";
 import dynamic from 'next/dynamic';
@@ -10,7 +11,7 @@ import { useEffect, useState } from 'react';
 // Dynamically import Map to avoid SSR issues
 const Map = dynamic(() => import('@/components/Map').then(mod => ({ default: mod.Map })), {
   ssr: false,
-  loading: () => <div className="w-full h-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center">Loading map...</div>,
+  loading: () => <MapLoader />
 });
 
 export default function Home() {
@@ -19,19 +20,19 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBusStops = async () => {
-      try {
-        const data = await BusStopService.read();
-        setBusStops(data.items);
-      } catch (error) {
-        console.error('Failed to fetch bus stops:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchBusStops();
   }, []);
+
+  const fetchBusStops = async () => {
+    try {
+      const data = await BusStopService.read();
+      setBusStops(data.items);
+    } catch (error) {
+      console.error('Failed to fetch bus stops:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="bg-white dark:bg-slate-950 min-h-screen flex flex-col">
@@ -95,16 +96,7 @@ export default function Home() {
 
           {/* Right Pane - Map */}
           <div className="lg:col-span-2 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
-            {isLoading ? (
-              <div className="w-full h-full flex items-center justify-center">
-                <div className="text-center">
-                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-                  <p className="text-gray-600 dark:text-gray-400">Loading map...</p>
-                </div>
-              </div>
-            ) : (
-              <Map busStops={busStops} selectedStopId={selectedStop?.id} />
-            )}
+            <Map busStops={busStops} selectedStopId={selectedStop?.id} />
           </div>
         </div>
       </section>

@@ -1,5 +1,6 @@
 'use client';
 
+import MapLoader from '@/components/MapLoader';
 import api from '@/lib/api';
 import BusStopService from '@/services/BusStopService';
 import BusStopModel from '@/types/BusStopModel';
@@ -29,7 +30,7 @@ interface RouteStop {
 // Dynamically import Map to avoid SSR issues
 const Map = dynamic(() => import('@/components/Map').then(mod => ({ default: mod.Map })), {
   ssr: false,
-  loading: () => <div className="w-full h-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center">Loading map...</div>,
+  loading: () => <MapLoader />
 });
 
 export default function LinesPage() {

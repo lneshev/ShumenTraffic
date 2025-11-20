@@ -5,6 +5,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useState } from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import MapLoader from './MapLoader';
 
 interface MapProps {
   busStops: BusStopModel[];
@@ -41,9 +42,7 @@ export function Map({ busStops, selectedStopId }: MapProps) {
 
   if (!mounted) {
     return (
-      <div className="w-full h-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center">
-        <p className="text-gray-600 dark:text-gray-400">Loading map...</p>
-      </div>
+      <MapLoader />
     );
   }
 

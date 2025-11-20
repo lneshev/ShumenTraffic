@@ -19,18 +19,6 @@ export function BusStopSearch({ onSelectStop, selectedStopId }: BusStopSearchPro
 
   // Fetch all bus stops on mount
   useEffect(() => {
-    const fetchBusStops = async () => {
-      try {
-        setIsLoading(true);
-        const data = await BusStopService.read();
-        setBusStops(data.items);
-      } catch (error) {
-        console.error('Failed to fetch bus stops:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchBusStops();
   }, []);
 
@@ -59,6 +47,18 @@ export function BusStopSearch({ onSelectStop, selectedStopId }: BusStopSearchPro
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const fetchBusStops = async () => {
+    try {
+      setIsLoading(true);
+      const data = await BusStopService.read();
+      setBusStops(data.items);
+    } catch (error) {
+      console.error('Failed to fetch bus stops:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSelectStop = (stop: BusStopModel) => {
     onSelectStop(stop);

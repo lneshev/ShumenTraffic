@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback, useImperativeHandle, forwardRef, useRef } from "react";
-import Select, { FilterOptionOption } from "react-select";
-import CreatableSelect from "react-select/creatable";
 import { authorisedGetRequest, getQueryString, getRequest } from "@/helpers/Request";
 import string from "@/helpers/StringUtility";
 import Id from "@/types/common/Id";
 import Sort from "@/types/common/Sort";
+import React, { useEffect, useRef, useState } from "react";
+import Select, { FilterOptionOption } from "react-select";
+import CreatableSelect from "react-select/creatable";
 
 interface EntityDropdownProps<TId extends Id> {
     parseData: (data: any) => OptionType<TId>[];
@@ -121,7 +121,10 @@ export default function EntityDropdown<TId extends Id>({
     }, []); // Only run on mount
 
     return (
-        <div className="react-select-dropdown">
+        <div
+            className="react-select-dropdown"
+            onClick={(e) => e.stopPropagation()} // Fixes the leaflet's marker popup closing when selecting an option from this dropdown
+        >
             {creatable ? (
                 <CreatableSelect
                     options={options}

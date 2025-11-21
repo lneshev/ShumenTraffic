@@ -97,18 +97,42 @@ function BusStopsPage() {
   }
 
   const handleBusStopNameChange = async (stop: BusStopModel, newName: string) => {
-    const updatedStop = {
-      ...stop,
-      name: newName
-    };
-    setBusStops(prev => prev.map(x => x.id === stop.id ? updatedStop : x));
+    if (stop.id === 0) {
+      setFormData({ ...stop, name: newName });
+    }
+    else {
+      const updatedStop = {
+        ...stop,
+        name: newName
+      };
+      setBusStops(prev => prev.map(x => x.id === stop.id ? updatedStop : x));
+    }
+  }
+
+  const handleBusStopZoneIdChange = async (stop: BusStopModel, newZoneId: number) => {
+    if (stop.id === 0) {
+      setFormData({ ...stop, zoneId: newZoneId });
+    }
+    else {
+      const updatedStop = {
+        ...stop,
+        zoneId: newZoneId
+      };
+      setBusStops(prev => prev.map(x => x.id === stop.id ? updatedStop : x));
+    }
   }
 
   const handleBusStopSave = async (stop: BusStopModel, e: Event) => {
     try {
       setError('');
-      const updatedStop = await BusStopService.update(stop.id, stop);
-      setBusStops(prev => prev.map(x => x.id === stop.id ? updatedStop : x));
+      if (stop.id === 0) {
+        const createdStop = await BusStopService.create(stop);
+        setBusStops(prev => [...prev, createdStop]);
+      }
+      else {
+        const updatedStop = await BusStopService.update(stop.id, stop);
+        setBusStops(prev => prev.map(x => x.id === stop.id ? updatedStop : x));
+      }
     } catch (err) {
       e.preventDefault();
       setError(err instanceof ApiError ? err.message : 'Error updating bus stop');
@@ -133,6 +157,14 @@ function BusStopsPage() {
   const handleBusStopCancel = async (stop: BusStopModel) => {
     setError('');
     await fetchBusStops(); // Revert to original position
+    setFormData({ ...initialFormData }); // Revert to original if new
+  }
+
+  const handleMapRightClick = (lat: number, lng: number) => {
+    setFormData({
+      ...initialFormData,
+      location: new GeoPoint(lat, lng)
+    });
   }
 
   return (
@@ -161,11 +193,14 @@ function BusStopsPage() {
             <Map
               busStops={busStops}
               mode={MapMode.Edit}
+              newBusStop={formData}
               onBusStopDragEnd={handleBusStopDragEnd}
               onBusStopNameChange={handleBusStopNameChange}
+              onBusStopZoneIdChange={handleBusStopZoneIdChange}
               onBusStopSave={handleBusStopSave}
               onBusStopDelete={handleBusStopDelete}
               onBusStopCancel={handleBusStopCancel}
+              onMapRightClick={handleMapRightClick}
             />
           </div>
         </div>

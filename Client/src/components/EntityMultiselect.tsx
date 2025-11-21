@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-import Select, { FilterOptionOption } from 'react-select';
-import { getRequest, authorisedGetRequest, getQueryString } from '@/helpers/Request';
+import { authorisedGetRequest, getQueryString, getRequest } from '@/helpers/Request';
 import string from '@/helpers/StringUtility';
 import Id from '@/types/common/Id';
 import Sort from '@/types/common/Sort';
+import { useEffect, useRef, useState } from 'react';
+import Select, { FilterOptionOption } from 'react-select';
 
 interface EntityMultiselectProps<TId extends Id> {
   parseData: (data: any) => OptionType<TId>[];
@@ -113,7 +113,10 @@ export default function EntityMultiselect<TId extends Id>({
   }, []); // Only run on mount
 
   return (
-    <div className="react-select-dropdown">
+    <div
+      className="react-select-dropdown"
+      onClick={(e) => e.stopPropagation()} // Fixes the leaflet's marker popup closing when selecting an option from this dropdown
+    >
       <Select
         isMulti
         options={options}

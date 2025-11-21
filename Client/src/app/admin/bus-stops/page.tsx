@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 // Dynamically import Map to avoid SSR issues
-const Map = dynamic(() => import('@/components/maps/Map').then(mod => ({ default: mod.Map })), {
+const Map = dynamic(() => import('@/components/maps/Map').then(mod => ({ default: mod.default })), {
   ssr: false,
   loading: () => <MapLoader />
 });

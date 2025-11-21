@@ -1,8 +1,10 @@
 ﻿using LinqKit;
 using MoravianStar.Dao;
 using ShumenTraffic.Common.Core.Entities.BusStops;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace ShumenTraffic.Common.Core.Filters.BusStops
 {
@@ -37,6 +39,21 @@ namespace ShumenTraffic.Common.Core.Filters.BusStops
             rootCriteria = mainCriteria;
 
             return query.Where(rootCriteria);
+        }
+
+        public override List<(Expression<Func<BusStop, object>> expression, SortDirection direction)> Sort<TDbContext>(IEnumerable<Sort> sorts, IEntityRepository<BusStop, TDbContext> entityRepository)
+        {
+            var result = base.Sort(sorts, entityRepository);
+
+            foreach (var sort in sorts)
+            {
+                if (sort.Field.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add((x => x.Name, sort.Dir));
+                }
+            }
+
+            return result;
         }
     }
 }

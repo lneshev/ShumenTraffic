@@ -12,7 +12,7 @@ import PageResult from '@/types/common/PageResult';
 import ZoneModel from '@/types/ZoneModel';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Dynamically import Map to avoid SSR issues
 const Map = dynamic(() => import('@/components/maps/Map').then(mod => ({ default: mod.Map })), {
@@ -26,11 +26,12 @@ function BusStopsPage() {
     name: '',
     zoneId: 0,
     zoneName: '',
-    location: new GeoPoint(43.276666, 26.936666),
+    location: new GeoPoint(43.270097, 26.924706),
     isActive: true
   };
 
   const [busStops, setBusStops] = useState<BusStopModel[]>([]);
+  const cachedBusStops = useRef<BusStopModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -44,7 +45,8 @@ function BusStopsPage() {
     try {
       setIsLoading(true);
       const data = await BusStopService.read(undefined, [{ field: 'Name', dir: 'asc' }]);
-      setBusStops(data.items);
+      cachedBusStops.current = data.items;
+      setBusStops(cachedBusStops.current);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Error loading bus stops');
     } finally {
@@ -56,9 +58,10 @@ function BusStopsPage() {
     e.preventDefault();
     try {
       setError('');
-      await BusStopService.create(formData);
+      const createdStop = await BusStopService.create(formData);
+      cachedBusStops.current = [createdStop, ...busStops];
+      setBusStops(cachedBusStops.current);
       toggleShowForm(false);
-      fetchBusStops();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Error creating bus stop');
     }
@@ -69,7 +72,8 @@ function BusStopsPage() {
     try {
       setError('');
       await BusStopService.delete(id);
-      fetchBusStops();
+      cachedBusStops.current = busStops.filter(x => x.id !== id);
+      setBusStops(cachedBusStops.current);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Error deleting bus stop');
     }
@@ -89,10 +93,11 @@ function BusStopsPage() {
         location: new GeoPoint(newLat, newLng)
       };
       updatedStop = await BusStopService.update(stop.id, updatedStop);
-      setBusStops(prev => prev.map(x => x.id === stop.id ? updatedStop : x));
+      cachedBusStops.current = busStops.map(x => x.id === stop.id ? updatedStop : x);
+      setBusStops(cachedBusStops.current);
     } catch (err) {
+      setBusStops(cachedBusStops.current);
       setError(err instanceof ApiError ? err.message : 'Error updating bus stop location');
-      fetchBusStops(); // Revert to original position
     }
   }
 
@@ -127,11 +132,13 @@ function BusStopsPage() {
       setError('');
       if (stop.id === 0) {
         const createdStop = await BusStopService.create(stop);
-        setBusStops(prev => [...prev, createdStop]);
+        cachedBusStops.current = [createdStop, ...busStops];
+        setBusStops(cachedBusStops.current);
       }
       else {
         const updatedStop = await BusStopService.update(stop.id, stop);
-        setBusStops(prev => prev.map(x => x.id === stop.id ? updatedStop : x));
+        cachedBusStops.current = busStops.map(x => x.id === stop.id ? updatedStop : x);
+        setBusStops(cachedBusStops.current);
       }
     } catch (err) {
       e.preventDefault();
@@ -147,7 +154,8 @@ function BusStopsPage() {
     try {
       setError('');
       await BusStopService.delete(stop.id);
-      setBusStops(prev => prev.filter(x => x.id !== stop.id));
+      cachedBusStops.current = busStops.filter(x => x.id !== stop.id);
+      setBusStops(cachedBusStops.current);
     } catch (err) {
       e.preventDefault();
       setError(err instanceof ApiError ? err.message : 'Error deleting bus stop');
@@ -156,8 +164,8 @@ function BusStopsPage() {
 
   const handleBusStopCancel = async (stop: BusStopModel) => {
     setError('');
-    await fetchBusStops(); // Revert to original position
-    setFormData({ ...initialFormData }); // Revert to original if new
+    setBusStops(cachedBusStops.current);
+    setFormData({ ...initialFormData });
   }
 
   const handleMapRightClick = (lat: number, lng: number) => {
@@ -188,29 +196,19 @@ function BusStopsPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-6 h-[600px]">
-          <div className="lg:col-span-2 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
-            <Map
-              busStops={busStops}
-              mode={MapMode.Edit}
-              newBusStop={formData}
-              onBusStopDragEnd={handleBusStopDragEnd}
-              onBusStopNameChange={handleBusStopNameChange}
-              onBusStopZoneIdChange={handleBusStopZoneIdChange}
-              onBusStopSave={handleBusStopSave}
-              onBusStopDelete={handleBusStopDelete}
-              onBusStopCancel={handleBusStopCancel}
-              onMapRightClick={handleMapRightClick}
-            />
-          </div>
-        </div>
-
         {/* Add Bus Stop Button */}
         <button
           onClick={() => toggleShowForm(!showForm)}
-          className="mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+          className="mb-6 mr-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
         >
           {showForm ? 'Cancel' : 'Add Bus Stop'}
+        </button>
+
+        <button
+          onClick={() => fetchBusStops()}
+          className="mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors float-right"
+        >
+          Refresh
         </button>
 
         {/* Add Bus Stop Form */}
@@ -296,6 +294,23 @@ function BusStopsPage() {
             </button>
           </form>
         )}
+
+        <div className="grid grid-cols-1 gap-6 h-[600px] mb-6">
+          <div className="lg:col-span-2 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+            <Map
+              busStops={busStops}
+              mode={MapMode.Edit}
+              newBusStop={formData}
+              onBusStopDragEnd={handleBusStopDragEnd}
+              onBusStopNameChange={handleBusStopNameChange}
+              onBusStopZoneIdChange={handleBusStopZoneIdChange}
+              onBusStopSave={handleBusStopSave}
+              onBusStopDelete={handleBusStopDelete}
+              onBusStopCancel={handleBusStopCancel}
+              onMapRightClick={handleMapRightClick}
+            />
+          </div>
+        </div>
 
         {/* Bus Stops List */}
         {isLoading ? (

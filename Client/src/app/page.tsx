@@ -1,7 +1,7 @@
 'use client';
 
 import { BusStopSearch } from '@/components/BusStopSearch';
-import MapLoader from '@/components/MapLoader';
+import MapLoader from '@/components/maps/MapLoader';
 import BusStopService from "@/services/BusStopService";
 import BusStopModel from "@/types/BusStopModel";
 import dynamic from 'next/dynamic';
@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useEffect, useState } from 'react';
 
 // Dynamically import Map to avoid SSR issues
-const Map = dynamic(() => import('@/components/Map').then(mod => ({ default: mod.Map })), {
+const Map = dynamic(() => import('@/components/maps/Map').then(mod => ({ default: mod.Map })), {
   ssr: false,
   loading: () => <MapLoader />
 });

@@ -4,8 +4,8 @@ import L, { LeafletEventHandlerFnMap, PopupEvent } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Tooltip, useMap, useMapEvents } from 'react-leaflet';
+import { BusStopMarker } from './BusStopMarker';
 import MapLoader from './MapLoader';
-import { BusStopMarker } from './maps/BusStopMarker';
 
 // Extend Leaflet Marker to support custom data property
 declare module 'leaflet' {

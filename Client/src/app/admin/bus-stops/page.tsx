@@ -1,7 +1,7 @@
 'use client';
 
 import EntityDropdown from '@/components/EntityDropdown';
-import MapLoader from '@/components/MapLoader';
+import MapLoader from '@/components/maps/MapLoader';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import MapMode from '@/enums/MapMode';
 import { ApiError } from '@/lib/api';
@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 // Dynamically import Map to avoid SSR issues
-const Map = dynamic(() => import('@/components/Map').then(mod => ({ default: mod.Map })), {
+const Map = dynamic(() => import('@/components/maps/Map').then(mod => ({ default: mod.Map })), {
   ssr: false,
   loading: () => <MapLoader />
 });

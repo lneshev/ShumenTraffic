@@ -1,6 +1,6 @@
 'use client';
 
-import MapLoader from '@/components/MapLoader';
+import MapLoader from '@/components/maps/MapLoader';
 import api from '@/lib/api';
 import BusStopService from '@/services/BusStopService';
 import BusStopModel from '@/types/BusStopModel';
@@ -28,7 +28,7 @@ interface RouteStop {
 }
 
 // Dynamically import Map to avoid SSR issues
-const Map = dynamic(() => import('@/components/Map').then(mod => ({ default: mod.Map })), {
+const Map = dynamic(() => import('@/components/maps/Map').then(mod => ({ default: mod.Map })), {
   ssr: false,
   loading: () => <MapLoader />
 });

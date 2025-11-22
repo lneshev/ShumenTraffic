@@ -29,35 +29,26 @@ interface MapProps {
   onMapRightClick?: (lat: number, lng: number) => void;
 }
 
-// Fix for default marker icons in Next.js
 const defaultIcon = L.icon({
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
+  iconUrl: '/icons/bus-stop-32x32.png',
+  iconSize: [24, 24],
+  iconAnchor: [12, 12],
+  popupAnchor: [0, -12]
 });
 
 const selectedIcon = L.icon({
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-  iconSize: [32, 51],
-  iconAnchor: [16, 51],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
+  iconUrl: '/icons/bus-stop-32x32.png',
+  iconSize: [32, 32],
+  iconAnchor: [16, 16],
+  popupAnchor: [0, -16]
 });
 
 const newStopIcon = L.icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
+  iconUrl: '/icons/add-32x32.png',
+  iconSize: [24, 24],
+  iconAnchor: [12, 12],
+  popupAnchor: [0, -12]
 });
-
-L.Marker.prototype.options.icon = defaultIcon;
 
 // Helper component to expose map instance
 function MapInstanceProvider({
@@ -225,12 +216,12 @@ function Map({
               />
             )}
           </MapContainer>
-          {showContextMenu && newMarkerData && (
+          {showContextMenu && newMarkerData && mapRef.current && (
             <div
               style={{
                 position: 'absolute',
-                top: mapRef.current?.latLngToContainerPoint([newMarkerData.lat, newMarkerData.lng]).y,
-                left: mapRef.current?.latLngToContainerPoint([newMarkerData.lat, newMarkerData.lng]).x,
+                top: mapRef.current.latLngToContainerPoint([newMarkerData.lat, newMarkerData.lng]).y + 10,
+                left: mapRef.current.latLngToContainerPoint([newMarkerData.lat, newMarkerData.lng]).x + 10,
                 zIndex: 1000,
                 backgroundColor: 'white',
                 border: '1px solid #ccc',

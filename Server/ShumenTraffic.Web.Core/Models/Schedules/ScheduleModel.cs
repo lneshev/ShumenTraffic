@@ -1,3 +1,4 @@
+using ShumenTraffic.Common.Core.Enums.Routes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -27,7 +28,7 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         /// <summary>
         /// Route direction.
         /// </summary>
-        public int Direction { get; set; }
+        public RouteDirection Direction { get; set; }
 
         /// <summary>
         /// Departure time from the start of the route.
@@ -156,4 +157,3 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         public TimeSpan? DepartureTime { get; set; }
     }
 }
-

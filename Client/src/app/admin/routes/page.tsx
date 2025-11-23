@@ -1,21 +1,29 @@
 'use client';
 
+import EntityDropdown from '@/components/EntityDropdown';
+import EnumDropdown from '@/components/EnumDropdown';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
 import api from '@/lib/api';
-
-interface Route {
-  id: number;
-  busLineId: number;
-  direction: number;
-  isActive: boolean;
-}
+import RouteService from '@/services/RouteService';
+import BusLineLightModel from '@/types/BusLineLightModel';
+import PageResult from '@/types/common/PageResult';
+import ServerEnums from '@/types/common/ServerEnums';
+import RouteModel from '@/types/RouteModel';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 function RoutesPage() {
-  const initialFormData = { busLineId: 1, direction: 0 };
+  const initialFormData = {
+    id: 0,
+    name: '',
+    direction: ServerEnums.RouteDirection.One,
+    directionText: '',
+    isActive: true,
+    busLineId: 0,
+    busLineNumber: ''
+  };
 
-  const [routes, setRoutes] = useState<Route[]>([]);
+  const [routes, setRoutes] = useState<RouteModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -28,8 +36,8 @@ function RoutesPage() {
   const fetchRoutes = async () => {
     try {
       setIsLoading(true);
-      const data = await api.get<Route[]>('/routes');
-      setRoutes(data);
+      const data = await RouteService.read(undefined, [{ field: 'Name', dir: 'asc' }, { field: 'BusLineNumber', dir: 'asc' }, { field: 'DirectionText', dir: 'asc' }]);
+      setRoutes(data.items);
     } catch (err) {
       setError(err instanceof api.ApiError ? err.message : 'Error loading routes');
     } finally {
@@ -41,7 +49,7 @@ function RoutesPage() {
     e.preventDefault();
     try {
       setError('');
-      await api.post('/routes', formData);
+      await RouteService.create(formData);
       toggleShowForm(false);
       fetchRoutes();
     } catch (err) {
@@ -53,7 +61,7 @@ function RoutesPage() {
     if (!confirm('Are you sure?')) return;
     try {
       setError('');
-      await api.delete(`/routes/${id}`);
+      await RouteService.delete(id);
       fetchRoutes();
     } catch (err) {
       setError(err instanceof api.ApiError ? err.message : 'Error deleting route');
@@ -100,13 +108,37 @@ function RoutesPage() {
           <form onSubmit={handleSubmit} className="mb-8 p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Bus Line ID
+                Route Name
               </label>
               <input
-                type="number"
-                value={formData.busLineId}
-                onChange={(e) => setFormData({ ...formData, busLineId: parseInt(e.target.value) })}
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                required
+                maxLength={255}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Bus Line
+              </label>
+              <EntityDropdown
+                value={formData.busLineId}
+                onChange={(e) => setFormData({ ...formData, busLineId: e ? e.value : 0 })}
+                placeholder="Select..."
+                url="/api/bus-lines-light"
+                sorts={[
+                  { field: "name", dir: "asc" }
+                ]}
+                parseData={(data: PageResult<BusLineLightModel>) =>
+                  data.items.map((item, i) => {
+                    return {
+                      value: item.id,
+                      label: item.lineNumber
+                    };
+                  })
+                }
                 required
               />
             </div>
@@ -114,11 +146,10 @@ function RoutesPage() {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Direction
               </label>
-              <input
-                type="number"
+              <EnumDropdown
+                enumName="RouteDirection"
                 value={formData.direction}
-                onChange={(e) => setFormData({ ...formData, direction: parseInt(e.target.value) })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                onChange={(e) => setFormData({ ...formData, direction: e ? e.value : 0 })}
                 required
               />
             </div>
@@ -145,6 +176,9 @@ function RoutesPage() {
                     ID
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
+                    Name
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Bus Line ID
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
@@ -168,10 +202,13 @@ function RoutesPage() {
                       {route.id}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
-                      {route.busLineId}
+                      {route.name}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
-                      {route.direction}
+                      {route.busLineNumber}
+                    </td>
+                    <td className="py-3 px-4 text-gray-900 dark:text-white">
+                      {route.directionText}
                     </td>
                     <td className="py-3 px-4">
                       <span

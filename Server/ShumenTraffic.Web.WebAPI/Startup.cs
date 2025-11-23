@@ -25,9 +25,11 @@ using ShumenTraffic.Common.Core.Configuration;
 using ShumenTraffic.Common.Core.Constants.Security;
 using ShumenTraffic.Common.Core.Entities.BusLines;
 using ShumenTraffic.Common.Core.Entities.BusStops;
+using ShumenTraffic.Common.Core.Entities.Routes;
 using ShumenTraffic.Common.Core.Entities.TransportationCompanies;
 using ShumenTraffic.Common.Core.Entities.Zones;
 using ShumenTraffic.Common.Core.Enums.Maintenance;
+using ShumenTraffic.Common.Core.Enums.Routes;
 using ShumenTraffic.Common.Core.Resources;
 using ShumenTraffic.Common.DataAccess.DbContexts;
 using ShumenTraffic.Common.Services.Interfaces;
@@ -40,6 +42,7 @@ using ShumenTraffic.Common.Services.Services.TransportationCompanies;
 using ShumenTraffic.Common.Services.Services.Zones;
 using ShumenTraffic.Web.Core.Models.BusLines;
 using ShumenTraffic.Web.Core.Models.BusStops;
+using ShumenTraffic.Web.Core.Models.Routes;
 using ShumenTraffic.Web.Core.Models.TransportationCompanies;
 using ShumenTraffic.Web.Core.Models.Zones;
 using ShumenTraffic.Web.Services.Interfaces;
@@ -213,14 +216,17 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddTransient<IEntityValidated<Zone>, ZoneEntityValidated>();
             services.AddTransient<IEntityDeleting<Zone>, ZoneEntityDeleting>();
             services.AddTransient<IEntityValidated<BusStop>, BusStopEntityValidated>();
+            services.AddTransient<IEntityValidated<Route>, RouteEntityValidated>();
             services.AddScoped<IRouteService, RouteService>();
             services.AddScoped<IScheduleService, ScheduleService>();
 
             // Add Application Services (Web Layer)
             services.AddTransient<IModelsMappingService<TransportationCompanyModel, TransportationCompany>, TransportationCompanyModelsMappingService>();
             services.AddTransient<IModelsMappingService<BusLineModel, BusLine>, BusLineModelsMappingService>();
+            services.AddTransient<IModelsMappingService<BusLineLightModel, BusLine>, BusLineLightModelsMappingService>();
             services.AddTransient<IModelsMappingService<ZoneModel, Zone>, ZoneModelMappingService>();
             services.AddTransient<IModelsMappingService<BusStopModel, BusStop>, BusStopModelsMappingService>();
+            services.AddTransient<IModelsMappingService<RouteModel, Route>, RouteModelsMappingService>();
             services.AddScoped<IRouteModelService, RouteModelService>();
             services.AddScoped<IScheduleModelService, ScheduleModelService>();
         }
@@ -242,6 +248,8 @@ namespace ShumenTraffic.Web.WebAPI
             {
                 Settings.RegisterDefaultExceptionMiddleware = false;
                 Settings.DefaultDbContextType = typeof(AppDbContext);
+                Settings.StringResourceTypeForEnums = typeof(Strings);
+                Settings.AssemblyForEnums = typeof(RouteDirection).Assembly;
             });
 
             // Add exception handling middleware

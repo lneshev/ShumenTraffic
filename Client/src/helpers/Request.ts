@@ -140,3 +140,28 @@ export function getQueryString(filter: Record<string, any> = {}, sorts: Sort[] =
 
     return result;
 }
+
+export function getEnumsQueryString(exactEnumValues: number[] = [], sortByText = false) {
+    // Prepare exactEnumValues
+    let exactEnumValuesString = "";
+
+    for (let i = 0; i < exactEnumValues.length; i++) {
+        exactEnumValuesString += `exactEnumValues[${i}]=${encodeURIComponent(exactEnumValues[i])}&`;
+    }
+
+    if (!string.isNullOrEmpty(exactEnumValuesString)) {
+        exactEnumValuesString = exactEnumValuesString.slice(0, -1);
+    }
+
+    // Prepare sortByText
+    let sortByTextString = `sortByText=${encodeURIComponent(sortByText)}`;
+
+    // Prepare result string
+    let result = [exactEnumValuesString, sortByTextString].filter(Boolean).join("&");
+
+    if (!string.isNullOrEmpty(result)) {
+        result = "?" + result;
+    }
+
+    return result;
+}

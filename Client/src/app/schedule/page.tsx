@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import api from '@/lib/api';
+import RouteService from '@/services/RouteService';
 import PageResult from '@/types/common/PageResult';
+import { useEffect, useState } from 'react';
 
 interface BusLine {
   id: number;
@@ -74,8 +75,8 @@ export default function SchedulePage() {
 
     const fetchRoutes = async () => {
       try {
-        const data = await api.get<Route[]>('/routes');
-        const lineRoutes = data.filter((r: Route) => r.busLineId === selectedLineId);
+        const data = await RouteService.read();
+        const lineRoutes = data.items.filter((r: Route) => r.busLineId === selectedLineId);
         setRoutes(lineRoutes);
       } catch (error) {
         console.error('Failed to fetch routes:', error);

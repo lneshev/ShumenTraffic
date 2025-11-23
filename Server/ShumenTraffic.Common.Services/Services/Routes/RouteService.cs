@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities.Routes;
+using ShumenTraffic.Common.Core.Enums.Routes;
 using ShumenTraffic.Common.DataAccess.DbContexts;
 using ShumenTraffic.Common.Services.Interfaces;
 using System.Collections.Generic;
@@ -74,7 +75,7 @@ namespace ShumenTraffic.Common.Services.Services.Routes
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task<Route> CreateAsync(int busLineId, int direction, string name, IEnumerable<RouteStopData> stops)
+        public async Task<Route> CreateAsync(int busLineId, RouteDirection direction, string name, IEnumerable<RouteStopData> stops)
         {
             var route = new Route
             {
@@ -107,7 +108,7 @@ namespace ShumenTraffic.Common.Services.Services.Routes
             return await GetByIdWithDetailsAsync(route.Id);
         }
 
-        public async Task<Route> UpdateAsync(int id, int? direction = null, string name = null, bool? isActive = null)
+        public async Task<Route> UpdateAsync(int id, RouteDirection? direction = null, string name = null, bool? isActive = null)
         {
             var route = await _context.Routes.FindAsync(id);
 
@@ -152,4 +153,3 @@ namespace ShumenTraffic.Common.Services.Services.Routes
         }
     }
 }
-

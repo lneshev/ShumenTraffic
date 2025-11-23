@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using ShumenTraffic.Common.DataAccess.DbContexts;
@@ -12,14 +13,16 @@ using ShumenTraffic.Common.DataAccess.DbContexts;
 namespace ShumenTraffic.Common.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251122145446_Alter_Route_Modify_Name")]
+    partial class Alter_Route_Modify_Name
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseCollation("SQL_Latin1_General_CP1_CS_AS")
-                .HasAnnotation("ProductVersion", "9.0.11")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -326,7 +329,7 @@ namespace ShumenTraffic.Common.DataAccess.Migrations
 
                     b.HasIndex("BusLineId");
 
-                    b.HasIndex("Name", "BusLineId", "Direction")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("Routes");

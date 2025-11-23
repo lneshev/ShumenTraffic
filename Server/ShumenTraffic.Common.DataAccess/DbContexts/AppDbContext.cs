@@ -109,7 +109,8 @@ namespace ShumenTraffic.Common.DataAccess.DbContexts
 
             // Route configuration
             modelBuilder.Entity<Route>()
-                .HasKey(x => x.Id);
+                .HasIndex(x => new { x.Name, x.BusLineId, x.Direction })
+                .IsUnique();
             modelBuilder.Entity<Route>()
                 .HasIndex(x => x.BusLineId);
             modelBuilder.Entity<Route>()

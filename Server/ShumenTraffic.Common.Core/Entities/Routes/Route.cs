@@ -1,34 +1,28 @@
+using ShumenTraffic.Common.Core.Constants.Routes;
 using ShumenTraffic.Common.Core.Entities.BusLines;
 using ShumenTraffic.Common.Core.Entities.Schedules;
-using System;
+using ShumenTraffic.Common.Core.Enums.Routes;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShumenTraffic.Common.Core.Entities.Routes
 {
     /// <summary>
     /// Represents a specific route for a bus line with direction.
     /// </summary>
-    public class Route
+    public class Route : TrackableEntityBase<int>
     {
-        /// <summary>
-        /// Primary key identifier.
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Foreign key to the bus line.
-        /// </summary>
-        public int BusLineId { get; set; }
-
-        /// <summary>
-        /// Direction of the route (1 or 2).
-        /// </summary>
-        public int Direction { get; set; }
-
         /// <summary>
         /// Route name or description.
         /// </summary>
+        [Required]
+        [MaxLength(RouteConstants.NameMaxLength)]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Direction of the route.
+        /// </summary>
+        public RouteDirection Direction { get; set; }
 
         /// <summary>
         /// Indicates if the route is active.
@@ -36,14 +30,9 @@ namespace ShumenTraffic.Common.Core.Entities.Routes
         public bool IsActive { get; set; } = true;
 
         /// <summary>
-        /// Timestamp when the record was created.
+        /// Foreign key to the bus line.
         /// </summary>
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
-
-        /// <summary>
-        /// Timestamp when the record was last updated.
-        /// </summary>
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+        public int BusLineId { get; set; }
 
         // Navigation properties
         /// <summary>

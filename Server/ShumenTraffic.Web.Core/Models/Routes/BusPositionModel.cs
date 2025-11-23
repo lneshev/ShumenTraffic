@@ -1,3 +1,4 @@
+using ShumenTraffic.Common.Core.Enums.Routes;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -28,7 +29,7 @@ namespace ShumenTraffic.Web.Core.Models.Routes
         /// <summary>
         /// Route direction.
         /// </summary>
-        public int Direction { get; set; }
+        public RouteDirection Direction { get; set; }
 
         /// <summary>
         /// Current latitude coordinate (WGS84/EPSG:4326).
@@ -103,4 +104,3 @@ namespace ShumenTraffic.Web.Core.Models.Routes
         public TimeSpan? CurrentTime { get; set; }
     }
 }
-

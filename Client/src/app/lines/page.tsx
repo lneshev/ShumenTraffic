@@ -3,6 +3,7 @@
 import MapLoader from '@/components/maps/MapLoader';
 import api from '@/lib/api';
 import BusStopService from '@/services/BusStopService';
+import RouteService from '@/services/RouteService';
 import BusStopModel from '@/types/BusStopModel';
 import PageResult from '@/types/common/PageResult';
 import dynamic from 'next/dynamic';
@@ -67,8 +68,8 @@ export default function LinesPage() {
 
     const fetchRoutes = async () => {
       try {
-        const data = await api.get<Route[]>('/routes');
-        const lineRoutes = data.filter((r: Route) => r.busLineId === selectedLineId);
+        const data = await RouteService.read();
+        const lineRoutes = data.items.filter((r: Route) => r.busLineId === selectedLineId);
         setRoutes(lineRoutes);
       } catch (error) {
         console.error('Failed to fetch routes:', error);

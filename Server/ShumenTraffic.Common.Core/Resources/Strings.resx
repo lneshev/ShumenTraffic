@@ -141,4 +141,16 @@
   <data name="BusStopWithNameAlreadyExists" xml:space="preserve">
     <value>A bus stop with name '{0}' already exists.</value>
   </data>
+  <data name="RouteDirection_One" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="RouteDirection_Two" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="RouteWithNameBusLineAndDirectionAlreadyExists" xml:space="preserve">
+    <value>A route with name '{0}', bus line '{1}' and direction '{2}' already exists.</value>
+  </data>
+  <data name="YouAreNotAllowedToDeleteBusLine" xml:space="preserve">
+    <value>You are not allowed to delete bus line: '{0}', because it has routes.</value>
+  </data>
 </root>

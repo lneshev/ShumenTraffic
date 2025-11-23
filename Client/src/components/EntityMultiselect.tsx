@@ -43,7 +43,7 @@ export default function EntityMultiselect<TId extends Id>({
   onRequestEnd,
   onChange,
   onOpen,
-  placeholder,
+  placeholder = "Select...",
   isDisabled = false,
   required = false,
   children

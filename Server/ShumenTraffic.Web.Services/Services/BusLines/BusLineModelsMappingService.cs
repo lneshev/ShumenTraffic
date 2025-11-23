@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using MoravianStar.Dao;
-using ShumenTraffic.Common.Core.Entities;
 using ShumenTraffic.Common.Core.Entities.BusLines;
 using ShumenTraffic.Common.Core.Entities.TransportationCompanies;
 using ShumenTraffic.Web.Core.Models.BusLines;

@@ -88,6 +88,33 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1.
+        /// </summary>
+        public static string RouteDirection_One {
+            get {
+                return ResourceManager.GetString("RouteDirection_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2.
+        /// </summary>
+        public static string RouteDirection_Two {
+            get {
+                return ResourceManager.GetString("RouteDirection_Two", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A route with name &apos;{0}&apos;, bus line &apos;{1}&apos; and direction &apos;{2}&apos; already exists..
+        /// </summary>
+        public static string RouteWithNameBusLineAndDirectionAlreadyExists {
+            get {
+                return ResourceManager.GetString("RouteWithNameBusLineAndDirectionAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Saving data to a database without a transaction is not allowed. First open a database transaction and then save&amp;commit the changes..
         /// </summary>
         public static string SavingDataToDBWithoutATransactionIsNotAllowed {
@@ -102,6 +129,15 @@ namespace ShumenTraffic.Common.Core.Resources {
         public static string TransportationCompanyWithNameAlreadyExists {
             get {
                 return ResourceManager.GetString("TransportationCompanyWithNameAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not allowed to delete bus line: &apos;{0}&apos;, because it has routes..
+        /// </summary>
+        public static string YouAreNotAllowedToDeleteBusLine {
+            get {
+                return ResourceManager.GetString("YouAreNotAllowedToDeleteBusLine", resourceCulture);
             }
         }
         

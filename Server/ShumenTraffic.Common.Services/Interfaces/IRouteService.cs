@@ -1,4 +1,5 @@
 using ShumenTraffic.Common.Core.Entities.Routes;
+using ShumenTraffic.Common.Core.Enums.Routes;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace ShumenTraffic.Common.Services.Interfaces
         /// <param name="name">Route name</param>
         /// <param name="stops">Route stops</param>
         /// <returns>Created route</returns>
-        Task<Route> CreateAsync(int busLineId, int direction, string name, IEnumerable<RouteStopData> stops);
+        Task<Route> CreateAsync(int busLineId, RouteDirection direction, string name, IEnumerable<RouteStopData> stops);
 
         /// <summary>
         /// Update an existing route.
@@ -42,7 +43,7 @@ namespace ShumenTraffic.Common.Services.Interfaces
         /// <param name="name">Name (optional)</param>
         /// <param name="isActive">Is active (optional)</param>
         /// <returns>Updated route or null if not found</returns>
-        Task<Route> UpdateAsync(int id, int? direction = null, string name = null, bool? isActive = null);
+        Task<Route> UpdateAsync(int id, RouteDirection? direction = null, string name = null, bool? isActive = null);
     }
 
     /// <summary>
@@ -57,4 +58,3 @@ namespace ShumenTraffic.Common.Services.Interfaces
         public int? EstimatedMinutesFromStart { get; set; }
     }
 }
-

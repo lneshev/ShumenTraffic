@@ -1,3 +1,4 @@
+using NetTopologySuite.Geometries;
 using ShumenTraffic.Common.Core.Entities.Routes;
 using ShumenTraffic.Common.Core.Enums.Routes;
 using System.Collections.Generic;
@@ -52,8 +53,7 @@ namespace ShumenTraffic.Common.Services.Interfaces
     public class RouteStopData
     {
         public int? BusStopId { get; set; }
-        public decimal Latitude { get; set; }
-        public decimal Longitude { get; set; }
+        public Point Location { get; set; }
         public int StopOrder { get; set; }
         public int? EstimatedMinutesFromStart { get; set; }
     }

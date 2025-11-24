@@ -95,8 +95,7 @@ namespace ShumenTraffic.Common.Services.Services.Routes
                 {
                     RouteId = route.Id,
                     BusStopId = stopData.BusStopId,
-                    Latitude = stopData.Latitude,
-                    Longitude = stopData.Longitude,
+                    Location = stopData.Location,
                     StopOrder = stopData.StopOrder,
                     EstimatedMinutesFromStart = stopData.EstimatedMinutesFromStart
                 };

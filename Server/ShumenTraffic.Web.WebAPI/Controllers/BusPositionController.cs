@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities.Routes;
+using ShumenTraffic.Common.Core.Extensions;
 using ShumenTraffic.Common.DataAccess.DbContexts;
 using ShumenTraffic.Web.Core.Models.Routes;
 using System;
@@ -151,8 +152,8 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
             var currentStop = stops[currentStopIndex >= 0 ? currentStopIndex : 0];
             var nextStop = stops[nextStopIndex];
 
-            decimal latitude = currentStop.Latitude;
-            decimal longitude = currentStop.Longitude;
+            decimal latitude = (decimal)currentStop.Location.GetLatitude();
+            decimal longitude = (decimal)currentStop.Location.GetLongitude();
             decimal progressPercentage = 0;
             int estimatedMinutesToNext = 0;
 
@@ -169,8 +170,8 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
 
                     // Linear interpolation between stops
                     var progress = (decimal)timeFromCurrentStop / timeBetweenStops;
-                    latitude = currentStop.Latitude + (nextStop.Latitude - currentStop.Latitude) * progress;
-                    longitude = currentStop.Longitude + (nextStop.Longitude - currentStop.Longitude) * progress;
+                    latitude = (decimal)currentStop.Location.GetLatitude() + ((decimal)(nextStop.Location.GetLatitude() - currentStop.Location.GetLatitude())) * progress;
+                    longitude = (decimal)currentStop.Location.GetLongitude() + ((decimal)(nextStop.Location.GetLongitude() - currentStop.Location.GetLongitude())) * progress;
 
                     estimatedMinutesToNext = Math.Max(0, nextStopTime - elapsedMinutes);
                 }

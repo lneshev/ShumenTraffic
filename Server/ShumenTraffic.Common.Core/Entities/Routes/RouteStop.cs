@@ -1,5 +1,8 @@
+using NetTopologySuite.Geometries;
+using ShumenTraffic.Common.Core.Attributes;
 using ShumenTraffic.Common.Core.Entities.BusStops;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShumenTraffic.Common.Core.Entities.Routes
 {
@@ -7,32 +10,14 @@ namespace ShumenTraffic.Common.Core.Entities.Routes
     /// Represents a point on a specific route. Can be either an actual bus stop (where passengers board/alight)
     /// or a waypoint that defines the route path between stops.
     /// </summary>
-    public class RouteStop
+    public class RouteStop : TrackableEntityBase<int>
     {
         /// <summary>
-        /// Primary key identifier.
+        /// Route stop's GPS location
         /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Foreign key to the route.
-        /// </summary>
-        public int RouteId { get; set; }
-
-        /// <summary>
-        /// Foreign key to the bus stop. Nullable - NULL indicates this is a waypoint only.
-        /// </summary>
-        public int? BusStopId { get; set; }
-
-        /// <summary>
-        /// GPS latitude coordinate (WGS84/EPSG:4326).
-        /// </summary>
-        public decimal Latitude { get; set; }
-
-        /// <summary>
-        /// GPS longitude coordinate (WGS84/EPSG:4326).
-        /// </summary>
-        public decimal Longitude { get; set; }
+        [Required]
+        [PointRange]
+        public Point Location { get; set; }
 
         /// <summary>
         /// Order of this point in the route (1-based).
@@ -46,20 +31,20 @@ namespace ShumenTraffic.Common.Core.Entities.Routes
         public int? EstimatedMinutesFromStart { get; set; }
 
         /// <summary>
-        /// Timestamp when the record was created.
+        /// Foreign key to the route.
         /// </summary>
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
-
-        /// <summary>
-        /// Timestamp when the record was last updated.
-        /// </summary>
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+        public int RouteId { get; set; }
 
         // Navigation properties
         /// <summary>
         /// The route this stop belongs to.
         /// </summary>
         public virtual Route Route { get; set; }
+
+        /// <summary>
+        /// Foreign key to the bus stop. Nullable - NULL indicates this is a waypoint only.
+        /// </summary>
+        public int? BusStopId { get; set; }
 
         /// <summary>
         /// The bus stop at this location.

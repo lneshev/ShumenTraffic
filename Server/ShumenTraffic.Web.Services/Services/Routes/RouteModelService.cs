@@ -40,8 +40,7 @@ namespace ShumenTraffic.Web.Services.Services.Routes
                         Id = rs.Id,
                         BusStopId = rs.BusStopId,
                         BusStopName = rs.BusStop?.Name,
-                        Latitude = rs.Latitude,
-                        Longitude = rs.Longitude,
+                        Location = rs.Location,
                         StopOrder = rs.StopOrder,
                         EstimatedMinutesFromStart = rs.EstimatedMinutesFromStart
                     })
@@ -88,8 +87,7 @@ namespace ShumenTraffic.Web.Services.Services.Routes
             var stops = dto.Stops.Select(s => new RouteStopData
             {
                 BusStopId = s.BusStopId,
-                Latitude = s.Latitude,
-                Longitude = s.Longitude,
+                Location = s.Location,
                 StopOrder = s.StopOrder,
                 EstimatedMinutesFromStart = s.EstimatedMinutesFromStart
             });

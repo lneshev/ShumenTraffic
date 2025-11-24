@@ -124,15 +124,11 @@ namespace ShumenTraffic.Common.DataAccess.DbContexts
 
             // RouteStop configuration
             modelBuilder.Entity<RouteStop>()
-                .HasKey(x => x.Id);
+                .Property(x => x.Location)
+                .HasColumnType("geography")
+                .HasScale(6);
             modelBuilder.Entity<RouteStop>()
-                .Property(x => x.Latitude)
-                .HasPrecision(10, 8);
-            modelBuilder.Entity<RouteStop>()
-                .Property(x => x.Longitude)
-                .HasPrecision(11, 8);
-            modelBuilder.Entity<RouteStop>()
-                .HasIndex(x => new { x.RouteId, x.StopOrder });
+                .HasIndex(x => x.RouteId);
             modelBuilder.Entity<RouteStop>()
                 .HasIndex(x => x.BusStopId);
             modelBuilder.Entity<RouteStop>()

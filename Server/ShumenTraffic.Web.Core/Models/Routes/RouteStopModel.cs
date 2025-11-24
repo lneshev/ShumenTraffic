@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NetTopologySuite.Geometries;
+using ShumenTraffic.Common.Core.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ShumenTraffic.Web.Core.Models.Routes
@@ -24,18 +26,11 @@ namespace ShumenTraffic.Web.Core.Models.Routes
         public string BusStopName { get; set; }
 
         /// <summary>
-        /// Latitude coordinate (WGS84/EPSG:4326).
+        /// Route stop's GPS location
         /// </summary>
-        [Required(ErrorMessage = "Latitude is required")]
-        [Range(-90, 90, ErrorMessage = "Latitude must be between -90 and 90")]
-        public decimal Latitude { get; set; }
-
-        /// <summary>
-        /// Longitude coordinate (WGS84/EPSG:4326).
-        /// </summary>
-        [Required(ErrorMessage = "Longitude is required")]
-        [Range(-180, 180, ErrorMessage = "Longitude must be between -180 and 180")]
-        public decimal Longitude { get; set; }
+        [Required]
+        [PointRange]
+        public Point Location { get; set; }
 
         /// <summary>
         /// Order of this point in the route (1-based).

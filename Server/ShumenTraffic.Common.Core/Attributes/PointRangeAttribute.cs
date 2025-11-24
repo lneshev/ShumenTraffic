@@ -1,4 +1,5 @@
 ﻿using NetTopologySuite.Geometries;
+using ShumenTraffic.Common.Core.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -24,12 +25,12 @@ namespace ShumenTraffic.Common.Core.Attributes
                 return new ValidationResult($"{validationContext.DisplayName} must be of type {nameof(Point)} in order to apply attribute {nameof(PointRangeAttribute)}.");
             }
 
-            if (point.X < MinX || point.X > MaxX)
+            if (point.GetLongitude() < MinX || point.GetLongitude() > MaxX)
             {
                 return new ValidationResult($"X (Longitude) must be in range {MinX} to {MaxX}.");
             }
 
-            if (point.Y < MinY || point.Y > MaxY)
+            if (point.GetLatitude() < MinY || point.GetLatitude() > MaxY)
             {
                 return new ValidationResult($"Y (Latitude) must be in range {MinY} to {MaxY}.");
             }

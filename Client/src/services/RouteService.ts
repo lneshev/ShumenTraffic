@@ -1,7 +1,5 @@
 import {
-    authorisedDeleteRequest,
-    authorisedPostRequest,
-    getQueryString,
+    authorisedGetRequest, authorisedPutRequest, getQueryString,
     getRequest
 } from "@/helpers/Request";
 import PageResult from "@/types/common/PageResult";
@@ -14,13 +12,13 @@ export default {
             return result;
         });
     },
-    async create(model: RouteModel): Promise<RouteModel> {
-        return await authorisedPostRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/routes`, model, result => {
+    async get(id: number): Promise<RouteModel> {
+        return await authorisedGetRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/routes/${id}`, result => {
             return result;
         });
     },
-    async delete(id: number): Promise<RouteModel> {
-        return await authorisedDeleteRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/routes/${id}`, result => {
+    async update(model: RouteModel): Promise<RouteModel> {
+        return await authorisedPutRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/routes/${model.id}`, model, result => {
             return result;
         });
     }

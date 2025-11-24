@@ -3,7 +3,7 @@
 import EntityDropdown from '@/components/EntityDropdown';
 import EnumDropdown from '@/components/EnumDropdown';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import api from '@/lib/api';
+import { ApiError } from '@/lib/api';
 import RouteOverviewService from '@/services/RouteOverviewService';
 import BusLineLightModel from '@/types/BusLineLightModel';
 import PageResult from '@/types/common/PageResult';
@@ -39,7 +39,7 @@ function RoutesPage() {
       const data = await RouteOverviewService.read(undefined, [{ field: 'Name', dir: 'asc' }, { field: 'BusLineNumber', dir: 'asc' }, { field: 'DirectionText', dir: 'asc' }]);
       setRoutes(data.items);
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error loading routes');
+      setError(err instanceof ApiError ? err.message : 'Error loading routes');
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +53,7 @@ function RoutesPage() {
       toggleShowForm(false);
       fetchRoutes();
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error creating route');
+      setError(err instanceof ApiError ? err.message : 'Error creating route');
     }
   };
 
@@ -64,7 +64,7 @@ function RoutesPage() {
       await RouteOverviewService.delete(id);
       fetchRoutes();
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error deleting route');
+      setError(err instanceof ApiError ? err.message : 'Error deleting route');
     }
   };
 
@@ -221,6 +221,12 @@ function RoutesPage() {
                       </span>
                     </td>
                     <td className="py-3 px-4">
+                      <Link
+                        href={`/admin/routes/${route.id}`}
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm mr-4"
+                      >
+                        Edit
+                      </Link>
                       <button
                         onClick={() => handleDelete(route.id)}
                         className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium text-sm"

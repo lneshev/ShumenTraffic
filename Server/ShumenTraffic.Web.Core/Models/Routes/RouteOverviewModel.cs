@@ -1,7 +1,6 @@
 ﻿using MoravianStar.Dao;
 using ShumenTraffic.Common.Core.Constants.BusStops;
 using ShumenTraffic.Common.Core.Enums.Routes;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ShumenTraffic.Web.Core.Models.Routes
@@ -9,7 +8,7 @@ namespace ShumenTraffic.Web.Core.Models.Routes
     /// <summary>
     /// DTO for Route.
     /// </summary>
-    public class RouteModel : ModelBase<int>
+    public class RouteOverviewModel : ModelBase<int>
     {
         /// <summary>
         /// Route name or description.
@@ -42,10 +41,5 @@ namespace ShumenTraffic.Web.Core.Models.Routes
         /// Bus line number.
         /// </summary>
         public string BusLineNumber { get; set; }
-
-        /// <summary>
-        /// Collection of stops and waypoints on this route.
-        /// </summary>
-        public List<RouteStopModel> Stops { get; set; } = new List<RouteStopModel>();
     }
 }

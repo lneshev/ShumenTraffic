@@ -35,7 +35,7 @@ namespace ShumenTraffic.Web.Services.Services.Routes
                 IsActive = entity.IsActive,
                 Stops = entity.RouteStops
                     .OrderBy(rs => rs.StopOrder)
-                    .Select(rs => new RouteStopDto
+                    .Select(rs => new RouteStopModel
                     {
                         Id = rs.Id,
                         BusStopId = rs.BusStopId,

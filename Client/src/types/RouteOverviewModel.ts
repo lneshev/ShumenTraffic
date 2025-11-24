@@ -1,0 +1,10 @@
+import ModelBase from "./common/ModelBase";
+
+export default interface RouteOverviewModel extends ModelBase<number> {
+    name: string;
+    direction: number;
+    directionText: string;
+    isActive: boolean;
+    busLineId: number;
+    busLineNumber: string;
+}

@@ -227,6 +227,7 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddTransient<IModelsMappingService<ZoneModel, Zone>, ZoneModelMappingService>();
             services.AddTransient<IModelsMappingService<BusStopModel, BusStop>, BusStopModelsMappingService>();
             services.AddTransient<IModelsMappingService<RouteModel, Route>, RouteModelsMappingService>();
+            services.AddTransient<IModelsMappingService<RouteOverviewModel, Route>, RouteOverviewModelsMappingService>();
             services.AddScoped<IRouteModelService, RouteModelService>();
             services.AddScoped<IScheduleModelService, ScheduleModelService>();
         }

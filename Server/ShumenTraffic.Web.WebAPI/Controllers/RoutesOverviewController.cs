@@ -5,7 +5,6 @@ using ShumenTraffic.Common.Core.Entities.Routes;
 using ShumenTraffic.Common.Core.Filters.Routes;
 using ShumenTraffic.Web.Core.DTOs;
 using ShumenTraffic.Web.Core.Models.Routes;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,23 +14,22 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
     /// Controller for managing Routes.
     /// </summary>
     [Authorize]
-    public class RoutesController : EntityRestController<Route, int, RouteModel, RouteFilter>
+    public class RoutesOverviewController : EntityRestController<Route, int, RouteOverviewModel, RouteFilter>
     {
-        [Obsolete]
         [AllowAnonymous]
-        public override Task<ActionResult<ApiResponse<PageResult<RouteModel>>>> Read([FromQuery] RouteFilter filter, [FromQuery] List<Sort> sorts, [FromQuery] Page page)
+        public override Task<ActionResult<ApiResponse<PageResult<RouteOverviewModel>>>> Read([FromQuery] RouteFilter filter, [FromQuery] List<Sort> sorts, [FromQuery] Page page)
         {
             return base.Read(filter, sorts, page);
         }
 
-        public override Task<ActionResult<ApiResponse<RouteModel>>> Get([FromRoute] int id)
+        public override Task<ActionResult<RouteOverviewModel>> Post([FromBody] RouteOverviewModel model)
         {
-            return base.Get(id);
+            return base.Post(model);
         }
 
-        public override Task<ActionResult<ApiResponse<RouteModel>>> Put([FromRoute] int id, [FromBody] RouteModel model)
+        public override Task<ActionResult<ApiResponse<RouteOverviewModel>>> Delete([FromRoute] int id)
         {
-            return base.Put(id, model);
+            return base.Delete(id);
         }
     }
 }

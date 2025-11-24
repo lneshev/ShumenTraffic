@@ -4,11 +4,11 @@ import EntityDropdown from '@/components/EntityDropdown';
 import EnumDropdown from '@/components/EnumDropdown';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import api from '@/lib/api';
-import RouteService from '@/services/RouteService';
+import RouteOverviewService from '@/services/RouteOverviewService';
 import BusLineLightModel from '@/types/BusLineLightModel';
 import PageResult from '@/types/common/PageResult';
 import ServerEnums from '@/types/common/ServerEnums';
-import RouteModel from '@/types/RouteModel';
+import RouteOverviewModel from '@/types/RouteOverviewModel';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -23,7 +23,7 @@ function RoutesPage() {
     busLineNumber: ''
   };
 
-  const [routes, setRoutes] = useState<RouteModel[]>([]);
+  const [routes, setRoutes] = useState<RouteOverviewModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -36,7 +36,7 @@ function RoutesPage() {
   const fetchRoutes = async () => {
     try {
       setIsLoading(true);
-      const data = await RouteService.read(undefined, [{ field: 'Name', dir: 'asc' }, { field: 'BusLineNumber', dir: 'asc' }, { field: 'DirectionText', dir: 'asc' }]);
+      const data = await RouteOverviewService.read(undefined, [{ field: 'Name', dir: 'asc' }, { field: 'BusLineNumber', dir: 'asc' }, { field: 'DirectionText', dir: 'asc' }]);
       setRoutes(data.items);
     } catch (err) {
       setError(err instanceof api.ApiError ? err.message : 'Error loading routes');
@@ -49,7 +49,7 @@ function RoutesPage() {
     e.preventDefault();
     try {
       setError('');
-      await RouteService.create(formData);
+      await RouteOverviewService.create(formData);
       toggleShowForm(false);
       fetchRoutes();
     } catch (err) {
@@ -61,7 +61,7 @@ function RoutesPage() {
     if (!confirm('Are you sure?')) return;
     try {
       setError('');
-      await RouteService.delete(id);
+      await RouteOverviewService.delete(id);
       fetchRoutes();
     } catch (err) {
       setError(err instanceof api.ApiError ? err.message : 'Error deleting route');
@@ -246,4 +246,3 @@ export default function RoutesPageWrapper() {
     </ProtectedRoute>
   );
 }
-

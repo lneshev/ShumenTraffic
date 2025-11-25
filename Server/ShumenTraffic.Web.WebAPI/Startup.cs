@@ -217,6 +217,7 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddTransient<IEntityDeleting<Zone>, ZoneEntityDeleting>();
             services.AddTransient<IEntityValidated<BusStop>, BusStopEntityValidated>();
             services.AddTransient<IEntityValidated<Route>, RouteEntityValidated>();
+            services.AddTransient<IEntityDeleting<Route>, RouteEntityDeleting>();
             services.AddScoped<IRouteService, RouteService>();
             services.AddScoped<IScheduleService, ScheduleService>();
 

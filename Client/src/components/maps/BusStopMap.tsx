@@ -1,4 +1,4 @@
-import MapMode from '@/enums/MapMode';
+import BusStopMapMode from '@/enums/BusStopMapMode';
 import BusStopModel from '@/types/BusStopModel';
 import L, { LeafletEventHandlerFnMap, PopupEvent } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -7,18 +7,11 @@ import { MapContainer, TileLayer, Tooltip, useMap, useMapEvents } from 'react-le
 import { BusStopMarker } from './BusStopMarker';
 import MapLoader from './MapLoader';
 
-// Extend Leaflet Marker to support custom data property
-declare module 'leaflet' {
-  interface MarkerOptions {
-    data?: any;
-  }
-}
-
-interface MapProps {
+interface BusStopMapProps {
   busStops: BusStopModel[];
   selectedStopId?: number;
   newBusStop?: BusStopModel;
-  mode?: MapMode;
+  mode?: BusStopMapMode;
   eventHandlers?: LeafletEventHandlerFnMap;
   onBusStopDragEnd?: (stop: BusStopModel, newLat: number, newLng: number) => void;
   onBusStopNameChange?: (stop: BusStopModel, newName: string) => void;
@@ -51,7 +44,7 @@ const newStopIcon = L.icon({
 });
 
 // Helper component to expose map instance
-function MapInstanceProvider({
+function BusStopMapInstanceProvider({
   onMapReady,
   onContextMenu
 }: {
@@ -59,22 +52,25 @@ function MapInstanceProvider({
   onContextMenu?: (lat: number, lng: number) => void;
 }) {
   const map = useMap();
+
   useMapEvents({
     contextmenu: (e) => {
       onContextMenu?.(parseFloat(e.latlng.lat.toFixed(6)), parseFloat(e.latlng.lng.toFixed(6)));
     }
   });
+
   useEffect(() => {
     onMapReady(map);
   }, [map, onMapReady]);
+
   return null;
 }
 
-function Map({
+function BusStopMap({
   busStops,
   selectedStopId,
   newBusStop,
-  mode = MapMode.View,
+  mode = BusStopMapMode.View,
   onBusStopDragEnd,
   onBusStopNameChange,
   onBusStopZoneIdChange,
@@ -82,7 +78,7 @@ function Map({
   onBusStopDelete,
   onBusStopCancel,
   onMapRightClick
-}: MapProps) {
+}: BusStopMapProps) {
   const [mounted, setMounted] = useState(false);
   const mapRef = useRef<L.Map>(null);
   const newMarkerPopupRef = useRef<L.Marker>(null);
@@ -123,7 +119,7 @@ function Map({
   };
 
   const handleContextMenu = (lat: number, lng: number) => {
-    if (mode === MapMode.Edit) {
+    if (mode === BusStopMapMode.Edit) {
       setNewMarkerData({ lat, lng });
       setShowContextMenu(true);
       mapRef.current?.closePopup();
@@ -172,7 +168,7 @@ function Map({
             style={{ width: '100%', height: '100%' }}
             className="rounded-lg"
           >
-            <MapInstanceProvider
+            <BusStopMapInstanceProvider
               onMapReady={(map) => { mapRef.current = map; }}
               onContextMenu={handleContextMenu}
             />
@@ -188,7 +184,7 @@ function Map({
                   busStop={stop}
                   position={[stop.location.latitude, stop.location.longitude]}
                   icon={selectedStopId === stop.id ? selectedIcon : defaultIcon}
-                  draggable={mode === MapMode.Edit}
+                  draggable={mode === BusStopMapMode.Edit}
                   tooltip={<Tooltip offset={[10, 0]} opacity={1} direction={'right'}>{stop.name}</Tooltip>}
                   eventHandlers={markerEventHandlers}
                   onBusStopNameChange={onBusStopNameChange}
@@ -256,4 +252,4 @@ function Map({
   );
 };
 
-export default memo(Map);
+export default memo(BusStopMap);

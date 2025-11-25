@@ -29,7 +29,7 @@ interface RouteStop {
 }
 
 // Dynamically import Map to avoid SSR issues
-const Map = dynamic(() => import('@/components/maps/Map').then(mod => ({ default: mod.default })), {
+const BusStopMap = dynamic(() => import('@/components/maps/BusStopMap').then(mod => ({ default: mod.default })), {
   ssr: false,
   loading: () => <MapLoader />
 });
@@ -207,7 +207,7 @@ export default function LinesPage() {
 
           {/* Right Pane - Map */}
           <div className="lg:col-span-2 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
-            <Map busStops={busStops} />
+            <BusStopMap busStops={busStops} />
           </div>
         </div>
       </div>

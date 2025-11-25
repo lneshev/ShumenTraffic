@@ -3,7 +3,7 @@
 import EntityDropdown from '@/components/EntityDropdown';
 import MapLoader from '@/components/maps/MapLoader';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import MapMode from '@/enums/MapMode';
+import BusStopMapMode from '@/enums/BusStopMapMode';
 import { ApiError } from '@/lib/api';
 import BusStopService from '@/services/BusStopService';
 import BusStopModel from '@/types/BusStopModel';
@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 // Dynamically import Map to avoid SSR issues
-const Map = dynamic(() => import('@/components/maps/Map').then(mod => ({ default: mod.default })), {
+const BusStopMap = dynamic(() => import('@/components/maps/BusStopMap').then(mod => ({ default: mod.default })), {
   ssr: false,
   loading: () => <MapLoader />
 });
@@ -297,9 +297,9 @@ function BusStopsPage() {
 
         <div className="grid grid-cols-1 gap-6 h-[600px] mb-6">
           <div className="lg:col-span-2 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
-            <Map
+            <BusStopMap
               busStops={busStops}
-              mode={MapMode.Edit}
+              mode={BusStopMapMode.Edit}
               newBusStop={formData}
               onBusStopDragEnd={handleBusStopDragEnd}
               onBusStopNameChange={handleBusStopNameChange}

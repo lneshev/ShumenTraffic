@@ -1,4 +1,4 @@
-import MapMode from "@/enums/MapMode";
+import BusStopMapMode from "@/enums/BusStopMapMode";
 import BusStopModel from "@/types/BusStopModel";
 import PageResult from "@/types/common/PageResult";
 import ZoneModel from "@/types/ZoneModel";
@@ -8,7 +8,7 @@ import { Marker, Popup, Tooltip } from "react-leaflet";
 import EntityDropdown from "../EntityDropdown";
 
 interface BusStopMarkerProps {
-    mode: MapMode;
+    mode: BusStopMapMode;
     busStop: BusStopModel;
     position: [number, number];
     icon: Icon | DivIcon;
@@ -51,13 +51,13 @@ export function BusStopMarker({
             <Popup>
                 <form onSubmit={(e) => { e.preventDefault(); onButtonSaveClick?.(busStop); }} className="text-sm">
                     <div className="font-semibold text-gray-900">
-                        {mode === MapMode.View && (
+                        {mode === BusStopMapMode.View && (
                             <>
                                 {busStop.name}<br />
                                 {busStop.zoneName}
                             </>
                         )}
-                        {mode === MapMode.Edit && (
+                        {mode === BusStopMapMode.Edit && (
                             <>
                                 <input
                                     type="text"
@@ -92,7 +92,7 @@ export function BusStopMarker({
                     <p className="text-gray-600 text-xs">
                         {busStop.location.latitude}, {busStop.location.longitude}
                     </p>
-                    {mode == MapMode.Edit && (
+                    {mode == BusStopMapMode.Edit && (
                         <div>
                             <button
                                 type="submit"

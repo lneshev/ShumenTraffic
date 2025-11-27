@@ -1,4 +1,5 @@
 import {
+    authorisedDeleteRequest,
     authorisedGetRequest, authorisedPutRequest, getQueryString,
     getRequest
 } from "@/helpers/Request";
@@ -19,6 +20,11 @@ export default {
     },
     async update(model: RouteModel): Promise<RouteModel> {
         return await authorisedPutRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/routes/${model.id}`, model, result => {
+            return result;
+        });
+    },
+    async delete(id: number): Promise<RouteModel> {
+        return await authorisedDeleteRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/routes/${id}`, result => {
             return result;
         });
     }

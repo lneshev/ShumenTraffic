@@ -128,7 +128,7 @@ namespace ShumenTraffic.Common.DataAccess.DbContexts
                 .HasColumnType("geography")
                 .HasScale(6);
             modelBuilder.Entity<RouteStop>()
-                .HasIndex(x => x.RouteId);
+                .HasIndex(x => new { x.RouteId, x.StopOrder });
             modelBuilder.Entity<RouteStop>()
                 .HasIndex(x => x.BusStopId);
             modelBuilder.Entity<RouteStop>()

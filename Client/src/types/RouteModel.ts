@@ -1,4 +1,5 @@
 import ModelBase from "./common/ModelBase";
+import RouteStopModel from "./RouteStopModel";
 
 export default interface RouteModel extends ModelBase<number> {
     name: string;
@@ -7,4 +8,5 @@ export default interface RouteModel extends ModelBase<number> {
     isActive: boolean;
     busLineId: number;
     busLineNumber: string;
+    stops: RouteStopModel[];
 }

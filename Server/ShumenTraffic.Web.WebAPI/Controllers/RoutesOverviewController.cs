@@ -26,10 +26,5 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         {
             return base.Post(model);
         }
-
-        public override Task<ActionResult<ApiResponse<RouteOverviewModel>>> Delete([FromRoute] int id)
-        {
-            return base.Delete(id);
-        }
     }
 }

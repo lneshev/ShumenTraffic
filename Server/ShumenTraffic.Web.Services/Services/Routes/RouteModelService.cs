@@ -40,6 +40,7 @@ namespace ShumenTraffic.Web.Services.Services.Routes
                         Id = rs.Id,
                         BusStopId = rs.BusStopId,
                         BusStopName = rs.BusStop?.Name,
+                        BusStopLocation = rs.BusStop?.Location,
                         Location = rs.Location,
                         StopOrder = rs.StopOrder,
                         EstimatedMinutesFromStart = rs.EstimatedMinutesFromStart

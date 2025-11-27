@@ -13,13 +13,13 @@ interface BusStopMapProps {
   newBusStop?: BusStopModel;
   mode?: BusStopMapMode;
   eventHandlers?: LeafletEventHandlerFnMap;
+  onBusStopAdd?: (lat: number, lng: number) => void;
   onBusStopDragEnd?: (stop: BusStopModel, newLat: number, newLng: number) => void;
   onBusStopNameChange?: (stop: BusStopModel, newName: string) => void;
   onBusStopZoneIdChange?: (stop: BusStopModel, newZoneId: number) => void;
   onBusStopSave?: (stop: BusStopModel, e: Event) => void;
   onBusStopDelete?: (stop: BusStopModel, e: Event) => void;
   onBusStopCancel?: (stop: BusStopModel) => void;
-  onMapRightClick?: (lat: number, lng: number) => void;
 }
 
 const defaultIcon = L.icon({
@@ -71,13 +71,13 @@ function BusStopMap({
   selectedStopId,
   newBusStop,
   mode = BusStopMapMode.View,
+  onBusStopAdd,
   onBusStopDragEnd,
   onBusStopNameChange,
   onBusStopZoneIdChange,
   onBusStopSave,
   onBusStopDelete,
-  onBusStopCancel,
-  onMapRightClick
+  onBusStopCancel
 }: BusStopMapProps) {
   const [mounted, setMounted] = useState(false);
   const mapRef = useRef<L.Map>(null);
@@ -108,7 +108,7 @@ function BusStopMap({
       const position = marker.getLatLng();
       const stopData = marker.options.data as BusStopModel;
       if (stopData) {
-        onBusStopDragEnd?.(stopData, position.lat, position.lng);
+        onBusStopDragEnd?.(stopData, parseFloat(position.lat.toFixed(6)), parseFloat(position.lng.toFixed(6)));
       }
     },
     popupclose: (e: PopupEvent) => {
@@ -128,7 +128,7 @@ function BusStopMap({
 
   const handleAddBusStop = () => {
     if (newMarkerData) {
-      onMapRightClick?.(newMarkerData.lat, newMarkerData.lng);
+      onBusStopAdd?.(newMarkerData.lat, newMarkerData.lng);
       setShowContextMenu(false);
       if (newMarkerPopupRef.current) {
         newMarkerPopupRef.current.openPopup();

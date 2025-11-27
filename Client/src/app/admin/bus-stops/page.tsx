@@ -85,6 +85,13 @@ function BusStopsPage() {
     setShowForm(show);
   }
 
+  const handleBusStopAdd = (lat: number, lng: number) => {
+    setFormData({
+      ...initialFormData,
+      location: new GeoPoint(lat, lng)
+    });
+  }
+
   const handleBusStopDragEnd = async (stop: BusStopModel, newLat: number, newLng: number) => {
     try {
       setError('');
@@ -166,13 +173,6 @@ function BusStopsPage() {
     setError('');
     setBusStops(cachedBusStops.current);
     setFormData({ ...initialFormData });
-  }
-
-  const handleMapRightClick = (lat: number, lng: number) => {
-    setFormData({
-      ...initialFormData,
-      location: new GeoPoint(lat, lng)
-    });
   }
 
   return (
@@ -301,13 +301,13 @@ function BusStopsPage() {
               busStops={busStops}
               mode={BusStopMapMode.Edit}
               newBusStop={formData}
+              onBusStopAdd={handleBusStopAdd}
               onBusStopDragEnd={handleBusStopDragEnd}
               onBusStopNameChange={handleBusStopNameChange}
               onBusStopZoneIdChange={handleBusStopZoneIdChange}
               onBusStopSave={handleBusStopSave}
               onBusStopDelete={handleBusStopDelete}
               onBusStopCancel={handleBusStopCancel}
-              onMapRightClick={handleMapRightClick}
             />
           </div>
         </div>

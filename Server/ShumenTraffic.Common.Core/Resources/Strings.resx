@@ -153,4 +153,22 @@
   <data name="YouAreNotAllowedToDeleteBusLine" xml:space="preserve">
     <value>You are not allowed to delete bus line: '{0}', because it has routes.</value>
   </data>
+  <data name="TheRouteShouldStartWithABusStop" xml:space="preserve">
+    <value>The route should start with a bus stop.</value>
+  </data>
+  <data name="TheRouteShouldEndWithABusStop" xml:space="preserve">
+    <value>The route should end with a bus stop.</value>
+  </data>
+  <data name="TheRouteCannotBeSavedBecauseTheStopOrderIsNotCorrect" xml:space="preserve">
+    <value>The route cannot be saved, because the stop order is not correct. The stop order should be unique for each stop.</value>
+  </data>
+  <data name="TheRouteCannotBeSavedBecauseTheEstimatedMinutesFromStartAreNotCorrect" xml:space="preserve">
+    <value>The route cannot be saved, because the estimated minutes from start for the stops are not correct. The estimated minutes from start should be in ascending order.</value>
+  </data>
+  <data name="RouteStopMustEitherHaveALocationOrABusStop" xml:space="preserve">
+    <value>Route stop must either have a location or a bus stop.</value>
+  </data>
+  <data name="YouAreNotAllowedToDeleteBusStop" xml:space="preserve">
+    <value>You are not allowed to delete bus stop: '{0}', because it is used in one or more routes.</value>
+  </data>
 </root>

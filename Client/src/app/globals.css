@@ -68,3 +68,8 @@ a:hover,
 select {
   cursor: pointer;
 }
+
+/* Reset z-index for leaflet */
+.leaflet-container * {
+  z-index: auto !important;
+}

@@ -106,6 +106,15 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Route stop must either have a location or a bus stop..
+        /// </summary>
+        public static string RouteStopMustEitherHaveALocationOrABusStop {
+            get {
+                return ResourceManager.GetString("RouteStopMustEitherHaveALocationOrABusStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A route with name &apos;{0}&apos;, bus line &apos;{1}&apos; and direction &apos;{2}&apos; already exists..
         /// </summary>
         public static string RouteWithNameBusLineAndDirectionAlreadyExists {
@@ -124,6 +133,42 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The route cannot be saved, because the estimated minutes from start for the stops are not correct. The estimated minutes from start should be in ascending order..
+        /// </summary>
+        public static string TheRouteCannotBeSavedBecauseTheEstimatedMinutesFromStartAreNotCorrect {
+            get {
+                return ResourceManager.GetString("TheRouteCannotBeSavedBecauseTheEstimatedMinutesFromStartAreNotCorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The route cannot be saved, because the stop order is not correct. The stop order should be unique for each stop..
+        /// </summary>
+        public static string TheRouteCannotBeSavedBecauseTheStopOrderIsNotCorrect {
+            get {
+                return ResourceManager.GetString("TheRouteCannotBeSavedBecauseTheStopOrderIsNotCorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The route should end with a bus stop..
+        /// </summary>
+        public static string TheRouteShouldEndWithABusStop {
+            get {
+                return ResourceManager.GetString("TheRouteShouldEndWithABusStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The route should start with a bus stop..
+        /// </summary>
+        public static string TheRouteShouldStartWithABusStop {
+            get {
+                return ResourceManager.GetString("TheRouteShouldStartWithABusStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A transportation company with name &apos;{0}&apos; already exists..
         /// </summary>
         public static string TransportationCompanyWithNameAlreadyExists {
@@ -138,6 +183,15 @@ namespace ShumenTraffic.Common.Core.Resources {
         public static string YouAreNotAllowedToDeleteBusLine {
             get {
                 return ResourceManager.GetString("YouAreNotAllowedToDeleteBusLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not allowed to delete bus stop: &apos;{0}&apos;, because it is used in one or more routes..
+        /// </summary>
+        public static string YouAreNotAllowedToDeleteBusStop {
+            get {
+                return ResourceManager.GetString("YouAreNotAllowedToDeleteBusStop", resourceCulture);
             }
         }
         

@@ -5,6 +5,7 @@ import EnumDropdown from '@/components/EnumDropdown';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { ApiError } from '@/lib/api';
 import RouteOverviewService from '@/services/RouteOverviewService';
+import RouteService from '@/services/RouteService';
 import BusLineLightModel from '@/types/BusLineLightModel';
 import PageResult from '@/types/common/PageResult';
 import ServerEnums from '@/types/common/ServerEnums';
@@ -61,7 +62,7 @@ function RoutesPage() {
     if (!confirm('Are you sure?')) return;
     try {
       setError('');
-      await RouteOverviewService.delete(id);
+      await RouteService.delete(id);
       fetchRoutes();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Error deleting route');

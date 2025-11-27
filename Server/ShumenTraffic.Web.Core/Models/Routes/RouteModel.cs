@@ -46,6 +46,6 @@ namespace ShumenTraffic.Web.Core.Models.Routes
         /// <summary>
         /// Collection of stops and waypoints on this route.
         /// </summary>
-        public List<RouteStopModel> Stops { get; set; } = new List<RouteStopModel>();
+        public IEnumerable<RouteStopModel> Stops { get; set; } = new List<RouteStopModel>();
     }
 }

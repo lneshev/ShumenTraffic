@@ -2,6 +2,7 @@ import string from "@/helpers/StringUtility";
 import { ApiError } from "@/lib/api";
 import ApiResponse from "@/types/common/ApiResponse";
 import { enhanceGeoJSON } from "@/types/common/GeoJSON";
+import ModelBase from "@/types/common/ModelBase";
 import Sort from "@/types/common/Sort";
 
 export async function getRequest(url: string, responseHandler: (value: any) => any, keepalive = false) {
@@ -164,4 +165,8 @@ export function getEnumsQueryString(exactEnumValues: number[] = [], sortByText =
     }
 
     return result;
+}
+
+export function nullifyNegativeIds<T extends ModelBase<number>>(array: T[]): T[] {
+    return array.map(x => x.id >= 0 ? x : { ...x, id: 0 });
 }

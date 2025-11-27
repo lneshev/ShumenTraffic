@@ -1,5 +1,4 @@
 import {
-    authorisedDeleteRequest,
     authorisedPostRequest,
     getQueryString,
     getRequest
@@ -16,11 +15,6 @@ export default {
     },
     async create(model: RouteOverviewModel): Promise<RouteOverviewModel> {
         return await authorisedPostRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/routes-overview`, model, result => {
-            return result;
-        });
-    },
-    async delete(id: number): Promise<RouteOverviewModel> {
-        return await authorisedDeleteRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/routes-overview/${id}`, result => {
             return result;
         });
     }

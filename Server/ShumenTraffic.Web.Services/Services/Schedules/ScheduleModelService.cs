@@ -1,4 +1,5 @@
 using ShumenTraffic.Common.Core.Entities.Schedules;
+using ShumenTraffic.Common.Core.Enums.Schedules;
 using ShumenTraffic.Common.Services.Interfaces;
 using ShumenTraffic.Web.Core.Models.Schedules;
 using ShumenTraffic.Web.Services.Interfaces;
@@ -28,8 +29,8 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
             {
                 Id = entity.Id,
                 DayType = entity.DayType,
-                EffectiveDate = entity.EffectiveDate,
-                ExpiryDate = entity.ExpiryDate,
+                StartDate = entity.StartDate,
+                EndDate = entity.EndDate,
                 IsActive = entity.IsActive,
                 Courses = entity.ScheduleCourses
                     .OrderBy(sc => sc.DepartureTime)
@@ -45,7 +46,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
             };
         }
 
-        public async Task<IEnumerable<ScheduleModel>> GetAllAsync(string dayType = null, bool includeInactive = false)
+        public async Task<IEnumerable<ScheduleModel>> GetAllAsync(DayType? dayType = null, bool includeInactive = false)
         {
             var entities = await _scheduleService.GetAllWithCoursesAsync(dayType, includeInactive);
             return entities.Select(MapToModel);
@@ -82,8 +83,8 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
 
             var entity = await _scheduleService.CreateAsync(
                 dto.DayType,
-                dto.EffectiveDate,
-                dto.ExpiryDate,
+                dto.StartDate,
+                dto.EndDate,
                 courses
             );
 
@@ -94,7 +95,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
         {
             var entity = await _scheduleService.UpdateAsync(
                 id,
-                dto.ExpiryDate,
+                dto.EndDate,
                 dto.IsActive
             );
 

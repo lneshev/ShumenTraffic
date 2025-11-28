@@ -1,22 +1,22 @@
 'use client';
 
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
 import api from '@/lib/api';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 interface Schedule {
   id: number;
-  dayType: string;
-  effectiveDate: string;
-  expiryDate?: string;
+  dayType: number;
+  startDate: string;
+  endDate?: string;
   isActive: boolean;
 }
 
 function SchedulesPage() {
   const initialFormData = {
-    dayType: 'Weekday',
-    effectiveDate: new Date().toISOString().split('T')[0],
+    dayType: 0,
+    startDate: new Date().toISOString().split('T')[0],
   };
 
   const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -108,22 +108,22 @@ function SchedulesPage() {
               </label>
               <select
                 value={formData.dayType}
-                onChange={(e) => setFormData({ ...formData, dayType: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, dayType: parseInt(e.target.value) })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
               >
-                <option>Weekday</option>
-                <option>Saturday</option>
-                <option>Sunday</option>
+                <option value={0}>Weekday</option>
+                <option value={1}>Saturday</option>
+                <option value={2}>Sunday</option>
               </select>
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Effective Date
+                Start Date
               </label>
               <input
                 type="date"
-                value={formData.effectiveDate}
-                onChange={(e) => setFormData({ ...formData, effectiveDate: e.target.value })}
+                value={formData.startDate}
+                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
                 required
               />
@@ -151,7 +151,7 @@ function SchedulesPage() {
                     Day Type
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
-                    Effective Date
+                    Start Date
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Status
@@ -171,7 +171,7 @@ function SchedulesPage() {
                       {schedule.dayType}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
-                      {new Date(schedule.effectiveDate).toLocaleDateString()}
+                      {new Date(schedule.startDate).toLocaleDateString()}
                     </td>
                     <td className="py-3 px-4">
                       <span

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using ShumenTraffic.Common.Core.Entities;
 using ShumenTraffic.Common.Core.Entities.Schedules;
+using ShumenTraffic.Common.Core.Enums.Schedules;
 using ShumenTraffic.Common.DataAccess.DbContexts;
 using ShumenTraffic.Common.Services.Interfaces;
 using System;
@@ -43,7 +43,7 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
             return await query.FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<IEnumerable<Schedule>> GetAllWithCoursesAsync(string dayType = null, bool includeInactive = false)
+        public async Task<IEnumerable<Schedule>> GetAllWithCoursesAsync(DayType? dayType = null, bool includeInactive = false)
         {
             var query = _context.Schedules
                 .Include(s => s.ScheduleCourses)
@@ -51,7 +51,7 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
                 .ThenInclude(r => r.BusLine)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(dayType))
+            if (dayType.HasValue)
             {
                 query = query.Where(s => s.DayType == dayType);
             }
@@ -63,7 +63,7 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
 
             return await query
                 .OrderBy(s => s.DayType)
-                .ThenBy(s => s.EffectiveDate)
+                .ThenBy(s => s.StartDate)
                 .ToListAsync();
         }
 
@@ -76,13 +76,13 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<Schedule> CreateAsync(string dayType, DateTimeOffset effectiveDate, DateTimeOffset? expiryDate, IEnumerable<ScheduleCourseData> courses)
+        public async Task<Schedule> CreateAsync(DayType dayType, DateTimeOffset startDate, DateTimeOffset? endDate, IEnumerable<ScheduleCourseData> courses)
         {
             var schedule = new Schedule
             {
                 DayType = dayType,
-                EffectiveDate = effectiveDate,
-                ExpiryDate = expiryDate,
+                StartDate = startDate,
+                EndDate = endDate,
                 IsActive = true
             };
 
@@ -106,7 +106,7 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
             return await GetByIdWithCoursesAsync(schedule.Id);
         }
 
-        public async Task<Schedule> UpdateAsync(int id, DateTimeOffset? expiryDate = null, bool? isActive = null)
+        public async Task<Schedule> UpdateAsync(int id, DateTimeOffset? endDate = null, bool? isActive = null)
         {
             var schedule = await _context.Schedules.FindAsync(id);
 
@@ -115,9 +115,9 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
                 return null;
             }
 
-            if (expiryDate.HasValue)
+            if (endDate.HasValue)
             {
-                schedule.ExpiryDate = expiryDate.Value;
+                schedule.EndDate = endDate.Value;
             }
             if (isActive.HasValue)
             {

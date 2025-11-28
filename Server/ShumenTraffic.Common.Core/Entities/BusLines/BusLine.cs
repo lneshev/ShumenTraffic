@@ -1,5 +1,6 @@
 using ShumenTraffic.Common.Core.Constants.BusLines;
 using ShumenTraffic.Common.Core.Entities.Routes;
+using ShumenTraffic.Common.Core.Entities.Schedules;
 using ShumenTraffic.Common.Core.Entities.TransportationCompanies;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -38,5 +39,10 @@ namespace ShumenTraffic.Common.Core.Entities.BusLines
         /// Collection of routes for this bus line.
         /// </summary>
         public virtual ICollection<Route> Routes { get; set; } = new List<Route>();
+
+        /// <summary>
+        /// Collection of schedules for this bus line.
+        /// </summary>
+        public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
     }
 }

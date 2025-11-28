@@ -1,3 +1,4 @@
+using ShumenTraffic.Common.Core.Enums.Schedules;
 using ShumenTraffic.Web.Core.Models.Schedules;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace ShumenTraffic.Web.Services.Interfaces
         /// <param name="dayType">Filter by day type (optional)</param>
         /// <param name="includeInactive">Include inactive schedules</param>
         /// <returns>List of schedule DTOs</returns>
-        Task<IEnumerable<ScheduleModel>> GetAllAsync(string dayType = null, bool includeInactive = false);
+        Task<IEnumerable<ScheduleModel>> GetAllAsync(DayType? dayType = null, bool includeInactive = false);
 
         /// <summary>
         /// Get schedule by ID.

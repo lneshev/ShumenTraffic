@@ -1,4 +1,5 @@
 using ShumenTraffic.Common.Core.Entities.Schedules;
+using ShumenTraffic.Common.Core.Enums.Schedules;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace ShumenTraffic.Common.Services.Interfaces
         /// <param name="dayType">Filter by day type (optional)</param>
         /// <param name="includeInactive">Include inactive schedules</param>
         /// <returns>List of schedules</returns>
-        Task<IEnumerable<Schedule>> GetAllWithCoursesAsync(string dayType = null, bool includeInactive = false);
+        Task<IEnumerable<Schedule>> GetAllWithCoursesAsync(DayType? dayType = null, bool includeInactive = false);
 
         /// <summary>
         /// Get schedule by ID with courses.
@@ -29,20 +30,20 @@ namespace ShumenTraffic.Common.Services.Interfaces
         /// Create a new schedule with courses.
         /// </summary>
         /// <param name="dayType">Day type</param>
-        /// <param name="effectiveDate">Effective date</param>
-        /// <param name="expiryDate">Expiry date (optional)</param>
+        /// <param name="startDate">Start date</param>
+        /// <param name="endDate">End date (optional)</param>
         /// <param name="courses">Schedule courses</param>
         /// <returns>Created schedule</returns>
-        Task<Schedule> CreateAsync(string dayType, DateTimeOffset effectiveDate, DateTimeOffset? expiryDate, IEnumerable<ScheduleCourseData> courses);
+        Task<Schedule> CreateAsync(DayType dayType, DateTimeOffset startDate, DateTimeOffset? endDate, IEnumerable<ScheduleCourseData> courses);
 
         /// <summary>
         /// Update an existing schedule.
         /// </summary>
         /// <param name="id">Schedule ID</param>
-        /// <param name="expiryDate">Expiry date (optional)</param>
+        /// <param name="endDate">End date (optional)</param>
         /// <param name="isActive">Is active (optional)</param>
         /// <returns>Updated schedule or null if not found</returns>
-        Task<Schedule> UpdateAsync(int id, DateTimeOffset? expiryDate = null, bool? isActive = null);
+        Task<Schedule> UpdateAsync(int id, DateTimeOffset? endDate = null, bool? isActive = null);
     }
 
     /// <summary>
@@ -54,4 +55,3 @@ namespace ShumenTraffic.Common.Services.Interfaces
         public TimeSpan DepartureTime { get; set; }
     }
 }
-

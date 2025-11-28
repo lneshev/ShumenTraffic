@@ -82,6 +82,10 @@ namespace ShumenTraffic.Common.DataAccess.DbContexts
                 .HasMany(x => x.Routes)
                 .WithOne(x => x.BusLine)
                 .HasForeignKey(x => x.BusLineId);
+            modelBuilder.Entity<BusLine>()
+                .HasMany(x => x.Schedules)
+                .WithOne(x => x.BusLine)
+                .HasForeignKey(x => x.BusLineId);
 
             // Zone configuration
             modelBuilder.Entity<Zone>()
@@ -139,11 +143,7 @@ namespace ShumenTraffic.Common.DataAccess.DbContexts
 
             // Schedule configuration
             modelBuilder.Entity<Schedule>()
-                .HasKey(x => x.Id);
-            modelBuilder.Entity<Schedule>()
-                .Property(x => x.DayType)
-                .IsRequired()
-                .HasMaxLength(20);
+                .HasIndex(x => x.BusLineId);
             modelBuilder.Entity<Schedule>()
                 .HasMany(x => x.ScheduleCourses)
                 .WithOne(x => x.Schedule)

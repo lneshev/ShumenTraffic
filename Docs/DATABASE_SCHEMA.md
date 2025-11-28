@@ -35,7 +35,7 @@ classDiagram
     class Route {
         int Id
         int BusLineId
-        int Direction
+        RouteDirection Direction
         string Name
         bool IsActive
         datetimeoffset CreatedAt
@@ -77,9 +77,9 @@ classDiagram
 
     class Schedule {
         int Id
-        string DayType
-        datetimeoffset EffectiveDate
-        datetimeoffset ExpiryDate
+        DayType DayType
+        datetimeoffset StartDate
+        datetimeoffset EndDate
         bool IsActive
         datetimeoffset CreatedAt
         datetimeoffset UpdatedAt
@@ -108,6 +108,17 @@ classDiagram
     Route "1" --> "0..*" ScheduleCourse : "has courses"
     Schedule "1" --> "0..*" ScheduleCourse : has
 ```
+
+## Enum Descriptions
+
+### DayType
+- Weekday = 0
+- Saturday = 1
+- Sunday = 2
+
+### RouteDirection
+- One = 1
+- Two = 2
 
 ## Entity Descriptions
 
@@ -203,9 +214,9 @@ Represents a schedule for a specific date range and day type. Contains multiple 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | Id | int | PK, Auto | Primary key |
-| DayType | string(20) | NOT NULL | Weekday, Saturday, Sunday |
-| EffectiveDate | datetimeoffset | NOT NULL | Schedule start date |
-| ExpiryDate | datetimeoffset | | Schedule end date (null = ongoing) |
+| DayType | int | NOT NULL | Weekday, Saturday or Sunday |
+| StartDate | datetimeoffset | NOT NULL | Schedule start date |
+| EndDate | datetimeoffset | | Schedule end date (null = ongoing) |
 | IsActive | bool | NOT NULL, Default=true | Active status |
 | CreatedAt | datetimeoffset | NOT NULL | Creation timestamp |
 | UpdatedAt | datetimeoffset | NOT NULL | Last update timestamp |

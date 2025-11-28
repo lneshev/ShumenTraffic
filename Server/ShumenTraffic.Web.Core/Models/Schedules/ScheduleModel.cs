@@ -1,4 +1,5 @@
 using ShumenTraffic.Common.Core.Enums.Routes;
+using ShumenTraffic.Common.Core.Enums.Schedules;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -50,20 +51,18 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         /// <summary>
         /// Day type: "Weekday", "Saturday", or "Sunday".
         /// </summary>
-        [Required(ErrorMessage = "Day type is required")]
-        [RegularExpression("^(Weekday|Saturday|Sunday)$", ErrorMessage = "Day type must be 'Weekday', 'Saturday', or 'Sunday'")]
-        public string DayType { get; set; }
+        public DayType DayType { get; set; }
 
         /// <summary>
-        /// Date when the schedule becomes effective.
+        /// Date when the schedule starts.
         /// </summary>
-        [Required(ErrorMessage = "Effective date is required")]
-        public DateTimeOffset EffectiveDate { get; set; }
+        [Required(ErrorMessage = "Start date is required")]
+        public DateTimeOffset StartDate { get; set; }
 
         /// <summary>
-        /// Date when the schedule expires (null means ongoing).
+        /// Date when the schedule ends (null means ongoing).
         /// </summary>
-        public DateTimeOffset? ExpiryDate { get; set; }
+        public DateTimeOffset? EndDate { get; set; }
 
         /// <summary>
         /// Whether the schedule is active.
@@ -84,20 +83,18 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         /// <summary>
         /// Day type: "Weekday", "Saturday", or "Sunday".
         /// </summary>
-        [Required(ErrorMessage = "Day type is required")]
-        [RegularExpression("^(Weekday|Saturday|Sunday)$", ErrorMessage = "Day type must be 'Weekday', 'Saturday', or 'Sunday'")]
-        public string DayType { get; set; }
+        public DayType DayType { get; set; }
 
         /// <summary>
-        /// Date when the schedule becomes effective.
+        /// Date when the schedule starts.
         /// </summary>
-        [Required(ErrorMessage = "Effective date is required")]
-        public DateTimeOffset EffectiveDate { get; set; }
+        [Required(ErrorMessage = "Start date is required")]
+        public DateTimeOffset StartDate { get; set; }
 
         /// <summary>
-        /// Date when the schedule expires (null means ongoing).
+        /// Date when the schedule ends (null means ongoing).
         /// </summary>
-        public DateTimeOffset? ExpiryDate { get; set; }
+        public DateTimeOffset? EndDate { get; set; }
 
         /// <summary>
         /// Collection of courses for this schedule.
@@ -131,9 +128,9 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
     public class UpdateScheduleDto
     {
         /// <summary>
-        /// Date when the schedule expires (null means ongoing).
+        /// Date when the schedule ends (null means ongoing).
         /// </summary>
-        public DateTimeOffset? ExpiryDate { get; set; }
+        public DateTimeOffset? EndDate { get; set; }
 
         /// <summary>
         /// Whether the schedule is active.

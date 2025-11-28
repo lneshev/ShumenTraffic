@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ShumenTraffic.Common.Core.Enums.Schedules;
 using ShumenTraffic.Web.Core.Models.Schedules;
 using ShumenTraffic.Web.Services.Interfaces;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         /// <returns>List of schedules</returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAll([FromQuery] string dayType = null, [FromQuery] bool includeInactive = false)
+        public async Task<IActionResult> GetAll([FromQuery] DayType? dayType = null, [FromQuery] bool includeInactive = false)
         {
             var schedules = await _scheduleService.GetAllAsync(dayType, includeInactive);
             var schedulesList = schedules.ToList();

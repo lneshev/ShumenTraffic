@@ -87,7 +87,7 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
             var today = DateTimeOffset.UtcNow.Date;
             var schedules = await _context.Schedules
                 .Include(s => s.ScheduleCourses)
-                .Where(s => s.IsActive && s.EffectiveDate.Date <= today && (s.ExpiryDate == null || s.ExpiryDate.Value.Date >= today))
+                .Where(s => s.IsActive && s.StartDate.Date <= today && (s.EndDate == null || s.EndDate.Value.Date >= today))
                 .ToListAsync();
 
             // Find a course for this route that matches the current time

@@ -1,3 +1,5 @@
+using ShumenTraffic.Common.Core.Entities.BusLines;
+using ShumenTraffic.Common.Core.Enums.Schedules;
 using System;
 using System.Collections.Generic;
 
@@ -7,27 +9,22 @@ namespace ShumenTraffic.Common.Core.Entities.Schedules
     /// Represents a schedule for a specific date range and day type.
     /// Contains multiple courses (trips/departures), each specifying which route it uses.
     /// </summary>
-    public class Schedule
+    public class Schedule : TrackableEntityBase<int>
     {
-        /// <summary>
-        /// Primary key identifier.
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// Day type: "Weekday", "Saturday", or "Sunday".
         /// </summary>
-        public required string DayType { get; set; }
+        public DayType DayType { get; set; }
 
         /// <summary>
-        /// Date when the schedule becomes effective.
+        /// Date when the schedule starts.
         /// </summary>
-        public DateTimeOffset EffectiveDate { get; set; }
+        public DateTimeOffset StartDate { get; set; }
 
         /// <summary>
-        /// Date when the schedule expires (null means ongoing).
+        /// Date when the schedule ends (null means ongoing).
         /// </summary>
-        public DateTimeOffset? ExpiryDate { get; set; }
+        public DateTimeOffset? EndDate { get; set; }
 
         /// <summary>
         /// Indicates if the schedule is active.
@@ -35,14 +32,15 @@ namespace ShumenTraffic.Common.Core.Entities.Schedules
         public bool IsActive { get; set; } = true;
 
         /// <summary>
-        /// Timestamp when the record was created.
+        /// Foreign key to the bus line.
         /// </summary>
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+        public int BusLineId { get; set; }
 
+        // Navigation properties
         /// <summary>
-        /// Timestamp when the record was last updated.
+        /// The bus line this schedule belongs to.
         /// </summary>
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+        public virtual BusLine BusLine { get; set; }
 
         // Navigation properties
         /// <summary>

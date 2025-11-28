@@ -77,6 +77,7 @@ classDiagram
 
     class Schedule {
         int Id
+        int BusLineId
         DayType DayType
         datetimeoffset StartDate
         datetimeoffset EndDate
@@ -102,6 +103,7 @@ classDiagram
     TransportationCompany "1" --> "0..*" TransportationCompanyBusLine : has
     BusLine "1" --> "0..*" TransportationCompanyBusLine : has
     BusLine "1" --> "0..*" Route : has
+    BusLine "1" --> "0..*" Schedule : has
     Route "1" --> "0..*" RouteStop : contains
     BusStop "1" --> "0..*" RouteStop : "is part of"
     Zone "1" --> "0..*" BusStop : contains
@@ -260,19 +262,22 @@ Junction table for the many-to-many relationship between TransportationCompany a
 2. **BusLine → Route** (1:N)
    - One bus line has multiple routes (different directions)
 
-3. **Route → RouteStop** (1:N)
+3. ** BusLine → Schedule** (1:N)
+   - One bus line has multiple schedules
+
+4. **Route → RouteStop** (1:N)
    - One route contains multiple stops (actual bus stops and waypoints)
 
-4. **BusStop → RouteStop** (1:N)
+5. **BusStop → RouteStop** (1:N)
    - One bus stop can be part of multiple routes
 
-5. **Zone → BusStop** (1:N)
+6. **Zone → BusStop** (1:N)
    - One zone contains multiple bus stops
 
-6. **Route → ScheduleCourse** (1:N)
+7. **Route → ScheduleCourse** (1:N)
    - One route can be used by multiple courses (trips/departures)
 
-7. **Schedule → ScheduleCourse** (1:N)
+8. **Schedule → ScheduleCourse** (1:N)
    - One schedule has multiple courses (trips/departures)
    - Each course specifies which route it uses, enabling route swapping within a schedule
 

@@ -79,11 +79,47 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Saturday.
+        /// </summary>
+        public static string DayType_Saturday {
+            get {
+                return ResourceManager.GetString("DayType_Saturday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sunday.
+        /// </summary>
+        public static string DayType_Sunday {
+            get {
+                return ResourceManager.GetString("DayType_Sunday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weekday.
+        /// </summary>
+        public static string DayType_Weekday {
+            get {
+                return ResourceManager.GetString("DayType_Weekday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to One or more databases could not be updated. Main status: {0}..
         /// </summary>
         public static string OneOrMoreDatabasesCouldNotBeUpdated {
             get {
                 return ResourceManager.GetString("OneOrMoreDatabasesCouldNotBeUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} must be of type {1} in order to apply attribute {2}..
+        /// </summary>
+        public static string PropertyMustBeOfTypeInOrderToApplyAttribute {
+            get {
+                return ResourceManager.GetString("PropertyMustBeOfTypeInOrderToApplyAttribute", resourceCulture);
             }
         }
         
@@ -133,6 +169,15 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start date must be less than or equal to end date..
+        /// </summary>
+        public static string StartDateMustBeLessThanOrEqualToEndDate {
+            get {
+                return ResourceManager.GetString("StartDateMustBeLessThanOrEqualToEndDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The route cannot be saved, because the estimated minutes from start for the stops are not correct. The estimated minutes from start should be in ascending order..
         /// </summary>
         public static string TheRouteCannotBeSavedBecauseTheEstimatedMinutesFromStartAreNotCorrect {
@@ -178,11 +223,38 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to X (Longitude) must be in range {0} to {1}..
+        /// </summary>
+        public static string XLongitudeMustBeInRange {
+            get {
+                return ResourceManager.GetString("XLongitudeMustBeInRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y (Latitude) must be in range {0} to {1}..
+        /// </summary>
+        public static string YLatitudeMustBeInRange {
+            get {
+                return ResourceManager.GetString("YLatitudeMustBeInRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You are not allowed to delete bus line: &apos;{0}&apos;, because it has routes..
         /// </summary>
-        public static string YouAreNotAllowedToDeleteBusLine {
+        public static string YouAreNotAllowedToDeleteBusLineBecauseItHasRoutes {
             get {
-                return ResourceManager.GetString("YouAreNotAllowedToDeleteBusLine", resourceCulture);
+                return ResourceManager.GetString("YouAreNotAllowedToDeleteBusLineBecauseItHasRoutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not allowed to delete bus line: &apos;{0}&apos;, because it has schedules..
+        /// </summary>
+        public static string YouAreNotAllowedToDeleteBusLineBecauseItHasSchedules {
+            get {
+                return ResourceManager.GetString("YouAreNotAllowedToDeleteBusLineBecauseItHasSchedules", resourceCulture);
             }
         }
         

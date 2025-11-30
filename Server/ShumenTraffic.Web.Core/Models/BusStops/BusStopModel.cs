@@ -21,7 +21,6 @@ namespace ShumenTraffic.Web.Core.Models.BusStops
         /// <summary>
         /// Zone ID.
         /// </summary>
-        [Required]
         public int ZoneId { get; set; }
 
         /// <summary>

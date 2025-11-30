@@ -1,5 +1,6 @@
-using ShumenTraffic.Common.Core.Enums.Routes;
+﻿using MoravianStar.Dao;
 using ShumenTraffic.Common.Core.Enums.Schedules;
+using ShumenTraffic.Common.Core.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,47 +8,10 @@ using System.ComponentModel.DataAnnotations;
 namespace ShumenTraffic.Web.Core.Models.Schedules
 {
     /// <summary>
-    /// DTO for Schedule Course (trip/departure).
-    /// </summary>
-    public class ScheduleCourseDto
-    {
-        /// <summary>
-        /// Schedule course ID.
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Route ID.
-        /// </summary>
-        public int RouteId { get; set; }
-
-        /// <summary>
-        /// Bus line number.
-        /// </summary>
-        public string BusLineNumber { get; set; }
-
-        /// <summary>
-        /// Route direction.
-        /// </summary>
-        public RouteDirection Direction { get; set; }
-
-        /// <summary>
-        /// Departure time from the start of the route.
-        /// </summary>
-        [Required(ErrorMessage = "Departure time is required")]
-        public TimeSpan DepartureTime { get; set; }
-    }
-
-    /// <summary>
     /// DTO for Schedule.
     /// </summary>
-    public class ScheduleModel
+    public class ScheduleModel : ModelBase<int>, IValidatableObject
     {
-        /// <summary>
-        /// Schedule ID.
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// Day type: "Weekday", "Saturday", or "Sunday".
         /// </summary>
@@ -56,7 +20,6 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         /// <summary>
         /// Date when the schedule starts.
         /// </summary>
-        [Required(ErrorMessage = "Start date is required")]
         public DateTimeOffset StartDate { get; set; }
 
         /// <summary>
@@ -70,87 +33,21 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         public bool IsActive { get; set; } = true;
 
         /// <summary>
+        /// Bus line ID.
+        /// </summary>
+        public int BusLineId { get; set; }
+
+        /// <summary>
         /// Collection of courses for this schedule.
         /// </summary>
         public List<ScheduleCourseDto> Courses { get; set; } = new List<ScheduleCourseDto>();
-    }
 
-    /// <summary>
-    /// DTO for creating a new Schedule.
-    /// </summary>
-    public class CreateScheduleDto
-    {
-        /// <summary>
-        /// Day type: "Weekday", "Saturday", or "Sunday".
-        /// </summary>
-        public DayType DayType { get; set; }
-
-        /// <summary>
-        /// Date when the schedule starts.
-        /// </summary>
-        [Required(ErrorMessage = "Start date is required")]
-        public DateTimeOffset StartDate { get; set; }
-
-        /// <summary>
-        /// Date when the schedule ends (null means ongoing).
-        /// </summary>
-        public DateTimeOffset? EndDate { get; set; }
-
-        /// <summary>
-        /// Collection of courses for this schedule.
-        /// </summary>
-        [Required(ErrorMessage = "At least one course is required")]
-        [MinLength(1, ErrorMessage = "Schedule must have at least one course")]
-        public List<CreateScheduleCourseDto> Courses { get; set; } = new List<CreateScheduleCourseDto>();
-    }
-
-    /// <summary>
-    /// DTO for creating a Schedule Course.
-    /// </summary>
-    public class CreateScheduleCourseDto
-    {
-        /// <summary>
-        /// Route ID.
-        /// </summary>
-        [Required(ErrorMessage = "Route ID is required")]
-        public int RouteId { get; set; }
-
-        /// <summary>
-        /// Departure time from the start of the route.
-        /// </summary>
-        [Required(ErrorMessage = "Departure time is required")]
-        public TimeSpan DepartureTime { get; set; }
-    }
-
-    /// <summary>
-    /// DTO for updating a Schedule.
-    /// </summary>
-    public class UpdateScheduleDto
-    {
-        /// <summary>
-        /// Date when the schedule ends (null means ongoing).
-        /// </summary>
-        public DateTimeOffset? EndDate { get; set; }
-
-        /// <summary>
-        /// Whether the schedule is active.
-        /// </summary>
-        public bool? IsActive { get; set; }
-    }
-
-    /// <summary>
-    /// DTO for updating a Schedule Course.
-    /// </summary>
-    public class UpdateScheduleCourseDto
-    {
-        /// <summary>
-        /// Route ID.
-        /// </summary>
-        public int? RouteId { get; set; }
-
-        /// <summary>
-        /// Departure time from the start of the route.
-        /// </summary>
-        public TimeSpan? DepartureTime { get; set; }
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (StartDate > EndDate)
+            {
+                yield return new ValidationResult(Strings.StartDateMustBeLessThanOrEqualToEndDate);
+            }
+        }
     }
 }

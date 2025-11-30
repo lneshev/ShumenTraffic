@@ -1,25 +1,31 @@
 'use client';
 
+import EntityDropdown from '@/components/EntityDropdown';
+import EnumDropdown from '@/components/EnumDropdown';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import api from '@/lib/api';
+import { ApiError } from '@/lib/api';
+import ScheduleOverviewService from '@/services/ScheduleOverviewService';
+import ScheduleService from '@/services/ScheduleService';
+import BusLineLightModel from '@/types/BusLineLightModel';
+import PageResult from '@/types/common/PageResult';
+import ServerEnums from '@/types/common/ServerEnums';
+import ScheduleOverviewModel from '@/types/ScheduleOverviewModel';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-interface Schedule {
-  id: number;
-  dayType: number;
-  startDate: string;
-  endDate?: string;
-  isActive: boolean;
-}
-
 function SchedulesPage() {
-  const initialFormData = {
-    dayType: 0,
+  const initialFormData: ScheduleOverviewModel = {
+    id: 0,
+    dayType: ServerEnums.DayType.Weekday,
+    dayTypeText: '',
     startDate: new Date().toISOString().split('T')[0],
+    endDate: '',
+    isActive: true,
+    busLineId: 0,
+    busLineNumber: '',
   };
 
-  const [schedules, setSchedules] = useState<Schedule[]>([]);
+  const [schedules, setSchedules] = useState<ScheduleOverviewModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -32,10 +38,10 @@ function SchedulesPage() {
   const fetchSchedules = async () => {
     try {
       setIsLoading(true);
-      const data = await api.get<Schedule[]>('/schedules');
-      setSchedules(data);
+      const data = await ScheduleOverviewService.read(undefined, [{ field: 'BusLineNumber', dir: 'asc' }, { field: 'DayType', dir: 'asc' }, { field: 'StartDate', dir: 'asc' }]);
+      setSchedules(data.items);
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error loading schedules');
+      setError(err instanceof ApiError ? err.message : 'Error loading schedules');
     } finally {
       setIsLoading(false);
     }
@@ -45,11 +51,11 @@ function SchedulesPage() {
     e.preventDefault();
     try {
       setError('');
-      await api.post('/schedules', formData);
+      await ScheduleOverviewService.create(formData);
       toggleShowForm(false);
       fetchSchedules();
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error creating schedule');
+      setError(err instanceof ApiError ? err.message : 'Error creating schedule');
     }
   };
 
@@ -57,10 +63,10 @@ function SchedulesPage() {
     if (!confirm('Are you sure?')) return;
     try {
       setError('');
-      await api.delete(`/schedules/${id}`);
+      await ScheduleService.delete(id);
       fetchSchedules();
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Error deleting schedule');
+      setError(err instanceof ApiError ? err.message : 'Error deleting schedule');
     }
   };
 
@@ -103,18 +109,37 @@ function SchedulesPage() {
         {showForm && (
           <form onSubmit={handleSubmit} className="mb-8 p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
             <div className="mb-4">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Bus Line
+                </label>
+                <EntityDropdown
+                  value={formData.busLineId}
+                  onChange={(e) => setFormData({ ...formData, busLineId: e ? e.value : 0 })}
+                  placeholder="Select..."
+                  url="/api/bus-lines-light"
+                  sorts={[{ field: "lineNumber", dir: "asc" }]}
+                  parseData={(data: PageResult<BusLineLightModel>) =>
+                    data.items.map((item, i) => {
+                      return {
+                        value: item.id,
+                        label: item.lineNumber
+                      };
+                    })
+                  }
+                  required
+                />
+              </div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Day Type
               </label>
-              <select
+              <EnumDropdown
+                enumName="DayType"
                 value={formData.dayType}
-                onChange={(e) => setFormData({ ...formData, dayType: parseInt(e.target.value) })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-              >
-                <option value={0}>Weekday</option>
-                <option value={1}>Saturday</option>
-                <option value={2}>Sunday</option>
-              </select>
+                onChange={(e) => setFormData({ ...formData, dayType: e ? e.value : 0 })}
+                isClearable={false}
+                required
+              />
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -126,6 +151,17 @@ function SchedulesPage() {
                 onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
                 required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                End Date
+              </label>
+              <input
+                type="date"
+                value={formData.endDate}
+                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
               />
             </div>
             <button
@@ -148,10 +184,16 @@ function SchedulesPage() {
               <thead>
                 <tr className="border-b border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800">
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
+                    Bus Line
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Day Type
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Start Date
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
+                    End Date
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Status
@@ -168,10 +210,16 @@ function SchedulesPage() {
                     className="border-b border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800"
                   >
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
-                      {schedule.dayType}
+                      {schedule.busLineNumber}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
-                      {new Date(schedule.startDate).toLocaleDateString()}
+                      {schedule.dayTypeText}
+                    </td>
+                    <td className="py-3 px-4 text-gray-900 dark:text-white">
+                      {new Date(schedule.startDate).toLocaleDateString("bg-BG")}
+                    </td>
+                    <td className="py-3 px-4 text-gray-900 dark:text-white">
+                      {schedule.endDate ? new Date(schedule.endDate).toLocaleDateString("bg-BG") : '-'}
                     </td>
                     <td className="py-3 px-4">
                       <span

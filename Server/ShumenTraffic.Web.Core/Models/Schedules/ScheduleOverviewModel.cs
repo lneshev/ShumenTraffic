@@ -1,22 +1,26 @@
-using ShumenTraffic.Common.Core.Entities.BusLines;
+﻿using MoravianStar.Dao;
 using ShumenTraffic.Common.Core.Enums.Schedules;
 using ShumenTraffic.Common.Core.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ShumenTraffic.Common.Core.Entities.Schedules
+namespace ShumenTraffic.Web.Core.Models.Schedules
 {
     /// <summary>
-    /// Represents a schedule for a specific date range and day type.
-    /// Contains multiple courses (trips/departures), each specifying which route it uses.
+    /// DTO for Schedule.
     /// </summary>
-    public class Schedule : TrackableEntityBase<int>, IValidatableObject
+    public class ScheduleOverviewModel : ModelBase<int>, IValidatableObject
     {
         /// <summary>
         /// Day type: "Weekday", "Saturday", or "Sunday".
         /// </summary>
         public DayType DayType { get; set; }
+
+        /// <summary>
+        /// Day type as text
+        /// </summary>
+        public string DayTypeText { get; set; }
 
         /// <summary>
         /// Date when the schedule starts.
@@ -29,27 +33,19 @@ namespace ShumenTraffic.Common.Core.Entities.Schedules
         public DateTimeOffset? EndDate { get; set; }
 
         /// <summary>
-        /// Indicates if the schedule is active.
+        /// Whether the schedule is active.
         /// </summary>
         public bool IsActive { get; set; } = true;
 
         /// <summary>
-        /// Foreign key to the bus line.
+        /// Bus line ID.
         /// </summary>
         public int BusLineId { get; set; }
 
-        // Navigation properties
         /// <summary>
-        /// The bus line this schedule belongs to.
+        /// Bus line number.
         /// </summary>
-        public virtual BusLine BusLine { get; set; }
-
-        // Navigation properties
-        /// <summary>
-        /// Collection of courses (trips/departures) for this schedule.
-        /// Each course specifies which route it uses.
-        /// </summary>
-        public virtual ICollection<ScheduleCourse> ScheduleCourses { get; set; } = new List<ScheduleCourse>();
+        public string BusLineNumber { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

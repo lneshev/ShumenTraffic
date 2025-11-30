@@ -1,7 +1,10 @@
 ﻿using MoravianStar.Dao;
 using NetTopologySuite.Geometries;
 using ShumenTraffic.Common.Core.Attributes;
+using ShumenTraffic.Common.Core.Entities.BusStops;
+using ShumenTraffic.Common.Core.Resources;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ShumenTraffic.Web.Core.Models.Routes
@@ -9,7 +12,7 @@ namespace ShumenTraffic.Web.Core.Models.Routes
     /// <summary>
     /// DTO for Route Stop (waypoint or actual bus stop on a route).
     /// </summary>
-    public class RouteStopModel : ModelBase<int>
+    public class RouteStopModel : ModelBase<int>, IValidatableObject
     {
         /// <summary>
         /// Bus stop ID (nullable for waypoints).
@@ -44,5 +47,14 @@ namespace ShumenTraffic.Web.Core.Models.Routes
         /// </summary>
         [Range(0, int.MaxValue)]
         public int? EstimatedMinutesFromStart { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Location == null && !BusStopId.HasValue ||
+                Location != null && BusStopId.HasValue)
+            {
+                yield return new ValidationResult(Strings.RouteStopMustEitherHaveALocationOrABusStop);
+            }
+        }
     }
 }

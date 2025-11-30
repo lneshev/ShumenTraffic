@@ -151,8 +151,6 @@ namespace ShumenTraffic.Common.DataAccess.DbContexts
 
             // ScheduleCourse configuration
             modelBuilder.Entity<ScheduleCourse>()
-                .HasKey(x => x.Id);
-            modelBuilder.Entity<ScheduleCourse>()
                 .HasIndex(x => x.ScheduleId);
             modelBuilder.Entity<ScheduleCourse>()
                 .HasIndex(x => x.RouteId);

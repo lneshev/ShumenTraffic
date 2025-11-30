@@ -26,6 +26,7 @@ using ShumenTraffic.Common.Core.Constants.Security;
 using ShumenTraffic.Common.Core.Entities.BusLines;
 using ShumenTraffic.Common.Core.Entities.BusStops;
 using ShumenTraffic.Common.Core.Entities.Routes;
+using ShumenTraffic.Common.Core.Entities.Schedules;
 using ShumenTraffic.Common.Core.Entities.TransportationCompanies;
 using ShumenTraffic.Common.Core.Entities.Zones;
 using ShumenTraffic.Common.Core.Enums.Maintenance;
@@ -43,6 +44,7 @@ using ShumenTraffic.Common.Services.Services.Zones;
 using ShumenTraffic.Web.Core.Models.BusLines;
 using ShumenTraffic.Web.Core.Models.BusStops;
 using ShumenTraffic.Web.Core.Models.Routes;
+using ShumenTraffic.Web.Core.Models.Schedules;
 using ShumenTraffic.Web.Core.Models.TransportationCompanies;
 using ShumenTraffic.Web.Core.Models.Zones;
 using ShumenTraffic.Web.Services.Interfaces;
@@ -231,6 +233,8 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddTransient<IModelsMappingService<BusStopModel, BusStop>, BusStopModelsMappingService>();
             services.AddTransient<IModelsMappingService<RouteModel, Route>, RouteModelsMappingService>();
             services.AddTransient<IModelsMappingService<RouteOverviewModel, Route>, RouteOverviewModelsMappingService>();
+            services.AddTransient<IModelsMappingService<ScheduleModel, Schedule>, ScheduleModelsMappingService>();
+            services.AddTransient<IModelsMappingService<ScheduleOverviewModel, Schedule>, ScheduleOverviewModelsMappingService>();
             services.AddScoped<IRouteModelService, RouteModelService>();
             services.AddScoped<IScheduleModelService, ScheduleModelService>();
         }

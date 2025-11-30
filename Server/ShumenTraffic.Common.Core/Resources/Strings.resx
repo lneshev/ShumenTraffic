@@ -150,7 +150,7 @@
   <data name="RouteWithNameBusLineAndDirectionAlreadyExists" xml:space="preserve">
     <value>A route with name '{0}', bus line '{1}' and direction '{2}' already exists.</value>
   </data>
-  <data name="YouAreNotAllowedToDeleteBusLine" xml:space="preserve">
+  <data name="YouAreNotAllowedToDeleteBusLineBecauseItHasRoutes" xml:space="preserve">
     <value>You are not allowed to delete bus line: '{0}', because it has routes.</value>
   </data>
   <data name="TheRouteShouldStartWithABusStop" xml:space="preserve">
@@ -170,5 +170,29 @@
   </data>
   <data name="YouAreNotAllowedToDeleteBusStop" xml:space="preserve">
     <value>You are not allowed to delete bus stop: '{0}', because it is used in one or more routes.</value>
+  </data>
+  <data name="DayType_Weekday" xml:space="preserve">
+    <value>Weekday</value>
+  </data>
+  <data name="DayType_Saturday" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="DayType_Sunday" xml:space="preserve">
+    <value>Sunday</value>
+  </data>
+  <data name="YouAreNotAllowedToDeleteBusLineBecauseItHasSchedules" xml:space="preserve">
+    <value>You are not allowed to delete bus line: '{0}', because it has schedules.</value>
+  </data>
+  <data name="StartDateMustBeLessThanOrEqualToEndDate" xml:space="preserve">
+    <value>Start date must be less than or equal to end date.</value>
+  </data>
+  <data name="XLongitudeMustBeInRange" xml:space="preserve">
+    <value>X (Longitude) must be in range {0} to {1}.</value>
+  </data>
+  <data name="YLatitudeMustBeInRange" xml:space="preserve">
+    <value>Y (Latitude) must be in range {0} to {1}.</value>
+  </data>
+  <data name="PropertyMustBeOfTypeInOrderToApplyAttribute" xml:space="preserve">
+    <value>{0} must be of type {1} in order to apply attribute {2}.</value>
   </data>
 </root>

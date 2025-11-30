@@ -81,7 +81,7 @@ export default function EnumDropdown({
         return (!string.isNullOrEmpty(label) ? label : "").toLowerCase().includes(searchString.toLowerCase());
     };
 
-    const selectedOption = options.find(option => value && value === option.value);
+    const selectedOption = options.find(option => value === option.value);
 
     const handleMenuOpen = async () => {
         // Fetch options when menu opens for the first time (if not already fetched)
@@ -93,7 +93,7 @@ export default function EnumDropdown({
 
     useEffect(() => {
         // Fetch immediately if autoBind is true or if there are preselected values
-        if (autoBind || !!value) {
+        if (autoBind || !!value || value === 0) {
             fetchOptions();
         }
     }, []); // Only run on mount

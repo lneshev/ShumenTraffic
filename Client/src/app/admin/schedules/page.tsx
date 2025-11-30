@@ -10,6 +10,7 @@ import BusLineLightModel from '@/types/BusLineLightModel';
 import PageResult from '@/types/common/PageResult';
 import ServerEnums from '@/types/common/ServerEnums';
 import ScheduleOverviewModel from '@/types/ScheduleOverviewModel';
+import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -18,7 +19,7 @@ function SchedulesPage() {
     id: 0,
     dayType: ServerEnums.DayType.Weekday,
     dayTypeText: '',
-    startDate: new Date().toISOString().split('T')[0],
+    startDate: DateTime.now().toISODate(),
     endDate: '',
     isActive: true,
     busLineId: 0,

@@ -84,10 +84,10 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         private async Task<BusPositionModel> CalculatePositionFromSchedule(Route route, string busId, TimeSpan currentTime)
         {
             // Get all schedules for today (we'll use all day types for now)
-            var today = DateTimeOffset.UtcNow.Date;
+            var today = DateOnly.FromDateTime(DateTimeOffset.UtcNow.Date);
             var schedules = await _context.Schedules
                 .Include(s => s.ScheduleCourses)
-                .Where(s => s.IsActive && s.StartDate.Date <= today && (s.EndDate == null || s.EndDate.Value.Date >= today))
+                .Where(s => s.IsActive && s.StartDate <= today && (s.EndDate == null || s.EndDate.Value >= today))
                 .ToListAsync();
 
             // Find a course for this route that matches the current time

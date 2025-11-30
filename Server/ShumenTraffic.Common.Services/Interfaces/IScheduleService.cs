@@ -34,7 +34,7 @@ namespace ShumenTraffic.Common.Services.Interfaces
         /// <param name="endDate">End date (optional)</param>
         /// <param name="courses">Schedule courses</param>
         /// <returns>Created schedule</returns>
-        Task<Schedule> CreateAsync(DayType dayType, DateTimeOffset startDate, DateTimeOffset? endDate, IEnumerable<ScheduleCourseData> courses);
+        Task<Schedule> CreateAsync(DayType dayType, DateOnly startDate, DateOnly? endDate, IEnumerable<ScheduleCourseData> courses);
 
         /// <summary>
         /// Update an existing schedule.
@@ -43,7 +43,7 @@ namespace ShumenTraffic.Common.Services.Interfaces
         /// <param name="endDate">End date (optional)</param>
         /// <param name="isActive">Is active (optional)</param>
         /// <returns>Updated schedule or null if not found</returns>
-        Task<Schedule> UpdateAsync(int id, DateTimeOffset? endDate = null, bool? isActive = null);
+        Task<Schedule> UpdateAsync(int id, DateOnly? endDate = null, bool? isActive = null);
     }
 
     /// <summary>

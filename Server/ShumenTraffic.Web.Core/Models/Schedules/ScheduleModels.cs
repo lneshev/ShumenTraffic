@@ -52,12 +52,12 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         /// Date when the schedule starts.
         /// </summary>
         [Required(ErrorMessage = "Start date is required")]
-        public DateTimeOffset StartDate { get; set; }
+        public DateOnly StartDate { get; set; }
 
         /// <summary>
         /// Date when the schedule ends (null means ongoing).
         /// </summary>
-        public DateTimeOffset? EndDate { get; set; }
+        public DateOnly? EndDate { get; set; }
 
         /// <summary>
         /// Collection of courses for this schedule.
@@ -93,7 +93,7 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         /// <summary>
         /// Date when the schedule ends (null means ongoing).
         /// </summary>
-        public DateTimeOffset? EndDate { get; set; }
+        public DateOnly? EndDate { get; set; }
 
         /// <summary>
         /// Whether the schedule is active.

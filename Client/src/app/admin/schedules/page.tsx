@@ -22,6 +22,8 @@ function SchedulesPage() {
     startDate: DateTime.now().toISODate(),
     endDate: '',
     isActive: true,
+    priority: ServerEnums.SchedulePriority.Normal,
+    priorityText: '',
     busLineId: 0,
     busLineNumber: '',
   };
@@ -39,7 +41,12 @@ function SchedulesPage() {
   const fetchSchedules = async () => {
     try {
       setIsLoading(true);
-      const data = await ScheduleOverviewService.read(undefined, [{ field: 'BusLineNumber', dir: 'asc' }, { field: 'DayType', dir: 'asc' }, { field: 'StartDate', dir: 'asc' }]);
+      const data = await ScheduleOverviewService.read(undefined, [
+        { field: 'BusLineNumber', dir: 'asc' },
+        { field: 'DayType', dir: 'asc' },
+        { field: 'StartDate', dir: 'asc' },
+        { field: 'Priority', dir: 'asc' }
+      ]);
       setSchedules(data.items);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Error loading schedules');
@@ -165,6 +172,18 @@ function SchedulesPage() {
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
               />
             </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Priority
+              </label>
+              <EnumDropdown
+                enumName="SchedulePriority"
+                value={formData.priority}
+                onChange={(e) => setFormData({ ...formData, priority: e ? e.value : 0 })}
+                isClearable={false}
+                required
+              />
+            </div>
             <button
               type="submit"
               className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
@@ -185,6 +204,9 @@ function SchedulesPage() {
               <thead>
                 <tr className="border-b border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800">
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
+                    ID
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Bus Line
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
@@ -195,6 +217,9 @@ function SchedulesPage() {
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     End Date
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
+                    Priority
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Status
@@ -211,6 +236,9 @@ function SchedulesPage() {
                     className="border-b border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800"
                   >
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
+                      {schedule.id}
+                    </td>
+                    <td className="py-3 px-4 text-gray-900 dark:text-white">
                       {schedule.busLineNumber}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
@@ -221,6 +249,9 @@ function SchedulesPage() {
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
                       {schedule.endDate ? new Date(schedule.endDate).toLocaleDateString("bg-BG") : '-'}
+                    </td>
+                    <td className="py-3 px-4 text-gray-900 dark:text-white">
+                      {schedule.priorityText}
                     </td>
                     <td className="py-3 px-4">
                       <span

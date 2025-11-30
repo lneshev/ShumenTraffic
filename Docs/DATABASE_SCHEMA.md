@@ -79,9 +79,10 @@ classDiagram
         int Id
         int BusLineId
         DayType DayType
-        datetimeoffset StartDate
-        datetimeoffset EndDate
+        date StartDate
+        date EndDate
         bool IsActive
+        SchedulePriority Priority
         datetimeoffset CreatedAt
         datetimeoffset UpdatedAt
     }
@@ -121,6 +122,10 @@ classDiagram
 ### RouteDirection
 - One = 1
 - Two = 2
+
+### SchedulePriority
+- Normal = 0 - Regular schedules
+- High = 1 - Special schedules (holidays, events, temporary changes)
 
 ## Entity Descriptions
 
@@ -216,16 +221,22 @@ Represents a schedule for a specific date range and day type. Contains multiple 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | Id | int | PK, Auto | Primary key |
+| BusLineId | int | FK, NOT NULL | Reference to bus line |
 | DayType | int | NOT NULL | Weekday, Saturday or Sunday |
-| StartDate | datetimeoffset | NOT NULL | Schedule start date |
-| EndDate | datetimeoffset | | Schedule end date (null = ongoing) |
+| StartDate | date | NOT NULL | Schedule start date |
+| EndDate | date | | Schedule end date (null = ongoing) |
 | IsActive | bool | NOT NULL, Default=true | Active status |
+| Priority | int | NOT NULL, Default=0 | Priority level (Normal=0, High=1) |
 | CreatedAt | datetimeoffset | NOT NULL | Creation timestamp |
 | UpdatedAt | datetimeoffset | NOT NULL | Last update timestamp |
 
 **Notes:**
 - Schedule does not directly reference a route; instead, each course in the schedule specifies which route it uses
 - This allows different courses in the same schedule to use different routes (route swapping)
+- Priority field allows multiple schedules for the same bus line, day type, and date range with different priority levels
+- Use cases for Priority:
+  - Normal priority: Regular schedules
+  - High priority: Special schedules (holidays, events, temporary changes)
 
 ### ScheduleCourse
 Represents a course (trip/departure) for a schedule on a specific route.
@@ -348,6 +359,7 @@ CREATE INDEX IX_RouteStop_BusStopId ON RouteStop(BusStopId);
 CREATE INDEX IX_RouteStop_StopOrder ON RouteStop(RouteId, StopOrder);
 CREATE INDEX IX_ScheduleCourse_ScheduleId ON ScheduleCourse(ScheduleId);
 CREATE INDEX IX_ScheduleCourse_RouteId ON ScheduleCourse(RouteId);
+CREATE INDEX IX_Schedule_BusLineId ON Schedule(BusLineId);
 
 -- Active records
 CREATE INDEX IX_BusLine_IsActive ON BusLine(IsActive);
@@ -377,7 +389,9 @@ Identity tables are automatically managed by the framework and are separate from
 - Soft deletes are not used; instead, `IsActive` flag is used
 - DayType values: "Weekday", "Saturday", "Sunday"
 - Direction values: 1 or 2
+- SchedulePriority values: "Normal" (0), "High" (1)
 - Coordinates use WGS84 (EPSG:4326) for Leaflet.js compatibility
 - `RouteStop.BusStopId` is nullable to support waypoints (intermediate route points)
 - `RouteStop.EstimatedMinutesFromStart` is only populated for actual bus stops (when `BusStopId IS NOT NULL`)
 - Live bus position calculation happens server-side; client receives either real GPS coords or calculated progress percentage
+- Schedules must have unique combinations of (BusLineId, DayType, Priority and date range) to allow multiple schedules for the same bus line and day type with different priorities

@@ -76,13 +76,14 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<Schedule> CreateAsync(DayType dayType, DateOnly startDate, DateOnly? endDate, IEnumerable<ScheduleCourseData> courses)
+        public async Task<Schedule> CreateAsync(DayType dayType, DateOnly startDate, DateOnly? endDate, SchedulePriority priority, IEnumerable<ScheduleCourseData> courses)
         {
             var schedule = new Schedule
             {
                 DayType = dayType,
                 StartDate = startDate,
                 EndDate = endDate,
+                Priority = priority,
                 IsActive = true
             };
 
@@ -106,7 +107,7 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
             return await GetByIdWithCoursesAsync(schedule.Id);
         }
 
-        public async Task<Schedule> UpdateAsync(int id, DateOnly? endDate = null, bool? isActive = null)
+        public async Task<Schedule> UpdateAsync(int id, DateOnly? endDate = null, bool? isActive = null, SchedulePriority? priority = null)
         {
             var schedule = await _context.Schedules.FindAsync(id);
 
@@ -122,6 +123,10 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
             if (isActive.HasValue)
             {
                 schedule.IsActive = isActive.Value;
+            }
+            if (priority.HasValue)
+            {
+                schedule.Priority = priority.Value;
             }
 
             _context.Schedules.Update(schedule);
@@ -147,4 +152,3 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
         }
     }
 }
-

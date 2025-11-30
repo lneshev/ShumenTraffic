@@ -121,10 +121,10 @@
     <value>Saving data to a database without a transaction is not allowed. First open a database transaction and then save&amp;commit the changes.</value>
   </data>
   <data name="TransportationCompanyWithNameAlreadyExists" xml:space="preserve">
-    <value>A transportation company with name '{0}' already exists.</value>
+    <value>A transportation company with name: '{0}' already exists.</value>
   </data>
   <data name="BusLineWithLineNumberAlreadyExists" xml:space="preserve">
-    <value>A bus line with line number '{0}' already exists.</value>
+    <value>A bus line with line number: '{0}' already exists.</value>
   </data>
   <data name="YouAreNotAllowedToDeleteTransportationCompany" xml:space="preserve">
     <value>You are not allowed to delete transportation company: '{0}', because it has bus lines.</value>
@@ -133,13 +133,13 @@
     <value>One or more databases could not be updated. Main status: {0}.</value>
   </data>
   <data name="ZoneWithNameAlreadyExists" xml:space="preserve">
-    <value>A zone with name '{0}' already exists.</value>
+    <value>A zone with name: '{0}' already exists.</value>
   </data>
   <data name="YouAreNotAllowedToDeleteZone" xml:space="preserve">
     <value>You are not allowed to delete zone: '{0}', because it has bus stops.</value>
   </data>
   <data name="BusStopWithNameAlreadyExists" xml:space="preserve">
-    <value>A bus stop with name '{0}' already exists.</value>
+    <value>A bus stop with name: '{0}' already exists.</value>
   </data>
   <data name="RouteDirection_One" xml:space="preserve">
     <value>1</value>
@@ -148,7 +148,7 @@
     <value>2</value>
   </data>
   <data name="RouteWithNameBusLineAndDirectionAlreadyExists" xml:space="preserve">
-    <value>A route with name '{0}', bus line '{1}' and direction '{2}' already exists.</value>
+    <value>A route with name: '{0}', bus line: '{1}' and direction: '{2}' already exists.</value>
   </data>
   <data name="YouAreNotAllowedToDeleteBusLineBecauseItHasRoutes" xml:space="preserve">
     <value>You are not allowed to delete bus line: '{0}', because it has routes.</value>
@@ -193,6 +193,18 @@
     <value>Y (Latitude) must be in range {0} to {1}.</value>
   </data>
   <data name="PropertyMustBeOfTypeInOrderToApplyAttribute" xml:space="preserve">
-    <value>{0} must be of type {1} in order to apply attribute {2}.</value>
+    <value>'{0}' must be of type: '{1}' in order to apply attribute: '{2}'.</value>
+  </data>
+  <data name="SchedulePriority_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="SchedulePriority_High" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="UnknownOrUnsupportedEnumValueOfEnumType" xml:space="preserve">
+    <value>Unknown or unsupported enum value of enum type: '{0}'.</value>
+  </data>
+  <data name="OneOrMoreSchedulesForBusLineExist" xml:space="preserve">
+    <value>One or more schedules for bus line: '{0}' and day type: '{1}' already exist for this date range. Either try saving this schedule with different parameters or modify/delete some of the existing schedules first. Problematic schedule IDs: {2}.</value>
   </data>
 </root>

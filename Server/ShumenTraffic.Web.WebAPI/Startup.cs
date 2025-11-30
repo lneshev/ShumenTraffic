@@ -222,6 +222,7 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddTransient<IEntityValidated<Route>, RouteEntityValidated>();
             services.AddTransient<IEntitySaving<Route>, RouteEntitySaving>();
             services.AddTransient<IEntityDeleting<Route>, RouteEntityDeleting>();
+            services.AddTransient<IEntityValidated<Schedule>, ScheduleEntityValidated>();
             services.AddScoped<IRouteService, RouteService>();
             services.AddScoped<IScheduleService, ScheduleService>();
 

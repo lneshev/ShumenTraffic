@@ -34,6 +34,11 @@ namespace ShumenTraffic.Common.Core.Entities.Schedules
         public bool IsActive { get; set; } = true;
 
         /// <summary>
+        /// Priority level of the schedule.
+        /// </summary>
+        public SchedulePriority Priority { get; set; } = SchedulePriority.Normal;
+
+        /// <summary>
         /// Foreign key to the bus line.
         /// </summary>
         public int BusLineId { get; set; }

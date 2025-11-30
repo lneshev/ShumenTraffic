@@ -22,6 +22,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
                 IsActive = x.IsActive,
+                Priority = x.Priority,
                 BusLineId = x.BusLineId,
                 BusLineNumber = x.BusLine.LineNumber
             };
@@ -31,6 +32,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
         {
             var model = (ScheduleOverviewModel)projection;
             model.DayTypeText = model.DayType.Translate(typeof(Strings));
+            model.PriorityText = model.Priority.Translate(typeof(Strings));
             return await Task.FromResult(model);
         }
 
@@ -45,6 +47,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
                 pair.Entity.StartDate = pair.Model.StartDate;
                 pair.Entity.EndDate = pair.Model.EndDate;
                 pair.Entity.IsActive = pair.Model.IsActive;
+                pair.Entity.Priority = pair.Model.Priority;
                 pair.Entity.BusLineId = pair.Model.BusLineId;
                 pair.Entity.BusLine = await Persistence.ForEntity<BusLine, int>().GetAsync(pair.Entity.BusLineId);
             }

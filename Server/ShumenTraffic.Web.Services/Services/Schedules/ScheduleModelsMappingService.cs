@@ -17,6 +17,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
                 IsActive = x.IsActive,
+                Priority = x.Priority,
                 BusLineId = x.BusLineId
             };
         }

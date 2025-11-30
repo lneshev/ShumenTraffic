@@ -7,6 +7,8 @@ export default interface ScheduleOverviewModel extends ModelBase<number> {
     startDate: string;
     endDate?: string;
     isActive: boolean;
+    priority: number;
+    priorityText: string;
     busLineId: number;
     busLineNumber: string;
 }

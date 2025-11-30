@@ -61,7 +61,7 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A bus line with line number &apos;{0}&apos; already exists..
+        ///   Looks up a localized string similar to A bus line with line number: &apos;{0}&apos; already exists..
         /// </summary>
         public static string BusLineWithLineNumberAlreadyExists {
             get {
@@ -70,7 +70,7 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A bus stop with name &apos;{0}&apos; already exists..
+        ///   Looks up a localized string similar to A bus stop with name: &apos;{0}&apos; already exists..
         /// </summary>
         public static string BusStopWithNameAlreadyExists {
             get {
@@ -115,7 +115,16 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} must be of type {1} in order to apply attribute {2}..
+        ///   Looks up a localized string similar to One or more schedules for bus line: &apos;{0}&apos; and day type: &apos;{1}&apos; already exist for this date range. Either try saving this schedule with different parameters or modify/delete some of the existing schedules first. Problematic schedule IDs: {2}..
+        /// </summary>
+        public static string OneOrMoreSchedulesForBusLineExist {
+            get {
+                return ResourceManager.GetString("OneOrMoreSchedulesForBusLineExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; must be of type: &apos;{1}&apos; in order to apply attribute: &apos;{2}&apos;..
         /// </summary>
         public static string PropertyMustBeOfTypeInOrderToApplyAttribute {
             get {
@@ -151,7 +160,7 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A route with name &apos;{0}&apos;, bus line &apos;{1}&apos; and direction &apos;{2}&apos; already exists..
+        ///   Looks up a localized string similar to A route with name: &apos;{0}&apos;, bus line: &apos;{1}&apos; and direction: &apos;{2}&apos; already exists..
         /// </summary>
         public static string RouteWithNameBusLineAndDirectionAlreadyExists {
             get {
@@ -165,6 +174,24 @@ namespace ShumenTraffic.Common.Core.Resources {
         public static string SavingDataToDBWithoutATransactionIsNotAllowed {
             get {
                 return ResourceManager.GetString("SavingDataToDBWithoutATransactionIsNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to High.
+        /// </summary>
+        public static string SchedulePriority_High {
+            get {
+                return ResourceManager.GetString("SchedulePriority_High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Normal.
+        /// </summary>
+        public static string SchedulePriority_Normal {
+            get {
+                return ResourceManager.GetString("SchedulePriority_Normal", resourceCulture);
             }
         }
         
@@ -214,11 +241,20 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A transportation company with name &apos;{0}&apos; already exists..
+        ///   Looks up a localized string similar to A transportation company with name: &apos;{0}&apos; already exists..
         /// </summary>
         public static string TransportationCompanyWithNameAlreadyExists {
             get {
                 return ResourceManager.GetString("TransportationCompanyWithNameAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown or unsupported enum value of enum type: &apos;{0}&apos;..
+        /// </summary>
+        public static string UnknownOrUnsupportedEnumValueOfEnumType {
+            get {
+                return ResourceManager.GetString("UnknownOrUnsupportedEnumValueOfEnumType", resourceCulture);
             }
         }
         
@@ -286,7 +322,7 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A zone with name &apos;{0}&apos; already exists..
+        ///   Looks up a localized string similar to A zone with name: &apos;{0}&apos; already exists..
         /// </summary>
         public static string ZoneWithNameAlreadyExists {
             get {

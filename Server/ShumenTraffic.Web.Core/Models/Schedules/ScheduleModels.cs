@@ -60,6 +60,11 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         public DateOnly? EndDate { get; set; }
 
         /// <summary>
+        /// Priority level of the schedule.
+        /// </summary>
+        public SchedulePriority Priority { get; set; } = SchedulePriority.Normal;
+
+        /// <summary>
         /// Collection of courses for this schedule.
         /// </summary>
         [Required(ErrorMessage = "At least one course is required")]
@@ -99,6 +104,11 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         /// Whether the schedule is active.
         /// </summary>
         public bool? IsActive { get; set; }
+
+        /// <summary>
+        /// Priority level of the schedule.
+        /// </summary>
+        public SchedulePriority? Priority { get; set; }
     }
 
     /// <summary>

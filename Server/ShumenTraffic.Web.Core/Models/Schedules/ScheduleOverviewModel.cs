@@ -38,6 +38,16 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         public bool IsActive { get; set; } = true;
 
         /// <summary>
+        /// Priority level of the schedule.
+        /// </summary>
+        public SchedulePriority Priority { get; set; } = SchedulePriority.Normal;
+
+        /// <summary>
+        /// Priority level as text.
+        /// </summary>
+        public string PriorityText { get; set; }
+
+        /// <summary>
         /// Bus line ID.
         /// </summary>
         public int BusLineId { get; set; }

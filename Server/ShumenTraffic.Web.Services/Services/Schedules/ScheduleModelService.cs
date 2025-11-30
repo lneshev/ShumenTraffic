@@ -32,6 +32,8 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
                 StartDate = entity.StartDate,
                 EndDate = entity.EndDate,
                 IsActive = entity.IsActive,
+                Priority = entity.Priority,
+                BusLineId = entity.BusLineId,
                 Courses = entity.ScheduleCourses
                     .OrderBy(sc => sc.DepartureTime)
                     .Select(sc => new ScheduleCourseDto
@@ -85,6 +87,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
                 dto.DayType,
                 dto.StartDate,
                 dto.EndDate,
+                dto.Priority,
                 courses
             );
 
@@ -96,7 +99,8 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
             var entity = await _scheduleService.UpdateAsync(
                 id,
                 dto.EndDate,
-                dto.IsActive
+                dto.IsActive,
+                dto.Priority
             );
 
             return entity != null ? MapToModel(entity) : null;

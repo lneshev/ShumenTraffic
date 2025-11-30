@@ -7,5 +7,9 @@ export default {
         "Weekday": 0,
         "Saturday": 1,
         "Sunday": 2
+    },
+    SchedulePriority: {
+        "Normal": 0,
+        "High": 1
     }
 }

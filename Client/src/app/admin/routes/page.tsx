@@ -107,52 +107,54 @@ function RoutesPage() {
         {/* Add Route Form */}
         {showForm && (
           <form onSubmit={handleSubmit} className="mb-8 p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Route Name
-              </label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-                required
-                maxLength={255}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Bus Line
-              </label>
-              <EntityDropdown
-                value={formData.busLineId}
-                onChange={(e) => setFormData({ ...formData, busLineId: e ? e.value : 0 })}
-                placeholder="Select..."
-                url="/api/bus-lines-light"
-                sorts={[
-                  { field: "name", dir: "asc" }
-                ]}
-                parseData={(data: PageResult<BusLineLightModel>) =>
-                  data.items.map((item, i) => {
-                    return {
-                      value: item.id,
-                      label: item.lineNumber
-                    };
-                  })
-                }
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Direction
-              </label>
-              <EnumDropdown
-                enumName="RouteDirection"
-                value={formData.direction}
-                onChange={(e) => setFormData({ ...formData, direction: e ? e.value : 0 })}
-                required
-              />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Route Name
+                </label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                  required
+                  maxLength={255}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Bus Line
+                </label>
+                <EntityDropdown
+                  value={formData.busLineId}
+                  onChange={(e) => setFormData({ ...formData, busLineId: e ? e.value : 0 })}
+                  placeholder="Select..."
+                  url="/api/bus-lines-light"
+                  sorts={[
+                    { field: "name", dir: "asc" }
+                  ]}
+                  parseData={(data: PageResult<BusLineLightModel>) =>
+                    data.items.map((item, i) => {
+                      return {
+                        value: item.id,
+                        label: item.lineNumber
+                      };
+                    })
+                  }
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Direction
+                </label>
+                <EnumDropdown
+                  enumName="RouteDirection"
+                  value={formData.direction}
+                  onChange={(e) => setFormData({ ...formData, direction: e ? e.value : 0 })}
+                  required
+                />
+              </div>
             </div>
             <button
               type="submit"

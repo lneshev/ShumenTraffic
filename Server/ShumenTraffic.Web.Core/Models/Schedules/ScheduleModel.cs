@@ -43,6 +43,11 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         public int BusLineId { get; set; }
 
         /// <summary>
+        /// Bus line number.
+        /// </summary>
+        public string BusLineNumber { get; set; }
+
+        /// <summary>
         /// Collection of courses for this schedule.
         /// </summary>
         public List<ScheduleCourseDto> Courses { get; set; } = new List<ScheduleCourseDto>();

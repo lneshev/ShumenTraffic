@@ -116,7 +116,7 @@ function SchedulesPage() {
         {/* Add Schedule Form */}
         {showForm && (
           <form onSubmit={handleSubmit} className="mb-8 p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
-            <div className="mb-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Bus Line
@@ -138,51 +138,55 @@ function SchedulesPage() {
                   required
                 />
               </div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Day Type
-              </label>
-              <EnumDropdown
-                enumName="DayType"
-                value={formData.dayType}
-                onChange={(e) => setFormData({ ...formData, dayType: e ? e.value : 0 })}
-                isClearable={false}
-                required
-              />
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Start Date
+                </label>
+                <input
+                  type="date"
+                  value={formData.startDate}
+                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  End Date
+                </label>
+                <input
+                  type="date"
+                  value={formData.endDate}
+                  onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                />
+              </div>
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Start Date
-              </label>
-              <input
-                type="date"
-                value={formData.startDate}
-                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                End Date
-              </label>
-              <input
-                type="date"
-                value={formData.endDate}
-                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Priority
-              </label>
-              <EnumDropdown
-                enumName="SchedulePriority"
-                value={formData.priority}
-                onChange={(e) => setFormData({ ...formData, priority: e ? e.value : 0 })}
-                isClearable={false}
-                required
-              />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Day Type
+                </label>
+                <EnumDropdown
+                  enumName="DayType"
+                  value={formData.dayType}
+                  onChange={(e) => setFormData({ ...formData, dayType: e ? e.value : 0 })}
+                  isClearable={false}
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Priority
+                </label>
+                <EnumDropdown
+                  enumName="SchedulePriority"
+                  value={formData.priority}
+                  onChange={(e) => setFormData({ ...formData, priority: e ? e.value : 0 })}
+                  isClearable={false}
+                  required
+                />
+              </div>
             </div>
             <button
               type="submit"
@@ -210,13 +214,13 @@ function SchedulesPage() {
                     Bus Line
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
-                    Day Type
-                  </th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Start Date
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     End Date
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
+                    Day Type
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Priority
@@ -242,13 +246,13 @@ function SchedulesPage() {
                       {schedule.busLineNumber}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
-                      {schedule.dayTypeText}
-                    </td>
-                    <td className="py-3 px-4 text-gray-900 dark:text-white">
                       {new Date(schedule.startDate).toLocaleDateString("bg-BG")}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
                       {schedule.endDate ? new Date(schedule.endDate).toLocaleDateString("bg-BG") : '-'}
+                    </td>
+                    <td className="py-3 px-4 text-gray-900 dark:text-white">
+                      {schedule.dayTypeText}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
                       {schedule.priorityText}
@@ -264,6 +268,12 @@ function SchedulesPage() {
                       </span>
                     </td>
                     <td className="py-3 px-4">
+                      <Link
+                        href={`/admin/schedules/${schedule.id}`}
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm mr-4"
+                      >
+                        Edit
+                      </Link>
                       <button
                         onClick={() => handleDelete(schedule.id)}
                         className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium text-sm"

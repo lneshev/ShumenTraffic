@@ -14,6 +14,17 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
     [Authorize]
     public class SchedulesController : EntityRestController<Schedule, int, ScheduleModel, ScheduleFilter>
     {
+        [AllowAnonymous]
+        public override Task<ActionResult<ApiResponse<ScheduleModel>>> Get([FromRoute] int id)
+        {
+            return base.Get(id);
+        }
+
+        public override Task<ActionResult<ApiResponse<ScheduleModel>>> Put([FromRoute] int id, [FromBody] ScheduleModel model)
+        {
+            return base.Put(id, model);
+        }
+
         public override Task<ActionResult<ApiResponse<ScheduleModel>>> Delete([FromRoute] int id)
         {
             return base.Delete(id);

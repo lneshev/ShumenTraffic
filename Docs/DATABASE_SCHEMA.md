@@ -78,6 +78,7 @@ classDiagram
     class Schedule {
         int Id
         int BusLineId
+        RouteDirection Direction
         DayType DayType
         date StartDate
         date EndDate
@@ -222,6 +223,7 @@ Represents a schedule for a specific date range and day type. Contains multiple 
 |--------|------|-------------|-------------|
 | Id | int | PK, Auto | Primary key |
 | BusLineId | int | FK, NOT NULL | Reference to bus line |
+| Direction | int | NOT NULL | Direction (1 or 2) |
 | DayType | int | NOT NULL | Weekday, Saturday or Sunday |
 | StartDate | date | NOT NULL | Schedule start date |
 | EndDate | date | | Schedule end date (null = ongoing) |
@@ -233,7 +235,7 @@ Represents a schedule for a specific date range and day type. Contains multiple 
 **Notes:**
 - Schedule does not directly reference a route; instead, each course in the schedule specifies which route it uses
 - This allows different courses in the same schedule to use different routes (route swapping)
-- Priority field allows multiple schedules for the same bus line, day type, and date range with different priority levels
+- Priority field allows multiple schedules for the same bus line, direction, day type and date range with different priority levels
 - Use cases for Priority:
   - Normal priority: Regular schedules
   - High priority: Special schedules (holidays, events, temporary changes)
@@ -254,6 +256,7 @@ Represents a course (trip/departure) for a schedule on a specific route.
 - `DepartureTime` is the departure time from the start of the route
 - Actual departure times at each stop are calculated by adding `EstimatedMinutesFromStart` from `RouteStop`
 - Supports route swapping: different courses in the same schedule can use different routes
+- All schedule courses in a schedule must have routes that are for the schedule's bus line and direction
 
 ### TransportationCompanyBusLine
 Junction table for the many-to-many relationship between TransportationCompany and BusLine.
@@ -291,6 +294,7 @@ Junction table for the many-to-many relationship between TransportationCompany a
 8. **Schedule → ScheduleCourse** (1:N)
    - One schedule has multiple courses (trips/departures)
    - Each course specifies which route it uses, enabling route swapping within a schedule
+   - All schedule courses in a schedule must have routes that are for the schedule's bus line and direction
 
 ## Live Bus Position System
 
@@ -395,3 +399,4 @@ Identity tables are automatically managed by the framework and are separate from
 - `RouteStop.EstimatedMinutesFromStart` is only populated for actual bus stops (when `BusStopId IS NOT NULL`)
 - Live bus position calculation happens server-side; client receives either real GPS coords or calculated progress percentage
 - Schedules must have unique combinations of (BusLineId, DayType, Priority and date range) to allow multiple schedules for the same bus line and day type with different priorities
+- All schedule courses in a schedule must have routes that are for the schedule's bus line and direction

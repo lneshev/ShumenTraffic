@@ -37,7 +37,7 @@ function RoutesPage() {
   const fetchRoutes = async () => {
     try {
       setIsLoading(true);
-      const data = await RouteOverviewService.read(undefined, [{ field: 'Name', dir: 'asc' }, { field: 'BusLineNumber', dir: 'asc' }, { field: 'DirectionText', dir: 'asc' }]);
+      const data = await RouteOverviewService.read(undefined, [{ field: 'BusLineNumber', dir: 'asc' }, { field: 'DirectionText', dir: 'asc' }, { field: 'Name', dir: 'asc' }]);
       setRoutes(data.items);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Error loading routes');

@@ -1,4 +1,5 @@
 ﻿using MoravianStar.Dao;
+using ShumenTraffic.Common.Core.Enums.Routes;
 using ShumenTraffic.Common.Core.Enums.Schedules;
 using ShumenTraffic.Common.Core.Resources;
 using System;
@@ -46,6 +47,16 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         /// Priority level as text.
         /// </summary>
         public string PriorityText { get; set; }
+
+        /// <summary>
+        /// The direction of the route this schedule belongs to.
+        /// </summary>
+        public RouteDirection Direction { get; set; }
+
+        /// <summary>
+        /// Direction as text.
+        /// </summary>
+        public string DirectionText { get; set; }
 
         /// <summary>
         /// Bus line ID.

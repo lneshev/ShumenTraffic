@@ -1,4 +1,5 @@
 using ShumenTraffic.Common.Core.Entities.BusLines;
+using ShumenTraffic.Common.Core.Enums.Routes;
 using ShumenTraffic.Common.Core.Enums.Schedules;
 using ShumenTraffic.Common.Core.Resources;
 using System;
@@ -39,17 +40,20 @@ namespace ShumenTraffic.Common.Core.Entities.Schedules
         public SchedulePriority Priority { get; set; } = SchedulePriority.Normal;
 
         /// <summary>
+        /// The direction of the route this schedule belongs to.
+        /// </summary>
+        public RouteDirection Direction { get; set; }
+
+        /// <summary>
         /// Foreign key to the bus line.
         /// </summary>
         public int BusLineId { get; set; }
 
-        // Navigation properties
         /// <summary>
         /// The bus line this schedule belongs to.
         /// </summary>
         public virtual BusLine BusLine { get; set; }
 
-        // Navigation properties
         /// <summary>
         /// Collection of courses (trips/departures) for this schedule.
         /// Each course specifies which route it uses.

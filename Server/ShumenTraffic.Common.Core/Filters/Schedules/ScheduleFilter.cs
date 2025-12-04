@@ -1,6 +1,7 @@
 ﻿using LinqKit;
 using MoravianStar.Dao;
 using ShumenTraffic.Common.Core.Entities.Schedules;
+using ShumenTraffic.Common.Core.Enums.Routes;
 using ShumenTraffic.Common.Core.Enums.Schedules;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace ShumenTraffic.Common.Core.Filters.Schedules
     public class ScheduleFilter : FilterSorterBase<Schedule>
     {
         public int? BusLineId { get; set; }
+        public RouteDirection? Direction { get; set; }
         public DayType? DayType { get; set; }
         public DateOnly? StartDateLE { get; set; }
         public DateOnly? EndDateGEOrNull { get; set; }
@@ -28,6 +30,11 @@ namespace ShumenTraffic.Common.Core.Filters.Schedules
             if (BusLineId.HasValue)
             {
                 mainCriteria = mainCriteria.And(x => x.BusLineId == BusLineId);
+            }
+
+            if (Direction.HasValue)
+            {
+                mainCriteria = mainCriteria.And(x => x.Direction == Direction);
             }
 
             if (DayType.HasValue)
@@ -69,6 +76,10 @@ namespace ShumenTraffic.Common.Core.Filters.Schedules
                 if (sort.Field.Equals("BusLineNumber", StringComparison.OrdinalIgnoreCase))
                 {
                     result.Add((x => x.BusLine.LineNumber, sort.Dir));
+                }
+                else if (sort.Field.Equals("Direction", StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add((x => x.Direction, sort.Dir));
                 }
                 else if (sort.Field.Equals("DayType", StringComparison.OrdinalIgnoreCase))
                 {

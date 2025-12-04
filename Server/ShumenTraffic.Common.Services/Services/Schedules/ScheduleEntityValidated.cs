@@ -22,6 +22,7 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
             var scheduleFilter = new ScheduleFilter()
             {
                 BusLineId = entity.BusLineId,
+                Direction = entity.Direction,
                 DayType = entity.DayType,
                 StartDateLE = entity.EndDate,
                 EndDateGEOrNull = entity.StartDate,
@@ -34,6 +35,7 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
                 throw new EntityNotUniqueException(string.Format(
                     Strings.OneOrMoreSchedulesForBusLineExist,
                     entity.BusLine.LineNumber,
+                    entity.Direction.Translate(typeof(Strings)),
                     entity.DayType.Translate(typeof(Strings)),
                     string.Join(", ", existingSchedules.Select(x => x.Id))
                 ));

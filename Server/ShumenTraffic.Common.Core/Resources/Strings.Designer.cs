@@ -115,7 +115,7 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to One or more schedules for bus line: &apos;{0}&apos; and day type: &apos;{1}&apos; already exist for this date range. Either try saving this schedule with different parameters or modify/delete some of the existing schedules first. Problematic schedule IDs: {2}..
+        ///   Looks up a localized string similar to One or more schedules for bus line: &apos;{0}&apos;, direction: &apos;{1}&apos; and day type: &apos;{2}&apos; already exist for this date range. Either try saving this schedule with different parameters or modify/delete some of the existing schedules first. Problematic schedule IDs: {3}..
         /// </summary>
         public static string OneOrMoreSchedulesForBusLineExist {
             get {

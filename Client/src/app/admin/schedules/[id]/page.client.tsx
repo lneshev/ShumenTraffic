@@ -119,8 +119,8 @@ export default function ScheduleDetails({ id }: { id: number }) {
 
                 <div className="p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
                     <form onSubmit={handleSubmit} ref={formRef}>
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                            <div className="mb-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Bus Line
                                 </label>
@@ -141,32 +141,18 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                     required
                                 />
                             </div>
-                            <div className="mb-4">
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Start Date
+                                    Direction
                                 </label>
-                                <input
-                                    type="date"
-                                    value={schedule.startDate}
-                                    onChange={(e) => setSchedule({ ...schedule, startDate: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                                <EnumDropdown
+                                    enumName="RouteDirection"
+                                    value={schedule.direction}
+                                    onChange={(e) => setSchedule({ ...schedule, direction: e ? e.value : 0 })}
                                     required
                                 />
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    End Date
-                                </label>
-                                <input
-                                    type="date"
-                                    value={schedule.endDate || ''}
-                                    onChange={(e) => setSchedule({ ...schedule, endDate: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-                                />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                            <div className="mb-4">
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Day Type
                                 </label>
@@ -178,7 +164,30 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                     required
                                 />
                             </div>
-                            <div className="mb-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Start Date
+                                </label>
+                                <input
+                                    type="date"
+                                    value={schedule.startDate}
+                                    onChange={(e) => setSchedule({ ...schedule, startDate: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    End Date
+                                </label>
+                                <input
+                                    type="date"
+                                    value={schedule.endDate || ''}
+                                    onChange={(e) => setSchedule({ ...schedule, endDate: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                                />
+                            </div>
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Priority
                                 </label>
@@ -193,7 +202,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                         </div>
                     </form>
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        <div className="mb-4">
+                        <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Schedule Courses ({schedule.scheduleCourses.length})
                             </label>

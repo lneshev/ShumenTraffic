@@ -2,7 +2,7 @@
 import ModelBase from "./common/ModelBase";
 import ScheduleCourseModel from "./ScheduleCourseModel";
 
-export default interface ScheduleOverviewModel extends ModelBase<number> {
+export default interface ScheduleModel extends ModelBase<number> {
     dayType: number;
     dayTypeText: string;
     startDate: string;
@@ -11,5 +11,6 @@ export default interface ScheduleOverviewModel extends ModelBase<number> {
     priority: number;
     busLineId: number;
     busLineNumber: string;
+    direction: number;
     scheduleCourses: ScheduleCourseModel[];
 }

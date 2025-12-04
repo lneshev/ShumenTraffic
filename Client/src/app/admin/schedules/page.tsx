@@ -26,6 +26,8 @@ function SchedulesPage() {
     priorityText: '',
     busLineId: 0,
     busLineNumber: '',
+    direction: 0,
+    directionText: ''
   };
 
   const [schedules, setSchedules] = useState<ScheduleOverviewModel[]>([]);
@@ -43,6 +45,7 @@ function SchedulesPage() {
       setIsLoading(true);
       const data = await ScheduleOverviewService.read(undefined, [
         { field: 'BusLineNumber', dir: 'asc' },
+        { field: 'Direction', dir: 'asc' },
         { field: 'DayType', dir: 'asc' },
         { field: 'StartDate', dir: 'asc' },
         { field: 'Priority', dir: 'asc' }
@@ -116,8 +119,8 @@ function SchedulesPage() {
         {/* Add Schedule Form */}
         {showForm && (
           <form onSubmit={handleSubmit} className="mb-8 p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="mb-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Bus Line
                 </label>
@@ -138,32 +141,18 @@ function SchedulesPage() {
                   required
                 />
               </div>
-              <div className="mb-4">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Start Date
+                  Direction
                 </label>
-                <input
-                  type="date"
-                  value={formData.startDate}
-                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                <EnumDropdown
+                  enumName="RouteDirection"
+                  value={formData.direction}
+                  onChange={(e) => setFormData({ ...formData, direction: e ? e.value : 0 })}
                   required
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  End Date
-                </label>
-                <input
-                  type="date"
-                  value={formData.endDate}
-                  onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="mb-4">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Day Type
                 </label>
@@ -175,7 +164,30 @@ function SchedulesPage() {
                   required
                 />
               </div>
-              <div className="mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Start Date
+                </label>
+                <input
+                  type="date"
+                  value={formData.startDate}
+                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  End Date
+                </label>
+                <input
+                  type="date"
+                  value={formData.endDate}
+                  onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                />
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Priority
                 </label>
@@ -214,13 +226,16 @@ function SchedulesPage() {
                     Bus Line
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
+                    Direction
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
+                    Day Type
+                  </th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Start Date
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     End Date
-                  </th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
-                    Day Type
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Priority
@@ -246,13 +261,16 @@ function SchedulesPage() {
                       {schedule.busLineNumber}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
+                      {schedule.directionText}
+                    </td>
+                    <td className="py-3 px-4 text-gray-900 dark:text-white">
+                      {schedule.dayTypeText}
+                    </td>
+                    <td className="py-3 px-4 text-gray-900 dark:text-white">
                       {new Date(schedule.startDate).toLocaleDateString("bg-BG")}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
                       {schedule.endDate ? new Date(schedule.endDate).toLocaleDateString("bg-BG") : '-'}
-                    </td>
-                    <td className="py-3 px-4 text-gray-900 dark:text-white">
-                      {schedule.dayTypeText}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
                       {schedule.priorityText}

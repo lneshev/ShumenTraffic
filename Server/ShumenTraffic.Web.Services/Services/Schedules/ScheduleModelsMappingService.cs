@@ -24,6 +24,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
                 EndDate = x.EndDate,
                 IsActive = x.IsActive,
                 Priority = x.Priority,
+                Direction = x.Direction,
                 BusLineId = x.BusLineId,
                 BusLineNumber = x.BusLine.LineNumber,
                 ScheduleCourses = x.ScheduleCourses.OrderBy(x => x.DepartureTime).Select(y => new ScheduleCourseModel()
@@ -54,6 +55,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
                 pair.Entity.EndDate = pair.Model.EndDate;
                 pair.Entity.IsActive = pair.Model.IsActive;
                 pair.Entity.Priority = pair.Model.Priority;
+                pair.Entity.Direction = pair.Model.Direction;
                 pair.Entity.BusLineId = pair.Model.BusLineId;
                 pair.Entity.BusLine = await Persistence.ForEntity<BusLine, int>().GetAsync(pair.Entity.BusLineId);
                 await FillEntityScheduleCourses(pair);

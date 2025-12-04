@@ -11,4 +11,6 @@ export default interface ScheduleOverviewModel extends ModelBase<number> {
     priorityText: string;
     busLineId: number;
     busLineNumber: string;
+    direction: number;
+    directionText: string;
 }

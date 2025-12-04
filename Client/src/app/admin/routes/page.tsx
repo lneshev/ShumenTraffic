@@ -8,7 +8,6 @@ import RouteOverviewService from '@/services/RouteOverviewService';
 import RouteService from '@/services/RouteService';
 import BusLineLightModel from '@/types/BusLineLightModel';
 import PageResult from '@/types/common/PageResult';
-import ServerEnums from '@/types/common/ServerEnums';
 import RouteOverviewModel from '@/types/RouteOverviewModel';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -17,7 +16,7 @@ function RoutesPage() {
   const initialFormData = {
     id: 0,
     name: '',
-    direction: ServerEnums.RouteDirection.One,
+    direction: 0,
     directionText: '',
     isActive: true,
     busLineId: 0,
@@ -107,8 +106,8 @@ function RoutesPage() {
         {/* Add Route Form */}
         {showForm && (
           <form onSubmit={handleSubmit} className="mb-8 p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="mb-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Route Name
                 </label>
@@ -121,7 +120,7 @@ function RoutesPage() {
                   maxLength={255}
                 />
               </div>
-              <div className="mb-4">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Bus Line
                 </label>
@@ -144,7 +143,7 @@ function RoutesPage() {
                   required
                 />
               </div>
-              <div className="mb-4">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Direction
                 </label>

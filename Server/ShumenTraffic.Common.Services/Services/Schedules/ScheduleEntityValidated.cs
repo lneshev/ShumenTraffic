@@ -15,6 +15,7 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
         public async Task ValidatedAsync(Schedule entity, Schedule originalEntity, IDictionary<string, object> additionalParameters = null)
         {
             await CheckForUniqueness(entity);
+            CheckForRoutes(entity);
         }
 
         private static async Task CheckForUniqueness(Schedule entity)
@@ -39,6 +40,14 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
                     entity.DayType.Translate(typeof(Strings)),
                     string.Join(", ", existingSchedules.Select(x => x.Id))
                 ));
+            }
+        }
+
+        private static void CheckForRoutes(Schedule entity)
+        {
+            if (entity.ScheduleCourses.Any(x => x.Route.BusLineId != entity.BusLineId || x.Route.Direction != entity.Direction))
+            {
+                throw new BusinessException(string.Format(Strings.AllScheduleCoursesInScheduleMustHaveRoutesThatAreForSchedulesBusLineAndDirection, entity.Id));
             }
         }
     }

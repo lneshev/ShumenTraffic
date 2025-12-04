@@ -40,7 +40,8 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
         {
             return base.GetIncludes(query)
                 .Include(x => x.BusLine)
-                .Include(x => x.ScheduleCourses);
+                .Include(x => x.ScheduleCourses)
+                    .ThenInclude(x => x.Route);
         }
 
         public override async Task<List<EntityModelPair<Schedule, ScheduleModel>>> ToEntities(List<EntityModelPair<Schedule, ScheduleModel>> pairs)

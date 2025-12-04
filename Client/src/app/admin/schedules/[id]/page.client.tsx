@@ -138,6 +138,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                             };
                                         })
                                     }
+                                    isDisabled={schedule.scheduleCourses.length > 0}
                                     required
                                 />
                             </div>
@@ -149,6 +150,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                     enumName="RouteDirection"
                                     value={schedule.direction}
                                     onChange={(e) => setSchedule({ ...schedule, direction: e ? e.value : 0 })}
+                                    isDisabled={schedule.scheduleCourses.length > 0}
                                     required
                                 />
                             </div>
@@ -201,12 +203,12 @@ export default function ScheduleDetails({ id }: { id: number }) {
                             </div>
                         </div>
                     </form>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Schedule Courses ({schedule.scheduleCourses.length})
                             </label>
-                            <ul className="w-xl">
+                            <ul>
                                 {schedule.scheduleCourses.sort((a, b) => a.departureTime.localeCompare(b.departureTime)).map((scheduleCourse, i) => {
                                     return (
                                         <li
@@ -231,6 +233,10 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                                 })}
                                                 placeholder="Select..."
                                                 url="/api/routes-overview"
+                                                filter={{
+                                                    busLineId: schedule.busLineId,
+                                                    direction: schedule.direction
+                                                }}
                                                 sorts={[
                                                     { field: 'Name', dir: 'asc' },
                                                     { field: 'BusLineNumber', dir: 'asc' },
@@ -240,7 +246,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                                     data.items.map((item, i) => {
                                                         return {
                                                             value: item.id,
-                                                            label: item.name
+                                                            label: "Name: " + item.name + ", Line: " + item.busLineNumber + ", Direction: " + item.directionText
                                                         };
                                                     })
                                                 }
@@ -275,6 +281,10 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                             onChange={(e) => setNewScheduleCourse({ ...newScheduleCourse, routeId: e ? e.value : 0 })}
                                             placeholder="Select..."
                                             url="/api/routes-overview"
+                                            filter={{
+                                                busLineId: schedule.busLineId,
+                                                direction: schedule.direction
+                                            }}
                                             sorts={[
                                                 { field: 'Name', dir: 'asc' },
                                                 { field: 'BusLineNumber', dir: 'asc' },
@@ -284,7 +294,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                                 data.items.map((item, i) => {
                                                     return {
                                                         value: item.id,
-                                                        label: item.name
+                                                        label: "Name: " + item.name + ", Line: " + item.busLineNumber + ", Direction: " + item.directionText
                                                     };
                                                 })
                                             }

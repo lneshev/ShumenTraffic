@@ -61,6 +61,15 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All schedule courses in schedule with ID: &apos;{0}&apos; must have routes that are for the schedule&apos;s bus line and direction..
+        /// </summary>
+        public static string AllScheduleCoursesInScheduleMustHaveRoutesThatAreForSchedulesBusLineAndDirection {
+            get {
+                return ResourceManager.GetString("AllScheduleCoursesInScheduleMustHaveRoutesThatAreForSchedulesBusLineAndDirection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A bus line with line number: &apos;{0}&apos; already exists..
         /// </summary>
         public static string BusLineWithLineNumberAlreadyExists {

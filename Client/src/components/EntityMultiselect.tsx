@@ -95,7 +95,7 @@ export default function EntityMultiselect<TId extends Id>({
     return (!string.isNullOrEmpty(label) ? label : "").toLowerCase().includes(searchString.toLowerCase());
   };
 
-  const selectedOptions = options.filter(option => value && value.includes(option.value));
+  const selectedOptions = value != null ? options.filter(option => value.includes(option.value)) : null;
 
   const handleMenuOpen = async () => {
     // Fetch options when menu opens for the first time (if not already fetched)

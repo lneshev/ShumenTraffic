@@ -81,7 +81,7 @@ export default function EnumDropdown({
         return (!string.isNullOrEmpty(label) ? label : "").toLowerCase().includes(searchString.toLowerCase());
     };
 
-    const selectedOption = options.find(option => value === option.value);
+    const selectedOption = value != null ? options.find(option => value === option.value) : null;
 
     const handleMenuOpen = async () => {
         // Fetch options when menu opens for the first time (if not already fetched)

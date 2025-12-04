@@ -103,7 +103,7 @@ export default function EntityDropdown<TId extends Id>({
         return (!string.isNullOrEmpty(label) ? label : "").toLowerCase().includes(searchString.toLowerCase());
     };
 
-    const selectedOption = options.find(option => value && value === option.value);
+    const selectedOption = value ? options.find(option => value === option.value) : null;
 
     const handleMenuOpen = async () => {
         // Fetch options when menu opens for the first time (if not already fetched)

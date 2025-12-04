@@ -50,7 +50,7 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
         /// <summary>
         /// Collection of courses for this schedule.
         /// </summary>
-        public List<ScheduleCourseDto> Courses { get; set; } = new List<ScheduleCourseDto>();
+        public IEnumerable<ScheduleCourseModel> ScheduleCourses { get; set; } = new List<ScheduleCourseModel>();
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

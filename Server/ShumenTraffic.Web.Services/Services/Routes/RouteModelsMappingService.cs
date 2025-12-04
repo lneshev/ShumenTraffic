@@ -34,7 +34,7 @@ namespace ShumenTraffic.Web.Services.Services.Routes
                     BusStopId = y.BusStopId,
                     BusStopName = y.BusStopId.HasValue ? y.BusStop.Name : null,
                     BusStopLocation = y.BusStopId.HasValue ? y.BusStop.Location : null,
-                    EstimatedMinutesFromStart = y.EstimatedMinutesFromStart,
+                    EstimatedMinutesFromStart = y.EstimatedMinutesFromStart
                 })
             };
         }

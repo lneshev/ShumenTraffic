@@ -2,10 +2,12 @@
 
 import EntityDropdown from "@/components/EntityDropdown";
 import EnumDropdown from "@/components/EnumDropdown";
+import { nullifyNegativeIds } from "@/helpers/Request";
 import { ApiError } from "@/lib/api";
 import ScheduleService from "@/services/ScheduleService";
 import BusLineLightModel from "@/types/BusLineLightModel";
 import PageResult from "@/types/common/PageResult";
+import RouteOverviewModel from "@/types/RouteOverviewModel";
 import ScheduleCourseModel from "@/types/ScheduleCourseModel";
 import ScheduleModel from "@/types/ScheduleModel";
 import { DateTime } from "luxon";
@@ -15,11 +17,14 @@ import { useEffect, useRef, useState } from "react";
 
 export default function ScheduleDetails({ id }: { id: number }) {
     const initialScheduleCourse: ScheduleCourseModel = {
-        id: 0
+        id: 0,
+        departureTime: '',
+        routeId: 0
     };
     const formRef = useRef<HTMLFormElement>(null);
     const router = useRouter();
     const [schedule, setSchedule] = useState<ScheduleModel | null>(null);
+    const [newScheduleCourse, setNewScheduleCourse] = useState<ScheduleCourseModel>({ ...initialScheduleCourse });
     const [error, setError] = useState('');
     const startDateText = schedule ? DateTime.fromISO(schedule.startDate).toLocaleString(DateTime.DATE_SHORT, { locale: 'bg-BG' }) : '';
     const endDateText = schedule ? (schedule.endDate ? DateTime.fromISO(schedule.endDate).toLocaleString(DateTime.DATE_SHORT, { locale: 'bg-BG' }) : '♾️') : '';
@@ -46,11 +51,33 @@ export default function ScheduleDetails({ id }: { id: number }) {
         }
     }
 
+    const handleNewScheduleCourseSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const newScheduleCourseToAdd: ScheduleCourseModel = {
+            ...newScheduleCourse,
+            id: getNewMimimumId()
+        };
+
+        setSchedule({
+            ...schedule!,
+            scheduleCourses: [...schedule!.scheduleCourses, newScheduleCourseToAdd]
+        });
+
+        setNewScheduleCourse({ ...initialScheduleCourse });
+    }
+
+    const getNewMimimumId = () => {
+        const result = Math.min(0, Math.min(...schedule!.scheduleCourses.map(x => x.id))) - 1;
+        return result;
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             setError('');
-            const model = await ScheduleService.update(schedule!);
+            const scheduleToSend: ScheduleModel = { ...schedule!, scheduleCourses: nullifyNegativeIds(schedule!.scheduleCourses) };
+            const model = await ScheduleService.update(scheduleToSend);
             setModel(model);
         } catch (err) {
             setError(err instanceof ApiError ? err.message : 'Error updating route');
@@ -90,80 +117,182 @@ export default function ScheduleDetails({ id }: { id: number }) {
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} ref={formRef} className="mb-8 p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
+                <div className="p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
+                    <form onSubmit={handleSubmit} ref={formRef}>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Bus Line
+                                </label>
+                                <EntityDropdown
+                                    value={schedule.busLineId}
+                                    onChange={(e) => setSchedule({ ...schedule, busLineId: e ? e.value : 0, busLineNumber: e ? e.label : '' })}
+                                    placeholder="Select..."
+                                    url="/api/bus-lines-light"
+                                    sorts={[{ field: "lineNumber", dir: "asc" }]}
+                                    parseData={(data: PageResult<BusLineLightModel>) =>
+                                        data.items.map((item, i) => {
+                                            return {
+                                                value: item.id,
+                                                label: item.lineNumber
+                                            };
+                                        })
+                                    }
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Start Date
+                                </label>
+                                <input
+                                    type="date"
+                                    value={schedule.startDate}
+                                    onChange={(e) => setSchedule({ ...schedule, startDate: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    End Date
+                                </label>
+                                <input
+                                    type="date"
+                                    value={schedule.endDate || ''}
+                                    onChange={(e) => setSchedule({ ...schedule, endDate: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                                />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Day Type
+                                </label>
+                                <EnumDropdown
+                                    enumName="DayType"
+                                    value={schedule.dayType}
+                                    onChange={(e) => setSchedule({ ...schedule, dayType: e ? e.value : 0 })}
+                                    isClearable={false}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Priority
+                                </label>
+                                <EnumDropdown
+                                    enumName="SchedulePriority"
+                                    value={schedule.priority}
+                                    onChange={(e) => setSchedule({ ...schedule, priority: e ? e.value : 0 })}
+                                    isClearable={false}
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </form>
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                         <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Bus Line
+                                Schedule Courses ({schedule.scheduleCourses.length})
                             </label>
-                            <EntityDropdown
-                                value={schedule.busLineId}
-                                onChange={(e) => setSchedule({ ...schedule, busLineId: e ? e.value : 0, busLineNumber: e ? e.label : '' })}
-                                placeholder="Select..."
-                                url="/api/bus-lines-light"
-                                sorts={[{ field: "lineNumber", dir: "asc" }]}
-                                parseData={(data: PageResult<BusLineLightModel>) =>
-                                    data.items.map((item, i) => {
-                                        return {
-                                            value: item.id,
-                                            label: item.lineNumber
-                                        };
-                                    })
-                                }
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Start Date
-                            </label>
-                            <input
-                                type="date"
-                                value={schedule.startDate}
-                                onChange={(e) => setSchedule({ ...schedule, startDate: e.target.value })}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                End Date
-                            </label>
-                            <input
-                                type="date"
-                                value={schedule.endDate || ''}
-                                onChange={(e) => setSchedule({ ...schedule, endDate: e.target.value })}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-                            />
+                            <ul className="w-xl">
+                                {schedule.scheduleCourses.sort((a, b) => a.departureTime.localeCompare(b.departureTime)).map((scheduleCourse, i) => {
+                                    return (
+                                        <li
+                                            key={scheduleCourse.id}
+                                            className="grid grid-cols-3 gap-4 justify-between border border-b-0 last:border-b border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 p-2"
+                                        >
+                                            <input
+                                                type="time"
+                                                value={scheduleCourse.departureTime}
+                                                onChange={(e) => setSchedule({
+                                                    ...schedule,
+                                                    scheduleCourses: schedule.scheduleCourses.map(x => x.id === scheduleCourse.id ? { ...x, departureTime: e.target.value } : x)
+                                                })}
+                                                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                                                required
+                                            />
+                                            <EntityDropdown
+                                                value={scheduleCourse.routeId}
+                                                onChange={(e) => setSchedule({
+                                                    ...schedule,
+                                                    scheduleCourses: schedule.scheduleCourses.map(x => x.id === scheduleCourse.id ? { ...x, routeId: e ? e.value : 0 } : x)
+                                                })}
+                                                placeholder="Select..."
+                                                url="/api/routes-overview"
+                                                sorts={[
+                                                    { field: 'Name', dir: 'asc' },
+                                                    { field: 'BusLineNumber', dir: 'asc' },
+                                                    { field: 'DirectionText', dir: 'asc' }
+                                                ]}
+                                                parseData={(data: PageResult<RouteOverviewModel>) =>
+                                                    data.items.map((item, i) => {
+                                                        return {
+                                                            value: item.id,
+                                                            label: item.name
+                                                        };
+                                                    })
+                                                }
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={(e) => setSchedule({
+                                                    ...schedule,
+                                                    scheduleCourses: schedule.scheduleCourses.filter(x => x.id !== scheduleCourse.id)
+                                                })}
+                                                className="bg-red-600 hover:bg-red-700 text-white rounded transition-colors w-9 h-full"
+                                            >
+                                                x
+                                            </button>
+                                        </li>
+                                    );
+                                })}
+                                <form onSubmit={handleNewScheduleCourseSubmit}>
+                                    <li
+                                        className="grid grid-cols-3 gap-4 justify-between border border-b-0 last:border-b border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 p-2"
+                                    >
+                                        <input
+                                            type="time"
+                                            value={newScheduleCourse.departureTime}
+                                            onChange={(e) => setNewScheduleCourse({ ...newScheduleCourse, departureTime: e.target.value })}
+                                            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                                            required
+                                        />
+                                        <EntityDropdown
+                                            value={newScheduleCourse.routeId}
+                                            onChange={(e) => setNewScheduleCourse({ ...newScheduleCourse, routeId: e ? e.value : 0 })}
+                                            placeholder="Select..."
+                                            url="/api/routes-overview"
+                                            sorts={[
+                                                { field: 'Name', dir: 'asc' },
+                                                { field: 'BusLineNumber', dir: 'asc' },
+                                                { field: 'DirectionText', dir: 'asc' }
+                                            ]}
+                                            parseData={(data: PageResult<RouteOverviewModel>) =>
+                                                data.items.map((item, i) => {
+                                                    return {
+                                                        value: item.id,
+                                                        label: item.name
+                                                    };
+                                                })
+                                            }
+                                            required
+                                        />
+                                        <button
+                                            type="submit"
+                                            className="bg-green-600 hover:bg-green-700 text-white rounded transition-colors w-9 h-full"
+                                        >
+                                            +
+                                        </button>
+                                    </li>
+                                </form>
+                            </ul>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Day Type
-                            </label>
-                            <EnumDropdown
-                                enumName="DayType"
-                                value={schedule.dayType}
-                                onChange={(e) => setSchedule({ ...schedule, dayType: e ? e.value : 0 })}
-                                isClearable={false}
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Priority
-                            </label>
-                            <EnumDropdown
-                                enumName="SchedulePriority"
-                                value={schedule.priority}
-                                onChange={(e) => setSchedule({ ...schedule, priority: e ? e.value : 0 })}
-                                isClearable={false}
-                                required
-                            />
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     );

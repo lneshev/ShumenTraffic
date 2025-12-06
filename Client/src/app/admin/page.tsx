@@ -92,7 +92,7 @@ function AdminDashboard() {
         </div>
 
         {/* Quick Stats */}
-        <section className="mb-12">
+        <section>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             System Statistics
           </h2>
@@ -115,56 +115,6 @@ function AdminDashboard() {
                 </p>
               </div>
             ))}
-          </div>
-        </section>
-
-        {/* Recent Activity */}
-        <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-            Recent Activity
-          </h2>
-          <div className="bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
-                    Action
-                  </th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
-                    User
-                  </th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
-                    Date
-                  </th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <tr
-                    key={i}
-                    className="border-b border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800"
-                  >
-                    <td className="py-3 px-4 text-gray-900 dark:text-white">
-                      Created new route
-                    </td>
-                    <td className="py-3 px-4 text-gray-600 dark:text-gray-400">
-                      Admin User
-                    </td>
-                    <td className="py-3 px-4 text-gray-600 dark:text-gray-400">
-                      {new Date(Date.now() - i * 3600000).toLocaleString()}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs font-medium">
-                        Success
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </section>
       </div>

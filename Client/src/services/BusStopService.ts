@@ -15,6 +15,11 @@ export default {
             return result;
         });
     },
+    async count(): Promise<number> {
+        return await getRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/bus-stops/count`, result => {
+            return result;
+        });
+    },
     async create(model: BusStopModel): Promise<BusStopModel> {
         return await authorisedPostRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/bus-stops`, model, result => {
             return result;

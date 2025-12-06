@@ -22,6 +22,11 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
             return base.Read(filter, sorts, page);
         }
 
+        public override Task<ActionResult<ApiResponse<int>>> Count([FromQuery] BusStopFilter filter)
+        {
+            return base.Count(filter);
+        }
+
         public override Task<ActionResult<BusStopModel>> Post([FromBody] BusStopModel model)
         {
             return base.Post(model);

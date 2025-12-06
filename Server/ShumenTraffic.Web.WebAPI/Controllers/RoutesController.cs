@@ -24,6 +24,11 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
             return base.Read(filter, sorts, page);
         }
 
+        public override Task<ActionResult<ApiResponse<int>>> Count([FromQuery] RouteFilter filter)
+        {
+            return base.Count(filter);
+        }
+
         public override Task<ActionResult<ApiResponse<RouteModel>>> Get([FromRoute] int id)
         {
             return base.Get(id);

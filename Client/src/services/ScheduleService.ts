@@ -11,6 +11,11 @@ export default {
             return result;
         });
     },
+    async count(): Promise<number> {
+        return await getRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/schedules/count`, result => {
+            return result;
+        });
+    },
     async update(model: ScheduleModel): Promise<ScheduleModel> {
         return await authorisedPutRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/schedules/${model.id}`, model, result => {
             return result;

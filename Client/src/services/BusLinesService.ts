@@ -14,6 +14,11 @@ export default {
             return result;
         });
     },
+    async count(): Promise<number> {
+        return await getRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/bus-lines/count`, result => {
+            return result;
+        });
+    },
     async create(model: BusLineModel): Promise<BusLineModel> {
         return await authorisedPostRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/bus-lines`, model, result => {
             return result;

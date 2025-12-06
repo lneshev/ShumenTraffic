@@ -36,17 +36,21 @@ export function enhanceGeoJSON<T extends object>(obj: T): T {
             return item;
         }) as any;
     }
-
-    const copy: any = { ...obj };
-    for (const key in copy) {
-        const value = copy[key];
-        if (value && typeof value === "object") {
-            if (value.type === "Point" && Array.isArray(value.coordinates)) {
-                copy[key] = enhancePoint(value);
-            } else {
-                copy[key] = enhanceGeoJSON(value);
+    else if (typeof obj === "object") {
+        const copy: any = { ...obj };
+        for (const key in copy) {
+            const value = copy[key];
+            if (value && typeof value === "object") {
+                if (value.type === "Point" && Array.isArray(value.coordinates)) {
+                    copy[key] = enhancePoint(value);
+                } else {
+                    copy[key] = enhanceGeoJSON(value);
+                }
             }
         }
+        return copy;
     }
-    return copy;
+    else {
+        return obj;
+    }
 }

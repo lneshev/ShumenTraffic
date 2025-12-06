@@ -18,6 +18,11 @@ export default {
             return result;
         });
     },
+    async count(): Promise<number> {
+        return await getRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/routes/count`, result => {
+            return result;
+        });
+    },
     async update(model: RouteModel): Promise<RouteModel> {
         return await authorisedPutRequest(process.env.NEXT_PUBLIC_WEB_API_BASE_URL + `/api/routes/${model.id}`, model, result => {
             return result;

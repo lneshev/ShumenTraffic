@@ -20,6 +20,11 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
             return base.Get(id);
         }
 
+        public override Task<ActionResult<ApiResponse<int>>> Count([FromQuery] ScheduleFilter filter)
+        {
+            return base.Count(filter);
+        }
+
         public override Task<ActionResult<ApiResponse<ScheduleModel>>> Put([FromRoute] int id, [FromBody] ScheduleModel model)
         {
             return base.Put(id, model);

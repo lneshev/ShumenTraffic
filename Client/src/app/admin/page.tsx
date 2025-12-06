@@ -2,10 +2,52 @@
 
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/context/AuthContext';
+import BusLinesService from '@/services/BusLinesService';
+import BusStopService from '@/services/BusStopService';
+import RouteService from '@/services/RouteService';
+import ScheduleService from '@/services/ScheduleService';
+import NumberFlow from '@number-flow/react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 function AdminDashboard() {
+  const initialStatistics = [
+    { label: 'Total Schedules', value: "0", color: 'purple', isError: false },
+    { label: 'Total Routes', value: "0", color: 'green', isError: false },
+    { label: 'Total Bus Stops', value: "0", color: 'blue', isError: false },
+    { label: 'Total Bus Lines', value: "0", color: 'orange', isError: false },
+  ];
+
   const { user, logout } = useAuth();
+  const [statistics, setStatistics] = useState([...initialStatistics]);
+
+  useEffect(() => {
+    fetchStatistics();
+  }, []);
+
+  const fetchStatistics = async () => {
+    fetchStatistic(ScheduleService.count, 0);
+    fetchStatistic(RouteService.count, 1);
+    fetchStatistic(BusStopService.count, 2);
+    fetchStatistic(BusLinesService.count, 3);
+  }
+
+  const fetchStatistic = async (service: () => Promise<number>, index: number) => {
+    try {
+      const count = await service();
+      setStatistics((prev) => {
+        prev[index].value = count.toString();
+        prev[index].isError = false;
+        return [...prev];
+      });
+    } catch (err) {
+      setStatistics((prev) => {
+        prev[index].value = "Error";
+        prev[index].isError = true;
+        return [...prev];
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
@@ -97,21 +139,16 @@ function AdminDashboard() {
             System Statistics
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {[
-              { label: 'Total Bus Lines', value: '12', color: 'blue' },
-              { label: 'Total Routes', value: '48', color: 'green' },
-              { label: 'Bus Stops', value: '156', color: 'orange' },
-              { label: 'Active Schedules', value: '24', color: 'purple' },
-            ].map((stat, i) => (
+            {statistics.map((stat, i) => (
               <div
                 key={i}
                 className={`p-6 bg-${stat.color}-50 dark:bg-${stat.color}-900/20 rounded-lg border border-${stat.color}-200 dark:border-${stat.color}-700`}
               >
-                <p className={`text-${stat.color}-600 dark:text-${stat.color}-400 text-sm font-medium mb-2`}>
+                <p className="text-sm font-medium mb-2">
                   {stat.label}
                 </p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {stat.value}
+                <p className={`text-3xl font-bold ${stat.isError ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}>
+                  {!stat.isError ? <NumberFlow value={parseInt(stat.value)} /> : stat.value}
                 </p>
               </div>
             ))}
@@ -129,4 +166,3 @@ export default function AdminPage() {
     </ProtectedRoute>
   );
 }
-

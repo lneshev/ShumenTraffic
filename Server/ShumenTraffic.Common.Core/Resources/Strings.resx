@@ -210,4 +210,7 @@
   <data name="AllScheduleCoursesInScheduleMustHaveRoutesThatAreForSchedulesBusLineAndDirection" xml:space="preserve">
     <value>All schedule courses in schedule with ID: '{0}' must have routes that are for the schedule's bus line and direction.</value>
   </data>
+  <data name="YouAreNotAllowedToDeleteRoute" xml:space="preserve">
+    <value>You are not allowed to delete route: '{0}', because it is used in one or more schedule courses.</value>
+  </data>
 </root>

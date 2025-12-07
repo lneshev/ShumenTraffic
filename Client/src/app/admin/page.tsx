@@ -25,7 +25,7 @@ function AdminDashboard() {
     fetchStatistics();
   }, []);
 
-  const fetchStatistics = async () => {
+  const fetchStatistics = () => {
     fetchStatistic(ScheduleService.count, 0);
     fetchStatistic(RouteService.count, 1);
     fetchStatistic(BusStopService.count, 2);

@@ -313,6 +313,15 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You are not allowed to delete route: &apos;{0}&apos;, because it is used in one or more schedule courses..
+        /// </summary>
+        public static string YouAreNotAllowedToDeleteRoute {
+            get {
+                return ResourceManager.GetString("YouAreNotAllowedToDeleteRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You are not allowed to delete transportation company: &apos;{0}&apos;, because it has bus lines..
         /// </summary>
         public static string YouAreNotAllowedToDeleteTransportationCompany {

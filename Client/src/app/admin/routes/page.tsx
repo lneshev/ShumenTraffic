@@ -181,7 +181,7 @@ function RoutesPage() {
                     Name
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
-                    Bus Line ID
+                    Bus Line
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Direction

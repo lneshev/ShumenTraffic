@@ -67,6 +67,7 @@ export function BusStopMarker({
                                     className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
                                     required
                                     maxLength={255}
+                                    autoFocus
                                 />
                                 <EntityDropdown
                                     value={busStop.zoneId}

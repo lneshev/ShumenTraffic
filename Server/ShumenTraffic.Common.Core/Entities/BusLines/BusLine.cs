@@ -20,6 +20,13 @@ namespace ShumenTraffic.Common.Core.Entities.BusLines
         public string LineNumber { get; set; }
 
         /// <summary>
+        /// Line number stored in a way appropriate for number-first sorting
+        /// </summary>
+        [Required]
+        [MaxLength(BusLineConstants.LineNumberSortKeyMinLength)]
+        public string LineNumberSortKey { get; set; }
+
+        /// <summary>
         /// Detailed description of the line.
         /// </summary>
         public string Description { get; set; }

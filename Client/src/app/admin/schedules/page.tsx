@@ -129,7 +129,9 @@ function SchedulesPage() {
                   onChange={(e) => setFormData({ ...formData, busLineId: e ? e.value : 0 })}
                   placeholder="Select..."
                   url="/api/bus-lines-light"
-                  sorts={[{ field: "lineNumber", dir: "asc" }]}
+                  sorts={[
+                    { field: "LineNumber", dir: "asc" }
+                  ]}
                   parseData={(data: PageResult<BusLineLightModel>) =>
                     data.items.map((item, i) => {
                       return {

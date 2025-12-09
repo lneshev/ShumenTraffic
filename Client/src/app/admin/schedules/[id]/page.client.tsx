@@ -129,7 +129,9 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                     onChange={(e) => setSchedule({ ...schedule, busLineId: e ? e.value : 0, busLineNumber: e ? e.label : '' })}
                                     placeholder="Select..."
                                     url="/api/bus-lines-light"
-                                    sorts={[{ field: "lineNumber", dir: "asc" }]}
+                                    sorts={[
+                                        { field: "LineNumber", dir: "asc" }
+                                    ]}
                                     parseData={(data: PageResult<BusLineLightModel>) =>
                                         data.items.map((item, i) => {
                                             return {
@@ -246,7 +248,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                                     data.items.map((item, i) => {
                                                         return {
                                                             value: item.id,
-                                                            label: "Name: " + item.name + ", Line: " + item.busLineNumber + ", Direction: " + item.directionText
+                                                            label: item.name
                                                         };
                                                     })
                                                 }
@@ -294,7 +296,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                                 data.items.map((item, i) => {
                                                     return {
                                                         value: item.id,
-                                                        label: "Name: " + item.name + ", Line: " + item.busLineNumber + ", Direction: " + item.directionText
+                                                        label: item.name
                                                     };
                                                 })
                                             }

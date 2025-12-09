@@ -14,7 +14,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MoravianStar.WebAPI" Version="1.47.0" />
+    <PackageReference Include="MoravianStar.WebAPI" Version="1.48.0" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="4.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="9.0.6" />
   </ItemGroup>

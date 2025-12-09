@@ -47,7 +47,7 @@ export default function LinesPage() {
   useEffect(() => {
     const fetchBusLines = async () => {
       try {
-        const data = await api.get<PageResult<BusLine>>('/bus-lines');
+        const data = await api.get<PageResult<BusLine>>('/bus-lines?sorts[0].field=LineNumber&sorts[0].dir=asc');
         setBusLines(data.items);
         if (data.items.length > 0) {
           setSelectedLineId(data.items[0].id);

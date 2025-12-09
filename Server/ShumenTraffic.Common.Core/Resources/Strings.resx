@@ -213,4 +213,7 @@
   <data name="YouAreNotAllowedToDeleteRoute" xml:space="preserve">
     <value>You are not allowed to delete route: '{0}', because it is used in one or more schedule courses.</value>
   </data>
+  <data name="TheNumericPartInParameterShouldBeNoMoreThanXDigits" xml:space="preserve">
+    <value>The numeric part in parameter {0} should be no more than {1} digits.</value>
+  </data>
 </root>

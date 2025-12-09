@@ -26,6 +26,7 @@ classDiagram
     class BusLine {
         int Id
         string LineNumber
+        string LineNumberSortKey
         string Description
         bool IsActive
         datetimeoffset CreatedAt
@@ -149,6 +150,7 @@ Represents a bus line that can be operated by one or more transportation compani
 |--------|------|-------------|-------------|
 | Id | int | PK, Auto | Primary key |
 | LineNumber | string(50) | NOT NULL | Line number (e.g., "1", "2A") |
+| LineNumberSortKey | string(63) | NOT NULL | Line number stored in a way appropriate for number-first sorting |
 | Description | string(1000) | | Line description |
 | IsActive | bool | NOT NULL, Default=true | Active status |
 | CreatedAt | datetimeoffset | NOT NULL | Creation timestamp |

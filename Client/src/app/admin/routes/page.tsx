@@ -130,7 +130,7 @@ function RoutesPage() {
                   placeholder="Select..."
                   url="/api/bus-lines-light"
                   sorts={[
-                    { field: "name", dir: "asc" }
+                    { field: "LineNumber", dir: "asc" }
                   ]}
                   parseData={(data: PageResult<BusLineLightModel>) =>
                     data.items.map((item, i) => {

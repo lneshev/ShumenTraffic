@@ -213,6 +213,7 @@ namespace ShumenTraffic.Web.WebAPI
             // Add Domain Services (Common Layer)
             services.AddTransient<IEntityValidated<TransportationCompany>, TransportationCompanyEntityValidated>();
             services.AddTransient<IEntityDeleting<TransportationCompany>, TransportationCompanyEntityDeleting>();
+            services.AddTransient<IEntityFilling<BusLine>, BusLineEntityFilling>();
             services.AddTransient<IEntityValidated<BusLine>, BusLineEntityValidated>();
             services.AddTransient<IEntityDeleting<BusLine>, BusLineEntityDeleting>();
             services.AddTransient<IEntityValidated<Zone>, ZoneEntityValidated>();

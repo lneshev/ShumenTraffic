@@ -214,6 +214,15 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The numeric part in parameter {0} should be no more than {1} digits..
+        /// </summary>
+        public static string TheNumericPartInParameterShouldBeNoMoreThanXDigits {
+            get {
+                return ResourceManager.GetString("TheNumericPartInParameterShouldBeNoMoreThanXDigits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The route cannot be saved, because the estimated minutes from start for the stops are not correct. The estimated minutes from start should be in ascending order..
         /// </summary>
         public static string TheRouteCannotBeSavedBecauseTheEstimatedMinutesFromStartAreNotCorrect {

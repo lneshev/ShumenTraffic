@@ -1,4 +1,4 @@
-using LinqKit;
+﻿using LinqKit;
 using MoravianStar.Dao;
 using ShumenTraffic.Common.Core.Entities.BusLines;
 using System;
@@ -43,7 +43,7 @@ namespace ShumenTraffic.Common.Core.Filters.BusLines
             {
                 if (sort.Field.Equals("LineNumber", StringComparison.OrdinalIgnoreCase))
                 {
-                    result.Add((x => x.LineNumber, sort.Dir));
+                    result.Add((x => x.LineNumberSortKey, sort.Dir));
                 }
             }
 

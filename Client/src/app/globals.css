@@ -69,7 +69,7 @@ select {
   cursor: pointer;
 }
 
-/* Reset z-index for leaflet */
-.leaflet-container * {
-  z-index: auto !important;
+/* Increase z-index for react-select dropdowns, because of leaflet's map */
+.react-select-dropdown__menu {
+  z-index: 401 !important;
 }

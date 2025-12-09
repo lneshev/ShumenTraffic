@@ -98,26 +98,39 @@ export default function RouteDetails({ id }: { id: number }) {
     }
 
     const handleRouteStopRemove = (routeStop: RouteStopModel) => {
-        route!.stops.forEach(x => {
-            if (x.stopOrder > routeStop.stopOrder) {
-                x.stopOrder--;
-            }
-        });
+        // Find the current version of the routeStop to get the correct stopOrder
+        const currentRouteStop = route!.stops.find(x => x.id === routeStop.id);
+        if (!currentRouteStop) {
+            return;
+        }
 
         setRoute({
             ...route!,
-            stops: route!.stops.filter(x => x.id !== routeStop.id)
+            stops: route!.stops
+                .filter(x => x.id !== routeStop.id)
+                .map(x => {
+                    // Decrement stopOrder for all stops after the removed one
+                    if (x.stopOrder > currentRouteStop.stopOrder) {
+                        return { ...x, stopOrder: x.stopOrder - 1 };
+                    }
+                    return x;
+                })
         });
     }
 
     const handleRouteStopDragEnd = async (routeStop: RouteStopModel, newLat: number, newLng: number) => {
-        const updatedRouteStop = {
-            ...routeStop,
-            location: new GeoPoint(newLat, newLng)
-        };
         setRoute({
             ...route!,
-            stops: route!.stops.map(x => x.id === routeStop.id ? updatedRouteStop : x)
+            stops: route!.stops.map(x => {
+                if (x.id === routeStop.id) {
+                    // Use the current state version of the routeStop, not the stale one from the event
+                    return {
+                        ...x,
+                        location: new GeoPoint(newLat, newLng)
+                    };
+                }
+                return x;
+            })
         });
     }
 

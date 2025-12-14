@@ -171,13 +171,13 @@
   <data name="YouAreNotAllowedToDeleteBusStop" xml:space="preserve">
     <value>You are not allowed to delete bus stop: '{0}', because it is used in one or more routes.</value>
   </data>
-  <data name="DayType_Weekday" xml:space="preserve">
-    <value>Weekday</value>
+  <data name="DaysOfWeek_Weekdays" xml:space="preserve">
+    <value>Weekdays</value>
   </data>
-  <data name="DayType_Saturday" xml:space="preserve">
+  <data name="DaysOfWeek_Saturday" xml:space="preserve">
     <value>Saturday</value>
   </data>
-  <data name="DayType_Sunday" xml:space="preserve">
+  <data name="DaysOfWeek_Sunday" xml:space="preserve">
     <value>Sunday</value>
   </data>
   <data name="YouAreNotAllowedToDeleteBusLineBecauseItHasSchedules" xml:space="preserve">
@@ -205,7 +205,7 @@
     <value>Unknown or unsupported enum value of enum type: '{0}'.</value>
   </data>
   <data name="OneOrMoreSchedulesForBusLineExist" xml:space="preserve">
-    <value>One or more schedules for bus line: '{0}', direction: '{1}' and day type: '{2}' already exist for this date range. Either try saving this schedule with different parameters or modify/delete some of the existing schedules first. Problematic schedule IDs: {3}.</value>
+    <value>One or more schedules for bus line: '{0}', direction: '{1}' and days of week: '{2}' already exist for this date range. Either try saving this schedule with different parameters or modify/delete some of the existing schedules first. Problematic schedule IDs: {3}.</value>
   </data>
   <data name="AllScheduleCoursesInScheduleMustHaveRoutesThatAreForSchedulesBusLineAndDirection" xml:space="preserve">
     <value>All schedule courses in schedule with ID: '{0}' must have routes that are for the schedule's bus line and direction.</value>
@@ -215,5 +215,29 @@
   </data>
   <data name="TheNumericPartInParameterShouldBeNoMoreThanXDigits" xml:space="preserve">
     <value>The numeric part in parameter {0} should be no more than {1} digits.</value>
+  </data>
+  <data name="DaysOfWeek_Monday" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="DaysOfWeek_Tuesday" xml:space="preserve">
+    <value>Tuesday</value>
+  </data>
+  <data name="DaysOfWeek_Wednesday" xml:space="preserve">
+    <value>Wednesday</value>
+  </data>
+  <data name="DaysOfWeek_Thursday" xml:space="preserve">
+    <value>Thursday</value>
+  </data>
+  <data name="DaysOfWeek_Friday" xml:space="preserve">
+    <value>Friday</value>
+  </data>
+  <data name="DaysOfWeek_Weekend" xml:space="preserve">
+    <value>Weekend</value>
+  </data>
+  <data name="DaysOfWeek_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="DaysOfWeek_None" xml:space="preserve">
+    <value>None</value>
   </data>
 </root>

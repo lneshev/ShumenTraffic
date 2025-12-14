@@ -79,7 +79,7 @@ A website for tracking live buses in Shumen, Bulgaria with real-time bus stop in
 - `DELETE /api/routes/{id}` - Delete route (authenticated)
 
 #### Schedules
-- `GET /api/schedules` - Get all schedules (public, filterable by day type)
+- `GET /api/schedules` - Get all schedules (public, filterable by days of week)
 - `GET /api/schedules/{id}` - Get schedule by ID with all courses (public)
 - `POST /api/schedules` - Create new schedule with courses (authenticated)
 - `PUT /api/schedules/{id}` - Update schedule (authenticated)
@@ -124,7 +124,7 @@ The live bus position endpoint calculates the current position of a bus on a rou
 
 1. **Find Active Course**: Searches for a schedule course that matches the current time
    - Looks for courses where: `departureTime <= currentTime <= departureTime + lastStopTime`
-   - Supports multiple day types (Weekday, Saturday, Sunday)
+   - Supports multiple days of week
 
 2. **Calculate Elapsed Time**: Determines how many minutes have passed since the course departure
 

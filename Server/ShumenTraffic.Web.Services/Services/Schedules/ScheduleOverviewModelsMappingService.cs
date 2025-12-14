@@ -18,7 +18,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
             return x => new ScheduleOverviewModel()
             {
                 Id = x.Id,
-                DayType = x.DayType,
+                DaysOfWeek = x.DaysOfWeek,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
                 IsActive = x.IsActive,
@@ -32,7 +32,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
         public override async Task<ScheduleOverviewModel> MapAsync(IProjectionBase projection)
         {
             var model = (ScheduleOverviewModel)projection;
-            model.DayTypeText = model.DayType.Translate(typeof(Strings));
+            model.DaysOfWeekText = model.DaysOfWeek.Translate(typeof(Strings));
             model.PriorityText = model.Priority.Translate(typeof(Strings));
             model.DirectionText = model.Direction.Translate(typeof(Strings));
             return await Task.FromResult(model);
@@ -45,7 +45,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
             foreach (var pair in pairs)
             {
                 pair.Entity.Id = pair.Model.Id;
-                pair.Entity.DayType = pair.Model.DayType;
+                pair.Entity.DaysOfWeek = pair.Model.DaysOfWeek;
                 pair.Entity.StartDate = pair.Model.StartDate;
                 pair.Entity.EndDate = pair.Model.EndDate;
                 pair.Entity.IsActive = pair.Model.IsActive;

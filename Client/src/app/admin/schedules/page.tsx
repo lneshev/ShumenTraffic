@@ -2,6 +2,7 @@
 
 import EntityDropdown from '@/components/EntityDropdown';
 import EnumDropdown from '@/components/EnumDropdown';
+import FlagsEnumMultiselect from '@/components/FlagsEnumMultiselect';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { ApiError } from '@/lib/api';
 import ScheduleOverviewService from '@/services/ScheduleOverviewService';
@@ -17,8 +18,8 @@ import { useEffect, useState } from 'react';
 function SchedulesPage() {
   const initialFormData: ScheduleOverviewModel = {
     id: 0,
-    dayType: ServerEnums.DayType.Weekday,
-    dayTypeText: '',
+    daysOfWeek: ServerEnums.DaysOfWeek.Weekdays,
+    daysOfWeekText: '',
     startDate: DateTime.now().toISODate(),
     endDate: '',
     isActive: true,
@@ -46,7 +47,7 @@ function SchedulesPage() {
       const data = await ScheduleOverviewService.read(undefined, [
         { field: 'BusLineNumber', dir: 'asc' },
         { field: 'Direction', dir: 'asc' },
-        { field: 'DayType', dir: 'asc' },
+        { field: 'DaysOfWeek', dir: 'asc' },
         { field: 'StartDate', dir: 'asc' },
         { field: 'Priority', dir: 'asc' }
       ]);
@@ -133,7 +134,7 @@ function SchedulesPage() {
                     { field: "LineNumber", dir: "asc" }
                   ]}
                   parseData={(data: PageResult<BusLineLightModel>) =>
-                    data.items.map((item, i) => {
+                    data.items.map((item) => {
                       return {
                         value: item.id,
                         label: item.lineNumber
@@ -156,13 +157,21 @@ function SchedulesPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Day Type
+                  Days of Week
                 </label>
-                <EnumDropdown
-                  enumName="DayType"
-                  value={formData.dayType}
-                  onChange={(e) => setFormData({ ...formData, dayType: e ? e.value : 0 })}
-                  isClearable={false}
+                <FlagsEnumMultiselect
+                  enumName="DaysOfWeek"
+                  exactEnumValues={[
+                    ServerEnums.DaysOfWeek.Monday,
+                    ServerEnums.DaysOfWeek.Tuesday,
+                    ServerEnums.DaysOfWeek.Wednesday,
+                    ServerEnums.DaysOfWeek.Thursday,
+                    ServerEnums.DaysOfWeek.Friday,
+                    ServerEnums.DaysOfWeek.Saturday,
+                    ServerEnums.DaysOfWeek.Sunday
+                  ]}
+                  value={formData.daysOfWeek}
+                  onChange={(e) => setFormData({ ...formData, daysOfWeek: e ? e : 0 })}
                   required
                 />
               </div>
@@ -231,7 +240,7 @@ function SchedulesPage() {
                     Direction
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
-                    Day Type
+                    Days of Week
                   </th>
                   <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">
                     Start Date
@@ -266,7 +275,7 @@ function SchedulesPage() {
                       {schedule.directionText}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
-                      {schedule.dayTypeText}
+                      {schedule.daysOfWeekText}
                     </td>
                     <td className="py-3 px-4 text-gray-900 dark:text-white">
                       {new Date(schedule.startDate).toLocaleDateString("bg-BG")}

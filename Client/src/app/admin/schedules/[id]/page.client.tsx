@@ -2,11 +2,13 @@
 
 import EntityDropdown from "@/components/EntityDropdown";
 import EnumDropdown from "@/components/EnumDropdown";
+import FlagsEnumMultiselect from "@/components/FlagsEnumMultiselect";
 import { nullifyNegativeIds } from "@/helpers/Request";
 import { ApiError } from "@/lib/api";
 import ScheduleService from "@/services/ScheduleService";
 import BusLineLightModel from "@/types/BusLineLightModel";
 import PageResult from "@/types/common/PageResult";
+import ServerEnums from "@/types/common/ServerEnums";
 import RouteOverviewModel from "@/types/RouteOverviewModel";
 import ScheduleCourseModel from "@/types/ScheduleCourseModel";
 import ScheduleModel from "@/types/ScheduleModel";
@@ -158,13 +160,21 @@ export default function ScheduleDetails({ id }: { id: number }) {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Day Type
+                                    Days of Week
                                 </label>
-                                <EnumDropdown
-                                    enumName="DayType"
-                                    value={schedule.dayType}
-                                    onChange={(e) => setSchedule({ ...schedule, dayType: e ? e.value : 0 })}
-                                    isClearable={false}
+                                <FlagsEnumMultiselect
+                                    enumName="DaysOfWeek"
+                                    exactEnumValues={[
+                                        ServerEnums.DaysOfWeek.Monday,
+                                        ServerEnums.DaysOfWeek.Tuesday,
+                                        ServerEnums.DaysOfWeek.Wednesday,
+                                        ServerEnums.DaysOfWeek.Thursday,
+                                        ServerEnums.DaysOfWeek.Friday,
+                                        ServerEnums.DaysOfWeek.Saturday,
+                                        ServerEnums.DaysOfWeek.Sunday
+                                    ]}
+                                    value={schedule.daysOfWeek}
+                                    onChange={(e) => setSchedule({ ...schedule, daysOfWeek: e ? e : 0 })}
                                     required
                                 />
                             </div>

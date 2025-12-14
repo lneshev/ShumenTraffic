@@ -7,7 +7,7 @@ This document describes the database schema for the ShumenTraffic application. T
 - Bus lines with different routes and directions
 - Bus stops organized in zones
 - Schedules with courses (trips/departures) that can use different routes
-- Route variations (weekdays, Saturdays, Sundays) via day type in Schedule
+- Route variations via days of week in Schedule
 - Route swapping: different courses in the same schedule can use different routes
 
 ## Class Diagram
@@ -80,7 +80,7 @@ classDiagram
         int Id
         int BusLineId
         RouteDirection Direction
-        DayType DayType
+        DaysOfWeek DaysOfWeek
         date StartDate
         date EndDate
         bool IsActive
@@ -116,10 +116,18 @@ classDiagram
 
 ## Enum Descriptions
 
-### DayType
-- Weekday = 0
-- Saturday = 1
-- Sunday = 2
+### DaysOfWeek
+- None = 0
+- Monday = 1
+- Tuesday = 2
+- Wednesday = 4
+- Thursday = 8
+- Friday = 16
+- Saturday = 32
+- Sunday = 64
+- Weekdays = Monday | Tuesday | Wednesday | Thursday | Friday
+- Weekend = Saturday | Sunday
+- All = Weekdays | Weekend
 
 ### RouteDirection
 - One = 1
@@ -219,14 +227,14 @@ Represents a geographical zone/neighborhood.
 | UpdatedAt | datetimeoffset | NOT NULL | Last update timestamp |
 
 ### Schedule
-Represents a schedule for a specific date range and day type. Contains multiple courses (trips/departures), each specifying which route it uses.
+Represents a schedule for a specific date range and days of week. Contains multiple courses (trips/departures), each specifying which route it uses.
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | Id | int | PK, Auto | Primary key |
 | BusLineId | int | FK, NOT NULL | Reference to bus line |
 | Direction | int | NOT NULL | Direction (1 or 2) |
-| DayType | int | NOT NULL | Weekday, Saturday or Sunday |
+| DaysOfWeek | int | NOT NULL | Days of week (bitmask) |
 | StartDate | date | NOT NULL | Schedule start date |
 | EndDate | date | | Schedule end date (null = ongoing) |
 | IsActive | bool | NOT NULL, Default=true | Active status |
@@ -237,7 +245,7 @@ Represents a schedule for a specific date range and day type. Contains multiple 
 **Notes:**
 - Schedule does not directly reference a route; instead, each course in the schedule specifies which route it uses
 - This allows different courses in the same schedule to use different routes (route swapping)
-- Priority field allows multiple schedules for the same bus line, direction, day type and date range with different priority levels
+- Priority field allows multiple schedules for the same bus line, direction, days of week and date range with different priority levels
 - Use cases for Priority:
   - Normal priority: Regular schedules
   - High priority: Special schedules (holidays, events, temporary changes)
@@ -393,12 +401,11 @@ Identity tables are automatically managed by the framework and are separate from
 
 - All timestamps use UTC
 - Soft deletes are not used; instead, `IsActive` flag is used
-- DayType values: "Weekday", "Saturday", "Sunday"
 - Direction values: 1 or 2
 - SchedulePriority values: "Normal" (0), "High" (1)
 - Coordinates use WGS84 (EPSG:4326) for Leaflet.js compatibility
 - `RouteStop.BusStopId` is nullable to support waypoints (intermediate route points)
 - `RouteStop.EstimatedMinutesFromStart` is only populated for actual bus stops (when `BusStopId IS NOT NULL`)
 - Live bus position calculation happens server-side; client receives either real GPS coords or calculated progress percentage
-- Schedules must have unique combinations of (BusLineId, DayType, Priority and date range) to allow multiple schedules for the same bus line and day type with different priorities
+- Schedules must have unique combinations of (BusLineId, DaysOfWeek, Priority and date range) to allow multiple schedules for the same bus line and days of week with different priorities
 - All schedule courses in a schedule must have routes that are for the schedule's bus line and direction

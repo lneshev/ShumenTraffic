@@ -1,6 +1,7 @@
 ﻿using LinqKit;
 using MoravianStar.Dao;
 using ShumenTraffic.Common.Core.Entities.Schedules;
+using ShumenTraffic.Common.Core.Enums.Common;
 using ShumenTraffic.Common.Core.Enums.Routes;
 using ShumenTraffic.Common.Core.Enums.Schedules;
 using System;
@@ -14,7 +15,7 @@ namespace ShumenTraffic.Common.Core.Filters.Schedules
     {
         public int? BusLineId { get; set; }
         public RouteDirection? Direction { get; set; }
-        public DayType? DayType { get; set; }
+        public DaysOfWeek? DaysOfWeek { get; set; }
         public DateOnly? StartDateLE { get; set; }
         public DateOnly? EndDateGEOrNull { get; set; }
         public SchedulePriority? Priority { get; set; }
@@ -37,9 +38,9 @@ namespace ShumenTraffic.Common.Core.Filters.Schedules
                 mainCriteria = mainCriteria.And(x => x.Direction == Direction);
             }
 
-            if (DayType.HasValue)
+            if (DaysOfWeek.HasValue)
             {
-                mainCriteria = mainCriteria.And(x => x.DayType == DayType);
+                mainCriteria = mainCriteria.And(x => x.DaysOfWeek == DaysOfWeek);
             }
 
             if (StartDateLE.HasValue)
@@ -81,9 +82,9 @@ namespace ShumenTraffic.Common.Core.Filters.Schedules
                 {
                     result.Add((x => x.Direction, sort.Dir));
                 }
-                else if (sort.Field.Equals("DayType", StringComparison.OrdinalIgnoreCase))
+                else if (sort.Field.Equals("DaysOfWeek", StringComparison.OrdinalIgnoreCase))
                 {
-                    result.Add((x => x.DayType, sort.Dir));
+                    result.Add((x => x.DaysOfWeek, sort.Dir));
                 }
                 else if (sort.Field.Equals("StartDate", StringComparison.OrdinalIgnoreCase))
                 {

@@ -24,7 +24,7 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
             {
                 BusLineId = entity.BusLineId,
                 Direction = entity.Direction,
-                DayType = entity.DayType,
+                DaysOfWeek = entity.DaysOfWeek,
                 StartDateLE = entity.EndDate,
                 EndDateGEOrNull = entity.StartDate,
                 Priority = entity.Priority,
@@ -37,7 +37,7 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
                     Strings.OneOrMoreSchedulesForBusLineExist,
                     entity.BusLine.LineNumber,
                     entity.Direction.Translate(typeof(Strings)),
-                    entity.DayType.Translate(typeof(Strings)),
+                    entity.DaysOfWeek.Translate(typeof(Strings)),
                     string.Join(", ", existingSchedules.Select(x => x.Id))
                 ));
             }

@@ -3,8 +3,7 @@ import ModelBase from "./common/ModelBase";
 import ScheduleCourseModel from "./ScheduleCourseModel";
 
 export default interface ScheduleModel extends ModelBase<number> {
-    dayType: number;
-    dayTypeText: string;
+    daysOfWeek: number;
     startDate: string;
     endDate?: string;
     isActive: boolean;

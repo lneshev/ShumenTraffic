@@ -1,4 +1,5 @@
 using ShumenTraffic.Common.Core.Entities.Schedules;
+using ShumenTraffic.Common.Core.Enums.Common;
 using ShumenTraffic.Common.Core.Enums.Schedules;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,10 @@ namespace ShumenTraffic.Common.Services.Interfaces
         /// <summary>
         /// Get all schedules with their courses.
         /// </summary>
-        /// <param name="dayType">Filter by day type (optional)</param>
+        /// <param name="daysOfWeek">Filter by days of week (optional)</param>
         /// <param name="includeInactive">Include inactive schedules</param>
         /// <returns>List of schedules</returns>
-        Task<IEnumerable<Schedule>> GetAllWithCoursesAsync(DayType? dayType = null, bool includeInactive = false);
+        Task<IEnumerable<Schedule>> GetAllWithCoursesAsync(DaysOfWeek? daysOfWeek = null, bool includeInactive = false);
 
         /// <summary>
         /// Get schedule by ID with courses.
@@ -29,13 +30,13 @@ namespace ShumenTraffic.Common.Services.Interfaces
         /// <summary>
         /// Create a new schedule with courses.
         /// </summary>
-        /// <param name="dayType">Day type</param>
+        /// <param name="daysOfWeek">Days of week</param>
         /// <param name="startDate">Start date</param>
         /// <param name="endDate">End date (optional)</param>
         /// <param name="priority">Priority level</param>
         /// <param name="courses">Schedule courses</param>
         /// <returns>Created schedule</returns>
-        Task<Schedule> CreateAsync(DayType dayType, DateOnly startDate, DateOnly? endDate, SchedulePriority priority, IEnumerable<ScheduleCourseData> courses);
+        Task<Schedule> CreateAsync(DaysOfWeek daysOfWeek, DateOnly startDate, DateOnly? endDate, SchedulePriority priority, IEnumerable<ScheduleCourseData> courses);
 
         /// <summary>
         /// Update an existing schedule.

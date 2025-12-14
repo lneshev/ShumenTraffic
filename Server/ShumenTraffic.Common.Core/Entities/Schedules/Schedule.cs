@@ -1,4 +1,5 @@
 using ShumenTraffic.Common.Core.Entities.BusLines;
+using ShumenTraffic.Common.Core.Enums.Common;
 using ShumenTraffic.Common.Core.Enums.Routes;
 using ShumenTraffic.Common.Core.Enums.Schedules;
 using ShumenTraffic.Common.Core.Resources;
@@ -9,15 +10,15 @@ using System.ComponentModel.DataAnnotations;
 namespace ShumenTraffic.Common.Core.Entities.Schedules
 {
     /// <summary>
-    /// Represents a schedule for a specific date range and day type.
+    /// Represents a schedule for a specific date range and days of week.
     /// Contains multiple courses (trips/departures), each specifying which route it uses.
     /// </summary>
     public class Schedule : TrackableEntityBase<int>, IValidatableObject
     {
         /// <summary>
-        /// Day type: "Weekday", "Saturday", or "Sunday".
+        /// Days of the week this schedule applies to.
         /// </summary>
-        public DayType DayType { get; set; }
+        public DaysOfWeek DaysOfWeek { get; set; }
 
         /// <summary>
         /// Date when the schedule starts.

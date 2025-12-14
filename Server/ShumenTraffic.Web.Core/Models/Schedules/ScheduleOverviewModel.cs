@@ -1,4 +1,5 @@
 ﻿using MoravianStar.Dao;
+using ShumenTraffic.Common.Core.Enums.Common;
 using ShumenTraffic.Common.Core.Enums.Routes;
 using ShumenTraffic.Common.Core.Enums.Schedules;
 using ShumenTraffic.Common.Core.Resources;
@@ -14,14 +15,14 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
     public class ScheduleOverviewModel : ModelBase<int>, IValidatableObject
     {
         /// <summary>
-        /// Day type: "Weekday", "Saturday", or "Sunday".
+        /// Days of the week this schedule applies to.
         /// </summary>
-        public DayType DayType { get; set; }
+        public DaysOfWeek DaysOfWeek { get; set; }
 
         /// <summary>
-        /// Day type as text
+        /// Days of week as text
         /// </summary>
-        public string DayTypeText { get; set; }
+        public string DaysOfWeekText { get; set; }
 
         /// <summary>
         /// Date when the schedule starts.

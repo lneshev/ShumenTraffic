@@ -94,11 +94,12 @@ ShumenTraffic is a web application for tracking live buses in Shumen, Bulgaria. 
 - Weekday routes
 - Saturday routes
 - Sunday routes
+- Weekend routes
 
 **Implementation**:
-- `Schedule.DayType` field: "Weekday", "Saturday", "Sunday"
-- Same physical route can have different schedules for different day types
-- Allows different timetables per day type while maintaining the same route structure
+- `Schedule.DaysOfWeek` bitmask for flexible day combinations
+- Same physical route can have different schedules for different days of week
+- Allows different timetables per day of week while maintaining the same route structure
 
 ## Data Flow
 

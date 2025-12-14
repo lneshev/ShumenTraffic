@@ -2,7 +2,7 @@ namespace ShumenTraffic.Common.Core.Enums.Schedules
 {
     /// <summary>
     /// Represents the priority level of a schedule.
-    /// Used to differentiate between multiple schedules with the same BusLineId, DayType, and date range.
+    /// Used to differentiate between multiple schedules with the same BusLineId, DaysOfWeek, and date range.
     /// </summary>
     public enum SchedulePriority
     {

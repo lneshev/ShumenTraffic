@@ -145,6 +145,8 @@ namespace ShumenTraffic.Common.DataAccess.DbContexts
             modelBuilder.Entity<Schedule>()
                 .HasIndex(x => x.BusLineId);
             modelBuilder.Entity<Schedule>()
+                .HasIndex(x => x.DaysOfWeek);
+            modelBuilder.Entity<Schedule>()
                 .HasMany(x => x.ScheduleCourses)
                 .WithOne(x => x.Schedule)
                 .HasForeignKey(x => x.ScheduleId);

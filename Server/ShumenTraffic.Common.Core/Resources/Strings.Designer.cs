@@ -88,29 +88,101 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string DaysOfWeek_All {
+            get {
+                return ResourceManager.GetString("DaysOfWeek_All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Friday.
+        /// </summary>
+        public static string DaysOfWeek_Friday {
+            get {
+                return ResourceManager.GetString("DaysOfWeek_Friday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monday.
+        /// </summary>
+        public static string DaysOfWeek_Monday {
+            get {
+                return ResourceManager.GetString("DaysOfWeek_Monday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string DaysOfWeek_None {
+            get {
+                return ResourceManager.GetString("DaysOfWeek_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Saturday.
         /// </summary>
-        public static string DayType_Saturday {
+        public static string DaysOfWeek_Saturday {
             get {
-                return ResourceManager.GetString("DayType_Saturday", resourceCulture);
+                return ResourceManager.GetString("DaysOfWeek_Saturday", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Sunday.
         /// </summary>
-        public static string DayType_Sunday {
+        public static string DaysOfWeek_Sunday {
             get {
-                return ResourceManager.GetString("DayType_Sunday", resourceCulture);
+                return ResourceManager.GetString("DaysOfWeek_Sunday", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Weekday.
+        ///   Looks up a localized string similar to Thursday.
         /// </summary>
-        public static string DayType_Weekday {
+        public static string DaysOfWeek_Thursday {
             get {
-                return ResourceManager.GetString("DayType_Weekday", resourceCulture);
+                return ResourceManager.GetString("DaysOfWeek_Thursday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tuesday.
+        /// </summary>
+        public static string DaysOfWeek_Tuesday {
+            get {
+                return ResourceManager.GetString("DaysOfWeek_Tuesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wednesday.
+        /// </summary>
+        public static string DaysOfWeek_Wednesday {
+            get {
+                return ResourceManager.GetString("DaysOfWeek_Wednesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weekdays.
+        /// </summary>
+        public static string DaysOfWeek_Weekdays {
+            get {
+                return ResourceManager.GetString("DaysOfWeek_Weekdays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weekend.
+        /// </summary>
+        public static string DaysOfWeek_Weekend {
+            get {
+                return ResourceManager.GetString("DaysOfWeek_Weekend", resourceCulture);
             }
         }
         
@@ -124,7 +196,7 @@ namespace ShumenTraffic.Common.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to One or more schedules for bus line: &apos;{0}&apos;, direction: &apos;{1}&apos; and day type: &apos;{2}&apos; already exist for this date range. Either try saving this schedule with different parameters or modify/delete some of the existing schedules first. Problematic schedule IDs: {3}..
+        ///   Looks up a localized string similar to One or more schedules for bus line: &apos;{0}&apos;, direction: &apos;{1}&apos; and days of week: &apos;{2}&apos; already exist for this date range. Either try saving this schedule with different parameters or modify/delete some of the existing schedules first. Problematic schedule IDs: {3}..
         /// </summary>
         public static string OneOrMoreSchedulesForBusLineExist {
             get {

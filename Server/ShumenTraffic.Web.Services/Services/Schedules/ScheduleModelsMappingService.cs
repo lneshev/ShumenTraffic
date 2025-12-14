@@ -19,7 +19,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
             return x => new ScheduleModel()
             {
                 Id = x.Id,
-                DayType = x.DayType,
+                DaysOfWeek = x.DaysOfWeek,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
                 IsActive = x.IsActive,
@@ -51,7 +51,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
             foreach (var pair in pairs)
             {
                 pair.Entity.Id = pair.Model.Id;
-                pair.Entity.DayType = pair.Model.DayType;
+                pair.Entity.DaysOfWeek = pair.Model.DaysOfWeek;
                 pair.Entity.StartDate = pair.Model.StartDate;
                 pair.Entity.EndDate = pair.Model.EndDate;
                 pair.Entity.IsActive = pair.Model.IsActive;

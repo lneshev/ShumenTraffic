@@ -1,3 +1,4 @@
+using ShumenTraffic.Common.Core.Enums.Common;
 using ShumenTraffic.Common.Core.Enums.Routes;
 using ShumenTraffic.Common.Core.Enums.Schedules;
 using System;
@@ -44,9 +45,9 @@ namespace ShumenTraffic.Web.Core.Models.Schedules
     public class CreateScheduleDto
     {
         /// <summary>
-        /// Day type: "Weekday", "Saturday", or "Sunday".
+        /// Days of the week this schedule applies to.
         /// </summary>
-        public DayType DayType { get; set; }
+        public DaysOfWeek DaysOfWeek { get; set; }
 
         /// <summary>
         /// Date when the schedule starts.

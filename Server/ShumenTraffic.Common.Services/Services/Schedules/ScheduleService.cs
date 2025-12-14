@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ShumenTraffic.Common.Core.Entities.Schedules;
+using ShumenTraffic.Common.Core.Enums.Common;
 using ShumenTraffic.Common.Core.Enums.Schedules;
 using ShumenTraffic.Common.DataAccess.DbContexts;
 using ShumenTraffic.Common.Services.Interfaces;
@@ -43,7 +44,7 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
             return await query.FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<IEnumerable<Schedule>> GetAllWithCoursesAsync(DayType? dayType = null, bool includeInactive = false)
+        public async Task<IEnumerable<Schedule>> GetAllWithCoursesAsync(DaysOfWeek? daysOfWeek = null, bool includeInactive = false)
         {
             var query = _context.Schedules
                 .Include(s => s.ScheduleCourses)
@@ -51,9 +52,9 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
                 .ThenInclude(r => r.BusLine)
                 .AsQueryable();
 
-            if (dayType.HasValue)
+            if (daysOfWeek.HasValue)
             {
-                query = query.Where(s => s.DayType == dayType);
+                query = query.Where(s => s.DaysOfWeek == daysOfWeek);
             }
 
             if (!includeInactive)
@@ -62,7 +63,7 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
             }
 
             return await query
-                .OrderBy(s => s.DayType)
+                .OrderBy(s => s.DaysOfWeek)
                 .ThenBy(s => s.StartDate)
                 .ToListAsync();
         }
@@ -76,11 +77,11 @@ namespace ShumenTraffic.Common.Services.Services.Schedules
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<Schedule> CreateAsync(DayType dayType, DateOnly startDate, DateOnly? endDate, SchedulePriority priority, IEnumerable<ScheduleCourseData> courses)
+        public async Task<Schedule> CreateAsync(DaysOfWeek daysOfWeek, DateOnly startDate, DateOnly? endDate, SchedulePriority priority, IEnumerable<ScheduleCourseData> courses)
         {
             var schedule = new Schedule
             {
-                DayType = dayType,
+                DaysOfWeek = daysOfWeek,
                 StartDate = startDate,
                 EndDate = endDate,
                 Priority = priority,

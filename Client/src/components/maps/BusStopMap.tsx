@@ -85,6 +85,8 @@ function BusStopMap({
   const [newMarkerData, setNewMarkerData] = useState<{ lat: number; lng: number } | null>(null);
   const [showContextMenu, setShowContextMenu] = useState(false);
   const defaultCenter: [number, number] = [43.271098, 26.935763]; // Default center: Shumen, Bulgaria
+  const defaultZoom = 14;
+  const maxZoom = 18;
 
   useEffect(() => {
     setMounted(true);
@@ -101,6 +103,18 @@ function BusStopMap({
       return () => document.removeEventListener('click', handleClick);
     }
   }, [showContextMenu]);
+
+  useEffect(() => {
+    if (selectedStopId) {
+      const stop = busStops.find(x => x.id === selectedStopId);
+      if (stop) {
+        mapRef.current?.setView([stop.location.latitude, stop.location.longitude], maxZoom);
+      }
+    }
+    else {
+      mapRef.current?.setView(defaultCenter, defaultZoom);
+    }
+  }, [selectedStopId]);
 
   const markerEventHandlers: LeafletEventHandlerFnMap = {
     dragend: (e: PopupEvent) => {
@@ -164,7 +178,8 @@ function BusStopMap({
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <MapContainer
             center={defaultCenter}
-            zoom={14}
+            zoom={defaultZoom}
+            maxZoom={maxZoom}
             style={{ width: '100%', height: '100%' }}
             className="rounded-lg"
           >

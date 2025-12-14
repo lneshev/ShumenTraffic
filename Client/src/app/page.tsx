@@ -42,7 +42,7 @@ export default function Home() {
 
   const fetchZonesWithBusLines = async () => {
     try {
-      const data = await ZoneWithBusLinesService.read();
+      const data = await ZoneWithBusLinesService.read(undefined, [{ field: 'Name', dir: 'asc' }]);
       setZonesWithBusLines(data.items);
     } catch (error) {
       console.error('Failed to fetch zones:', error);

@@ -21,6 +21,7 @@ namespace ShumenTraffic.Web.Services.Services.Zones
                     .SelectMany(bs => bs.RouteStops)
                     .Select(rs => rs.Route.BusLine)
                     .Distinct()
+                    .OrderBy(x => x.LineNumberSortKey)
                     .Select(bl => new BusLineLightModel { Id = bl.Id, LineNumber = bl.LineNumber })
                     .ToList()
             };

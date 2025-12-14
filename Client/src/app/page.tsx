@@ -2,8 +2,10 @@
 
 import MapLoader from '@/components/maps/MapLoader';
 import BusStopService from "@/services/BusStopService";
+import ZoneWithBusLinesService from '@/services/ZoneWithBusLinesService';
 import BusStopModel from "@/types/BusStopModel";
 import PageResult from '@/types/common/PageResult';
+import ZoneWithBusLinesModel from '@/types/ZoneWithBusLinesModel';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
@@ -19,10 +21,12 @@ const EntityDropdown = dynamic(() => import("@/components/EntityDropdown"), { ss
 export default function Home() {
   const [selectedStop, setSelectedStop] = useState<BusStopModel | null>(null);
   const [busStops, setBusStops] = useState<BusStopModel[]>([]);
+  const [zonesWithBusLines, setZonesWithBusLines] = useState<ZoneWithBusLinesModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchBusStops();
+    fetchZonesWithBusLines();
   }, []);
 
   const fetchBusStops = async () => {
@@ -36,6 +40,15 @@ export default function Home() {
     }
   };
 
+  const fetchZonesWithBusLines = async () => {
+    try {
+      const data = await ZoneWithBusLinesService.read();
+      setZonesWithBusLines(data.items);
+    } catch (error) {
+      console.error('Failed to fetch zones:', error);
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-slate-950 min-h-screen flex flex-col">
       {/* Main Content - Two Column Layout */}
@@ -43,11 +56,11 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[800px]">
           {/* Left Pane - Search and Info */}
           <div className="lg:col-span-1 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-6 overflow-y-auto">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
               Find a Bus Stop
             </h2>
             {/* Search Box */}
-            <div className="mb-8">
+            <div className="mb-6">
               <EntityDropdown
                 value={selectedStop?.id || 0}
                 onChange={(e) => setSelectedStop(e ? e.data : null)}
@@ -67,6 +80,17 @@ export default function Home() {
                 }
               />
             </div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              Zones
+            </h2>
+            <ul>
+              {zonesWithBusLines.map(zone => (
+                <li key={zone.id} className="mb-1">
+                  <h3 className="font-bold">{zone.name}</h3>
+                  {zone.busLines.length > 0 ? zone.busLines.map(line => line.lineNumber).join(', ') : "-"}
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Right Pane - Map */}

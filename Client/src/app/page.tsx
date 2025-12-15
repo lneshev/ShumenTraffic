@@ -1,10 +1,13 @@
 'use client';
 
 import MapLoader from '@/components/maps/MapLoader';
+import BusLinesService from '@/services/BusLinesService';
 import BusStopService from "@/services/BusStopService";
 import ZoneWithBusLinesService from '@/services/ZoneWithBusLinesService';
+import BusLineModel from '@/types/BusLineModel';
 import BusStopModel from "@/types/BusStopModel";
 import PageResult from '@/types/common/PageResult';
+import TransportationCompanyWithBusLinesModel from '@/types/TransportationCompanyWithBusLinesModel';
 import ZoneWithBusLinesModel from '@/types/ZoneWithBusLinesModel';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
@@ -22,10 +25,12 @@ export default function Home() {
   const [selectedStop, setSelectedStop] = useState<BusStopModel | null>(null);
   const [busStops, setBusStops] = useState<BusStopModel[]>([]);
   const [zonesWithBusLines, setZonesWithBusLines] = useState<ZoneWithBusLinesModel[]>([]);
+  const [transportationCompanies, setTransportationCompanies] = useState<TransportationCompanyWithBusLinesModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchBusStops();
+    fetchBusLines();
     fetchZonesWithBusLines();
   }, []);
 
@@ -39,6 +44,46 @@ export default function Home() {
       setIsLoading(false);
     }
   };
+
+  const fetchBusLines = async () => {
+    try {
+      const data = await BusLinesService.read(undefined, [{ field: 'LineNumber', dir: 'asc' }]);
+      const transportationCompaniesByBusLines = groupBusLinesByCompany(data);
+      setTransportationCompanies(transportationCompaniesByBusLines);
+    } catch (error) {
+      console.error('Failed to fetch bus lines:', error);
+    }
+  };
+
+  const groupBusLinesByCompany = (data: PageResult<BusLineModel>) => {
+    const result: TransportationCompanyWithBusLinesModel[] = [];
+    let notServiced: TransportationCompanyWithBusLinesModel | undefined = undefined;
+
+    data.items.forEach(line => {
+      if (line.transportationCompanies.length === 0) {
+        if (!notServiced) {
+          notServiced = { id: 0, name: 'Not serviced', busLines: [] };
+        }
+        notServiced!.busLines.push(line);
+      }
+
+      line.transportationCompanies.forEach(company => {
+        let c = result.find(x => x.id === company.id);
+        if (!c) {
+          result.push({ ...company, busLines: [] });
+          c = result[result.length - 1];
+        }
+        c.busLines.push(line);
+      });
+    });
+
+    result.sort((a, b) => a.name.localeCompare(b.name));
+    if (notServiced) {
+      result.push(notServiced!);
+    }
+
+    return result;
+  }
 
   const fetchZonesWithBusLines = async () => {
     try {
@@ -56,7 +101,7 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[800px]">
           {/* Left Pane - Search and Info */}
           <div className="lg:col-span-1 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-6 overflow-y-auto">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
               Find a Bus Stop
             </h2>
             {/* Search Box */}
@@ -80,7 +125,18 @@ export default function Home() {
                 }
               />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              Transportation Companies
+            </h2>
+            <ul className="mb-6">
+              {transportationCompanies.map(company => (
+                <li key={company.id} className="mb-1">
+                  <h3 className="font-bold">{company.name}</h3>
+                  {company.busLines.length > 0 ? company.busLines.map(line => line.lineNumber).join(', ') : "-"}
+                </li>
+              ))}
+            </ul>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
               Zones
             </h2>
             <ul>

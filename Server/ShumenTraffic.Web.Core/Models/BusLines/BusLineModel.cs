@@ -1,5 +1,6 @@
 using MoravianStar.Dao;
 using ShumenTraffic.Common.Core.Constants.BusLines;
+using ShumenTraffic.Web.Core.Models.TransportationCompanies;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -30,11 +31,6 @@ namespace ShumenTraffic.Web.Core.Models.BusLines
         /// <summary>
         /// Gets or sets the unique identifier for the transportation company.
         /// </summary>
-        public List<int> TransportationCompanyIds { get; set; } = new List<int>();
-
-        /// <summary>
-        /// Gets or sets the name of the transportation company.
-        /// </summary>
-        public List<string> TransportationCompanyNames { get; set; } = new List<string>();
+        public IEnumerable<TransportationCompanyLightModel> TransportationCompanies { get; set; } = new List<TransportationCompanyLightModel>();
     }
 }

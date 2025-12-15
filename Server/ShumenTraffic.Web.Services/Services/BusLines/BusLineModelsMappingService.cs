@@ -3,6 +3,7 @@ using MoravianStar.Dao;
 using ShumenTraffic.Common.Core.Entities.BusLines;
 using ShumenTraffic.Common.Core.Entities.TransportationCompanies;
 using ShumenTraffic.Web.Core.Models.BusLines;
+using ShumenTraffic.Web.Core.Models.TransportationCompanies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +22,14 @@ namespace ShumenTraffic.Web.Services.Services.BusLines
                 LineNumber = x.LineNumber,
                 Description = x.Description,
                 IsActive = x.IsActive,
-                TransportationCompanyIds = x.TransportationCompanyBusLines.OrderBy(x => x.TransportationCompany.Name).Select(x => x.TransportationCompanyId).ToList(),
-                TransportationCompanyNames = x.TransportationCompanyBusLines.OrderBy(x => x.TransportationCompany.Name).Select(x => x.TransportationCompany.Name).ToList()
+                TransportationCompanies = x.TransportationCompanyBusLines
+                                           .OrderBy(x => x.TransportationCompany.Name)
+                                           .Select(x => new TransportationCompanyLightModel()
+                                           {
+                                               Id = x.TransportationCompanyId,
+                                               Name = x.TransportationCompany.Name
+                                           })
+                                           .ToList()
             };
         }
 
@@ -51,7 +58,7 @@ namespace ShumenTraffic.Web.Services.Services.BusLines
 
         private async Task FillEntityTransportCompanies(EntityModelPair<BusLine, BusLineModel> pair)
         {
-            var distinctModelTransportCompanyIds = pair.Model.TransportationCompanyIds.Distinct();
+            var distinctModelTransportCompanyIds = pair.Model.TransportationCompanies.Select(x => x.Id).Distinct();
             var existingTransportCompanyIds = pair.Entity.TransportationCompanyBusLines.Select(x => x.TransportationCompanyId).ToList();
 
             var transportCompanyIdsToDelete = existingTransportCompanyIds.Except(distinctModelTransportCompanyIds);

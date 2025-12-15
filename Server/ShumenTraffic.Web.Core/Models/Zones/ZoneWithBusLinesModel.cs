@@ -7,6 +7,6 @@ namespace ShumenTraffic.Web.Core.Models.Zones
     public class ZoneWithBusLinesModel : ModelBase<int>
     {
         public string Name { get; set; }
-        public ICollection<BusLineLightModel> BusLines { get; set; }
+        public ICollection<BusLineLightModel> BusLines { get; set; } = new List<BusLineLightModel>();
     }
 }

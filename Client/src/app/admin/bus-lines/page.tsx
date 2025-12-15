@@ -1,22 +1,21 @@
 'use client';
 
-import { ProtectedRoute } from '@/components/ProtectedRoute';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { ApiError } from '@/lib/api';
-import PageResult from '@/types/common/PageResult';
 import EntityMultiselect from '@/components/EntityMultiselect';
-import TransportationCompanyModel from '@/types/TransportationCompanyModel';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { ApiError } from '@/lib/api';
 import BusLinesService from '@/services/BusLinesService';
 import BusLineModel from '@/types/BusLineModel';
+import PageResult from '@/types/common/PageResult';
+import TransportationCompanyModel from '@/types/TransportationCompanyModel';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 function BusLinesPage() {
   const initialFormData: BusLineModel = {
     id: 0,
     lineNumber: '',
     description: '',
-    transportationCompanyIds: [],
-    transportationCompanyNames: [],
+    transportationCompanies: [],
     isActive: true
   };
 
@@ -121,8 +120,8 @@ function BusLinesPage() {
                 Transportation companies
               </label>
               <EntityMultiselect
-                value={formData.transportationCompanyIds}
-                onChange={(e) => setFormData({ ...formData, transportationCompanyIds: e.map(x => x.value) })}
+                value={formData.transportationCompanies.map(x => x.id)}
+                onChange={(e) => setFormData({ ...formData, transportationCompanies: e.map(x => { return { id: x.value, name: x.label }; }) })}
                 placeholder="Select..."
                 url="/api/transportation-companies"
                 sorts={[
@@ -181,7 +180,7 @@ function BusLinesPage() {
                       {line.lineNumber}
                     </td>
                     <td className="py-3 px-4">
-                      {line.transportationCompanyNames.join(', ')}
+                      {line.transportationCompanies.map(x => x.name).join(', ')}
                     </td>
                     <td className="py-3 px-4">
                       <span
@@ -219,4 +218,3 @@ export default function BusLinesPageWrapper() {
     </ProtectedRoute>
   );
 }
-

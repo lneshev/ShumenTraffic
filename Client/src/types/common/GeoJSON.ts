@@ -19,8 +19,11 @@ function enhancePoint(p: Point): GeoPoint {
     return new GeoPoint(p.coordinates[1], p.coordinates[0]);
 }
 
-export function enhanceGeoJSON<T extends object>(obj: T): T {
-    if (Array.isArray(obj)) {
+export function enhanceGeoJSON<T extends object>(obj: T): T | null {
+    if (obj == null || obj === undefined) {
+        return null;
+    }
+    else if (Array.isArray(obj)) {
         return obj.map((item: any) => {
             if (Array.isArray(item)) {
                 // recurse into nested array

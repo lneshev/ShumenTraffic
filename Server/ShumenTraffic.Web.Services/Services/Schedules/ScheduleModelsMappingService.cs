@@ -26,7 +26,7 @@ namespace ShumenTraffic.Web.Services.Services.Schedules
                 Priority = x.Priority,
                 Direction = x.Direction,
                 BusLineId = x.BusLineId,
-                BusLineNumber = x.BusLine.LineNumber,
+                //BusLineNumber = x.BusLine.LineNumber,
                 ScheduleCourses = x.ScheduleCourses.OrderBy(x => x.DepartureTime).Select(y => new ScheduleCourseModel()
                 {
                     Id = y.Id,

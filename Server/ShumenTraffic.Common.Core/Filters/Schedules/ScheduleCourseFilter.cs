@@ -8,6 +8,7 @@ namespace ShumenTraffic.Common.Core.Filters.Schedules
     public class ScheduleCourseFilter : FilterSorterBase<ScheduleCourse>
     {
         public int? RouteId { get; set; }
+        public int? ScheduleId { get; set; }
 
         public override IQueryable<ScheduleCourse> Filter<TDbContext>(IQueryable<ScheduleCourse> query, IEntityRepository<ScheduleCourse, TDbContext> entityRepository)
         {
@@ -19,6 +20,11 @@ namespace ShumenTraffic.Common.Core.Filters.Schedules
             if (RouteId.HasValue)
             {
                 mainCriteria = mainCriteria.And(x => x.RouteId == RouteId);
+            }
+
+            if (ScheduleId.HasValue)
+            {
+                mainCriteria = mainCriteria.And(x => x.ScheduleId == ScheduleId);
             }
 
             rootCriteria = mainCriteria;

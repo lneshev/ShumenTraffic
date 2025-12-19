@@ -2,7 +2,9 @@
 using MoravianStar.Dao;
 using MoravianStar.Extensions;
 using ShumenTraffic.Common.Core.Entities.Routes;
+using ShumenTraffic.Common.Core.Entities.Schedules;
 using ShumenTraffic.Common.Core.Enums.Routes;
+using ShumenTraffic.Common.Core.Filters.Schedules;
 using ShumenTraffic.Common.Core.Resources;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,8 @@ namespace ShumenTraffic.Common.Core.Filters.Routes
         public string NameEqualsInsensitive { get; set; }
         public int? BusLineId { get; set; }
         public RouteDirection? Direction { get; set; }
+        public bool? IsActive { get; set; }
+        public int? ScheduleId { get; set; }
         public List<int> ExcludeIds { get; set; } = new List<int>();
 
         public override IQueryable<Route> Filter<TDbContext>(IQueryable<Route> query, IEntityRepository<Route, TDbContext> entityRepository)
@@ -38,6 +42,17 @@ namespace ShumenTraffic.Common.Core.Filters.Routes
             if (Direction.HasValue)
             {
                 mainCriteria = mainCriteria.And(x => x.Direction == Direction.Value);
+            }
+
+            if (IsActive.HasValue)
+            {
+                mainCriteria = mainCriteria.And(x => x.IsActive == IsActive.Value);
+            }
+
+            if (ScheduleId.HasValue)
+            {
+                var routeIds = Persistence.ForEntity<ScheduleCourse>().ReadQuery(new ScheduleCourseFilter() { ScheduleId = ScheduleId }).Select(x => x.RouteId).Distinct();
+                mainCriteria = mainCriteria.And(x => routeIds.Contains(x.Id));
             }
 
             if (ExcludeIds != null && ExcludeIds.Count > 0)

@@ -16,9 +16,11 @@ namespace ShumenTraffic.Common.Core.Filters.Schedules
         public int? BusLineId { get; set; }
         public RouteDirection? Direction { get; set; }
         public DaysOfWeek? DaysOfWeek { get; set; }
+        public DaysOfWeek? DaysOfWeekHasFlag { get; set; }
         public DateOnly? StartDateLE { get; set; }
         public DateOnly? EndDateGEOrNull { get; set; }
         public SchedulePriority? Priority { get; set; }
+        public bool? IsActive { get; set; }
         public List<int> ExcludeIds { get; set; } = new List<int>();
 
         public override IQueryable<Schedule> Filter<TDbContext>(IQueryable<Schedule> query, IEntityRepository<Schedule, TDbContext> entityRepository)
@@ -43,6 +45,11 @@ namespace ShumenTraffic.Common.Core.Filters.Schedules
                 mainCriteria = mainCriteria.And(x => x.DaysOfWeek == DaysOfWeek);
             }
 
+            if (DaysOfWeekHasFlag.HasValue)
+            {
+                mainCriteria = mainCriteria.And(x => x.DaysOfWeek.HasFlag(DaysOfWeekHasFlag));
+            }
+
             if (StartDateLE.HasValue)
             {
                 mainCriteria = mainCriteria.And(x => x.StartDate <= StartDateLE);
@@ -56,6 +63,11 @@ namespace ShumenTraffic.Common.Core.Filters.Schedules
             if (Priority.HasValue)
             {
                 mainCriteria = mainCriteria.And(x => x.Priority == Priority);
+            }
+
+            if (IsActive.HasValue)
+            {
+                mainCriteria = mainCriteria.And(x => x.IsActive == IsActive);
             }
 
             if (ExcludeIds != null && ExcludeIds.Count > 0)

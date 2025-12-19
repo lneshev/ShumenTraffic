@@ -34,11 +34,13 @@ using ShumenTraffic.Common.Core.Enums.Routes;
 using ShumenTraffic.Common.Core.Resources;
 using ShumenTraffic.Common.DataAccess.DbContexts;
 using ShumenTraffic.Common.Services.Interfaces;
+using ShumenTraffic.Common.Services.Interfaces.Timetables;
 using ShumenTraffic.Common.Services.Services.BusLines;
 using ShumenTraffic.Common.Services.Services.BusStops;
 using ShumenTraffic.Common.Services.Services.Maintenance;
 using ShumenTraffic.Common.Services.Services.Routes;
 using ShumenTraffic.Common.Services.Services.Schedules;
+using ShumenTraffic.Common.Services.Services.Timetables;
 using ShumenTraffic.Common.Services.Services.TransportationCompanies;
 using ShumenTraffic.Common.Services.Services.Zones;
 using ShumenTraffic.Web.Core.Models.BusLines;
@@ -48,6 +50,8 @@ using ShumenTraffic.Web.Core.Models.Schedules;
 using ShumenTraffic.Web.Core.Models.TransportationCompanies;
 using ShumenTraffic.Web.Core.Models.Zones;
 using ShumenTraffic.Web.Services.Interfaces;
+using ShumenTraffic.Web.Services.Interfaces.Timetables;
+using ShumenTraffic.Web.Services.Services;
 using ShumenTraffic.Web.Services.Services.BusLines;
 using ShumenTraffic.Web.Services.Services.BusStops;
 using ShumenTraffic.Web.Services.Services.Routes;
@@ -225,6 +229,8 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddTransient<IEntityDeleting<Route>, RouteEntityDeleting>();
             services.AddTransient<IEntityValidated<Schedule>, ScheduleEntityValidated>();
             services.AddTransient<IEntityDeleting<Schedule>, ScheduleEntityDeleting>();
+            services.AddTransient<ITimetableService, TimetableService>();
+
             services.AddScoped<IRouteService, RouteService>();
             services.AddScoped<IScheduleService, ScheduleService>();
 
@@ -239,6 +245,8 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddTransient<IModelsMappingService<RouteOverviewModel, Route>, RouteOverviewModelsMappingService>();
             services.AddTransient<IModelsMappingService<ScheduleModel, Schedule>, ScheduleModelsMappingService>();
             services.AddTransient<IModelsMappingService<ScheduleOverviewModel, Schedule>, ScheduleOverviewModelsMappingService>();
+            services.AddTransient<ITimetableModelService, TimetableModelService>();
+
             services.AddScoped<IRouteModelService, RouteModelService>();
         }
 

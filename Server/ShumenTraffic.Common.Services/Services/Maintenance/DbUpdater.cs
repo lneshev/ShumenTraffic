@@ -79,7 +79,17 @@ namespace ShumenTraffic.Common.Services.Services.Maintenance
 
         private async Task MigrateAndSeedAppDB()
         {
-            await appDbContext.Database.MigrateAsync();
+            var appDbCreator = (IRelationalDatabaseCreator)appDbContext.GetInfrastructure().GetRequiredService<IDatabaseCreator>();
+            if (!await appDbCreator.ExistsAsync())
+            {
+                await appDbCreator.CreateAsync();
+            }
+
+            using (var tx = await appDbContext.Database.BeginTransactionAsync())
+            {
+                await appDbContext.Database.MigrateAsync();
+                await tx.CommitAsync();
+            }
         }
     }
 }

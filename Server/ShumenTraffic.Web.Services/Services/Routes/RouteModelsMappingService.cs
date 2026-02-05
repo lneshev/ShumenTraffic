@@ -92,8 +92,16 @@ namespace ShumenTraffic.Web.Services.Services.Routes
                 if (stopModel != null)
                 {
                     routeStop.StopOrder = stopModel.StopOrder;
-                    routeStop.Location = stopModel.Location;
-                    routeStop.EstimatedMinutesFromStart = stopModel.EstimatedMinutesFromStart;
+
+                    if (routeStop.BusStopId.HasValue)
+                    {
+                        routeStop.EstimatedMinutesFromStart = stopModel.EstimatedMinutesFromStart;
+                    }
+                    else
+                    {
+                        routeStop.Location = stopModel.Location;
+                    }
+
                     await Persistence.ForEntity<RouteStop>().SaveAsync(routeStop);
                 }
             }
@@ -106,10 +114,10 @@ namespace ShumenTraffic.Web.Services.Services.Routes
                     RouteId = pair.Entity.Id,
                     Route = pair.Entity,
                     StopOrder = stopModel.StopOrder,
-                    Location = stopModel.Location,
+                    Location = stopModel.BusStopId.HasValue ? null : stopModel.Location,
                     BusStopId = stopModel.BusStopId,
                     BusStop = stopModel.BusStopId.HasValue ? await Persistence.ForEntity<BusStop, int>().GetAsync(stopModel.BusStopId.Value) : null,
-                    EstimatedMinutesFromStart = stopModel.EstimatedMinutesFromStart
+                    EstimatedMinutesFromStart = stopModel.BusStopId.HasValue ? stopModel.EstimatedMinutesFromStart : null
                 };
                 await Persistence.ForEntity<RouteStop>().SaveAsync(newStop);
             }

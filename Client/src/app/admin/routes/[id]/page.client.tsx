@@ -326,6 +326,7 @@ export default function RouteDetails({ id }: { id: number }) {
                                                         {routeStop.busStopId ? routeStop.busStopName : `${routeStop.location?.latitude}, ${routeStop.location?.longitude}`}
                                                     </span>
                                                 </p>
+                                                {routeStop.busStopId && (
                                                 <p className="mt-auto">
                                                     <label className="block text-xs text-gray-400 dark:text-gray-300">
                                                         Est. minutes from start
@@ -338,6 +339,7 @@ export default function RouteDetails({ id }: { id: number }) {
                                                         className={`w-full px-3 py-2 border ${typeof rsEstMins === 'number' && rsEstMins <= previousRouteStopEstMins ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'} rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white`}
                                                     />
                                                 </p>
+                                                )}
                                             </div>
                                             <div className="text-center">
                                                 <p>

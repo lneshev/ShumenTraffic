@@ -4,6 +4,7 @@ import TimetablesService from '@/services/TimetablesService';
 import BusLineLightModel from '@/types/BusLineLightModel';
 import PageResult from '@/types/common/PageResult';
 import TimetableModel from '@/types/TimetableModel';
+import { DateTime } from 'luxon';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
@@ -126,20 +127,20 @@ export default function SchedulePage() {
           <div className={`bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-x-auto ${isLoading ? 'opacity-50 pointer-events-none' : ''}`}>
             <table className="w-full text-sm border-separate border-spacing-0">
               <thead>
-                <tr className="border-b-2 border-gray-300 dark:border-slate-600 bg-gray-100 dark:bg-slate-800">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white sticky left-0 bg-gray-100 dark:bg-slate-800 z-10">
+                <tr className="bg-gray-100 dark:bg-slate-800">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border-r border-b border-gray-200 sticky left-0 bg-gray-100 dark:bg-slate-800 z-10">
                     Bus Stop
                   </th>
                   {timetable?.schedule.scheduleCourses.map(course => (
                     <th
                       key={course.id}
-                      className={`text-center py-3 px-2 font-semibold text-gray-900 dark:text-white whitespace-nowrap transition-colors ${highlightedCourse === course.id
+                      className={`text-center py-3 px-2 font-semibold text-gray-900 dark:text-white border-r border-b last:border-r-0 border-gray-200 whitespace-nowrap transition-colors ${highlightedCourse === course.id
                         ? 'bg-blue-50 dark:bg-blue-900/20'
                         : ''
                         }`}
 
                     >
-                      {course.departureTime.substring(0, 5)}
+                      {DateTime.fromISO(course.departureTime).toFormat("HH:mm")}
                     </th>
                   ))}
                 </tr>
@@ -161,7 +162,7 @@ export default function SchedulePage() {
                         }`}
                     >
                       <td
-                        className={`py-3 px-4 font-medium text-gray-900 dark:text-white border-r border-gray-200 sticky left-0 z-10 transition-colors ${highlightedStop === rs.busStop.id
+                        className={`py-3 px-4 font-medium text-gray-900 dark:text-white border-r border-b border-gray-200 sticky left-0 z-10 transition-colors ${highlightedStop === rs.busStop.id
                           ? 'bg-blue-50 dark:bg-blue-900/20'
                           : 'bg-gray-50 dark:bg-slate-900'
                           }`}
@@ -177,13 +178,13 @@ export default function SchedulePage() {
                       {timetable.schedule.scheduleCourses.map(course => (
                         <td
                           key={`${rs.busStop.id}-${course.id}`}
-                          className={`text-center py-3 px-2 text-gray-900 dark:text-white border-r border-gray-200 transition-colors cursor-pointer ${highlightedCourse === course.id
+                          className={`text-center py-3 px-2 text-gray-900 dark:text-white border-r border-b last:border-r-0 border-gray-200 transition-colors cursor-pointer ${highlightedCourse === course.id
                             ? 'bg-blue-50 dark:bg-blue-900/20'
                             : ''
                             }`}
                           onClick={() => { setHighlightedStop(rs.busStop.id); setHighlightedCourse(course.id); }}
                         >
-                          {rs.timesByVariant[course.id]}
+                          {rs.timesByVariant[course.id] ? DateTime.fromISO(rs.timesByVariant[course.id]!).toFormat("HH:mm") : ''}
                         </td>
                       ))}
                     </tr>

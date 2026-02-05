@@ -69,7 +69,7 @@ namespace ShumenTraffic.Common.Services.Services.Routes
                 }
 
                 previousRouteStopEstMins = Math.Max(previousRouteStopEstMins, previousRouteStop.EstimatedMinutesFromStart ?? 0);
-                if (currentRouteStop.EstimatedMinutesFromStart <= previousRouteStopEstMins)
+                if (currentRouteStop.EstimatedMinutesFromStart < previousRouteStopEstMins)
                 {
                     throw new BusinessException(Strings.TheRouteCannotBeSavedBecauseTheEstimatedMinutesFromStartAreNotCorrect);
                 }

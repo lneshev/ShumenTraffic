@@ -336,7 +336,7 @@ export default function RouteDetails({ id }: { id: number }) {
                                                         value={rsEstMins ?? ""}
                                                         min={0}
                                                         onChange={(e) => handleRouteStopEstMinsFromStartChange(routeStop, e.target.value !== "" ? parseInt(e.target.value) : undefined)}
-                                                        className={`w-full px-3 py-2 border ${typeof rsEstMins === 'number' && rsEstMins <= previousRouteStopEstMins ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'} rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white`}
+                                                        className={`w-full px-3 py-2 border ${typeof rsEstMins === 'number' && rsEstMins < previousRouteStopEstMins ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'} rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white`}
                                                     />
                                                 </p>
                                                 )}

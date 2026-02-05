@@ -39,7 +39,7 @@ export default function RouteDetails({ id }: { id: number }) {
     const [busStops, setBusStops] = useState<BusStopModel[]>([]);
     const [newRouteStop, setNewRouteStop] = useState<RouteStopModel>({ ...initialRouteStop });
     const [error, setError] = useState('');
-    let previousRouteStopEstMins = 0;
+    let previousRouteStopEstMins = -1;
 
     useEffect(() => {
         setModel();
@@ -307,7 +307,7 @@ export default function RouteDetails({ id }: { id: number }) {
                             )}
                             <ul className="h-[600px] overflow-auto">
                                 {route.stops.sort((a, b) => a.stopOrder - b.stopOrder).map((routeStop, i) => {
-                                    previousRouteStopEstMins = Math.max(previousRouteStopEstMins, route.stops[i - 1]?.estimatedMinutesFromStart || 0);
+                                    previousRouteStopEstMins = Math.max(previousRouteStopEstMins, route.stops[i - 1]?.estimatedMinutesFromStart || -1);
                                     const rsEstMins = routeStop.estimatedMinutesFromStart;
                                     return (
                                         <li
@@ -333,9 +333,9 @@ export default function RouteDetails({ id }: { id: number }) {
                                                     </label>
                                                     <input
                                                         type="number"
-                                                        value={rsEstMins || ""}
+                                                        value={rsEstMins ?? ""}
                                                         min={0}
-                                                        onChange={(e) => handleRouteStopEstMinsFromStartChange(routeStop, parseInt(e.target.value) || undefined)}
+                                                        onChange={(e) => handleRouteStopEstMinsFromStartChange(routeStop, e.target.value !== "" ? parseInt(e.target.value) : undefined)}
                                                         className={`w-full px-3 py-2 border ${typeof rsEstMins === 'number' && rsEstMins <= previousRouteStopEstMins ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'} rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white`}
                                                     />
                                                 </p>

@@ -3,7 +3,11 @@
 A website for tracking live buses in Shumen, Bulgaria with real-time bus stop information, schedules, and route management.
 
 ## 🟥 **Warning**
-Status: Early stage of development!
+**Status: Under development!**
+
+## Screenshots
+![ShumenTraffic](Screenshot1.png)
+![ShumenTraffic](Screenshot2.png)
 
 ## Project Overview
 
@@ -35,9 +39,7 @@ ShumenTraffic/
 ├── Client/              # Next.js frontend application
 ├── Server/              # ASP.NET Core backend API
 ├── Docs/                # Documentation
-│   ├── PROJECT_PLAN.md
-│   └── CLARIFICATIONS.md
-└── README.md
+└── LICENSE.md           # License file
 ```
 
 ## Features
@@ -78,7 +80,7 @@ ShumenTraffic/
 ## Getting Started
 
 ### Prerequisites
-- .NET 6.0 or higher
+- .NET 10.0 or higher
 - Node.js 16.0 or higher
 - MSSQL Server (local instance)
 - Git
@@ -146,9 +148,4 @@ The application will be available at `http://localhost:3000`
 
 ## License
 
-[Add your license here]
-
-## Contact
-
-[Add contact information here]
-
+This project is licensed with **All Rights Reserved - Proprietary License**. See the [LICENSE](https://github.com/lneshev/ShumenTraffic/blob/main/LICENSE) file for details.

@@ -20,7 +20,7 @@ export default function SchedulePage() {
   const [highlightedCourse, setHighlightedCourse] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch routes when line is selected
+  // Fetch timetable when a line, direction and date are selected
   useEffect(() => {
     if (!selectedLineId || !selectedDirection || !selectedDate) {
       setTimetable(null);
@@ -138,7 +138,6 @@ export default function SchedulePage() {
                         ? 'bg-blue-50 dark:bg-blue-900/20'
                         : ''
                         }`}
-
                     >
                       {DateTime.fromISO(course.departureTime).toFormat("HH:mm")}
                     </th>
@@ -166,7 +165,6 @@ export default function SchedulePage() {
                           ? 'bg-blue-50 dark:bg-blue-900/20'
                           : 'bg-gray-50 dark:bg-slate-900'
                           }`}
-
                       >
                         <div className="flex items-center gap-2">
                           <span className="shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">

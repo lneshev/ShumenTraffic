@@ -5,7 +5,6 @@ using ShumenTraffic.Common.Core.Entities.Routes;
 using ShumenTraffic.Common.Core.Filters.Routes;
 using ShumenTraffic.Web.Core.DTOs;
 using ShumenTraffic.Web.Core.Models.Routes;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,7 +16,6 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
     [Authorize]
     public class RoutesController : EntityRestController<Route, int, RouteModel, RouteFilter>
     {
-        [Obsolete]
         [AllowAnonymous]
         public override Task<ActionResult<ApiResponse<PageResult<RouteModel>>>> Read([FromQuery] RouteFilter filter, [FromQuery] List<Sort> sorts, [FromQuery] Page page)
         {

@@ -58,6 +58,7 @@ namespace ShumenTraffic.Common.Services.Services.Timetables
                             .ThenInclude(y => y.Route)
                                 .ThenInclude(y => y.RouteStops)
                                     .ThenInclude(y => y.BusStop);
+
             var schedule = await Persistence.ForEntity<Schedule>().ReadQuery(filter, sorts, includes: includes, trackable: false).FirstOrDefaultAsync();
             return schedule;
         }

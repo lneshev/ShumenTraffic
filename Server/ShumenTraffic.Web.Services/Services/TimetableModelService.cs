@@ -49,7 +49,10 @@ namespace ShumenTraffic.Web.Services.Services
                     BusStop = new BusStopModel()
                     {
                         Id = row.BusStop.Id,
-                        Name = row.BusStop.Name
+                        Name = row.BusStop.Name,
+                        IsActive = row.BusStop.IsActive,
+                        Location = row.BusStop.Location,
+                        ZoneId = row.BusStop.ZoneId
                     },
                     TimesByVariant = row.TimesByVariant
                 });

@@ -1,0 +1,1 @@
+export const ROUTE_COLORS = ['green', 'blue', 'red', 'orange', 'purple', 'gray', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'violet', 'rose'];

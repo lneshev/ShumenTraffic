@@ -1,122 +1,125 @@
 'use client';
 
+import EntityDropdown from '@/components/EntityDropdown';
 import MapLoader from '@/components/maps/MapLoader';
-import api from '@/lib/api';
-import BusStopService from '@/services/BusStopService';
+import { ROUTE_COLORS } from '@/constants/RouteColors';
 import RouteService from '@/services/RouteService';
+import TimetablesService from '@/services/TimetablesService';
+import BusLineLightModel from '@/types/BusLineLightModel';
 import BusStopModel from '@/types/BusStopModel';
 import PageResult from '@/types/common/PageResult';
+import RouteModel from '@/types/RouteModel';
+import TimetableModel from '@/types/TimetableModel';
+import { DateTime } from 'luxon';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
-interface BusLine {
-  id: number;
-  lineNumber: string;
-}
-
-interface Route {
-  id: number;
-  busLineId: number;
-  direction: number;
-}
-
-interface RouteStop {
-  id: number;
-  routeId: number;
-  busStopId?: number;
-  stopOrder: number;
-  estimatedMinutesFromStart: number;
-}
-
 // Dynamically import Map to avoid SSR issues
-const BusStopMap = dynamic(() => import('@/components/maps/BusStopMap').then(mod => ({ default: mod.default })), {
+const RoutesMap = dynamic(() => import('@/components/maps/RoutesMap').then(mod => ({ default: mod.default })), {
   ssr: false,
   loading: () => <MapLoader />
 });
 
 export default function LinesPage() {
-  const [busLines, setBusLines] = useState<BusLine[]>([]);
-  const [selectedLineId, setSelectedLineId] = useState<number | null>(null);
-  const [selectedDirection, setSelectedDirection] = useState<number>(0);
-  const [routes, setRoutes] = useState<Route[]>([]);
-  const [routeStops, setRouteStops] = useState<RouteStop[]>([]);
+  const [selectedLineId, setSelectedLineId] = useState<number>(0);
+  const [selectedDirection, setSelectedDirection] = useState<number>(1);
+  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [timetable, setTimetable] = useState<TimetableModel | null>(null);
+  const [routes, setRoutes] = useState<RouteModel[]>([]);
   const [busStops, setBusStops] = useState<BusStopModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
 
-  // Fetch bus lines on mount
   useEffect(() => {
-    const fetchBusLines = async () => {
-      try {
-        const data = await api.get<PageResult<BusLine>>('/bus-lines?sorts[0].field=LineNumber&sorts[0].dir=asc');
-        setBusLines(data.items);
-        if (data.items.length > 0) {
-          setSelectedLineId(data.items[0].id);
-        }
-      } catch (error) {
-        console.error('Failed to fetch bus lines:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    console.log(`initializing interval`);
 
-    fetchBusLines();
+    const interval = setInterval(() => {
+      setCurrentTime(DateTime.now());
+    }, 1000);
+
+    return () => {
+      console.log(`clearing interval`);
+      clearInterval(interval);
+    };
   }, []);
 
-  // Fetch routes when line is selected
+  // Fetch timetable when a line and direction are selected
   useEffect(() => {
-    if (!selectedLineId) return;
+    if (!selectedLineId || !selectedDirection || !selectedDate) {
+      setTimetable(null);
+      return;
+    }
+    fetchTimetable();
+  }, [selectedLineId, selectedDirection, selectedDate]);
 
-    const fetchRoutes = async () => {
-      try {
-        const data = await RouteService.read();
-        const lineRoutes = data.items.filter((r: Route) => r.busLineId === selectedLineId);
-        setRoutes(lineRoutes);
-      } catch (error) {
-        console.error('Failed to fetch routes:', error);
-      }
-    };
-
+  // Fetch routes when a timetable is fetched
+  useEffect(() => {
+    if (!timetable) {
+      setRoutes([]);
+      setBusStops([]);
+      return;
+    }
     fetchRoutes();
-  }, [selectedLineId]);
+  }, [timetable]);
 
-  // Fetch route stops when route is selected
-  useEffect(() => {
-    const selectedRoute = routes.find(r => r.direction === selectedDirection);
-    if (!selectedRoute) return;
+  const fetchTimetable = async () => {
+    try {
+      setIsLoading(true);
+      const data = await TimetablesService.get(selectedLineId, selectedDirection, selectedDate);
+      setTimetable(data);
+      setBusStops(data?.timetableRows.map(x => x.busStop));
+    } catch (error) {
+      console.error('Failed to fetch timetable:', error);
+    }
+    finally {
+      setIsLoading(false);
+    }
+  };
 
-    const fetchRouteStops = async () => {
-      try {
-        const data = await api.get<RouteStop[]>(`/routes/${selectedRoute.id}/stops`);
-        setRouteStops(data);
-      } catch (error) {
-        console.error('Failed to fetch route stops:', error);
-      }
-    };
+  const fetchRoutes = async () => {
+    try {
+      setIsLoading(true);
+      const data = await RouteService.read({ scheduleId: timetable!.schedule.id });
+      setRoutes(data.items);
+    } catch (error) {
+      console.error('Failed to fetch routes:', error);
+    }
+    finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchRouteStops();
-  }, [selectedDirection, routes]);
+  // Finds the next departure time for a bus stop
+  const getNextDepartureTime = (timesByVariant: { [key: string]: string | null }): string | null => {
+    if (!timesByVariant) {
+      return null;
+    }
 
-  // Fetch all bus stops for map
-  useEffect(() => {
-    const fetchBusStops = async () => {
-      try {
-        const data = await BusStopService.read();
-        setBusStops(data.items);
-      } catch (error) {
-        console.error('Failed to fetch bus stops:', error);
-      }
-    };
+    // Extract all departure times and filter out nulls
+    const departureTimes = Object.values(timesByVariant)
+      .filter((time): time is string => time !== null)
+      .map(timeStr => {
+        // Parse time string (format: "HH:mm:ss" or "HH:mm")
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return DateTime.now().set({ hour: hours, minute: minutes, second: 0, millisecond: 0 });
+      })
+      .sort((a, b) => a.toMillis() - b.toMillis()); // Sort by time
 
-    fetchBusStops();
-  }, []);
+    if (departureTimes.length === 0) {
+      return null;
+    }
 
-  const selectedRoute = routes.find(r => r.direction === selectedDirection);
-  const stopsForDisplay = routeStops
-    .sort((a, b) => a.stopOrder - b.stopOrder)
-    .map(rs => {
-      const stop = busStops.find(s => s.id === rs.busStopId);
-      return { ...rs, stop };
-    });
+    // Find the next departure time after current time
+    const nextDeparture = departureTimes.find(time => time >= currentTime);
+
+    if (!nextDeparture) {
+      // No more departures today
+      return null;
+    }
+
+    // Return formatted time
+    return nextDeparture.toFormat('HH:mm');
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col">
@@ -133,19 +136,23 @@ export default function LinesPage() {
           {/* Line Selector */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Select Bus Line
+              Bus Line
             </label>
-            <select
-              value={selectedLineId || ''}
-              onChange={(e) => setSelectedLineId(parseInt(e.target.value))}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
-            >
-              {busLines.map(line => (
-                <option key={line.id} value={line.id}>
-                  Line {line.lineNumber}
-                </option>
-              ))}
-            </select>
+            <EntityDropdown
+              value={selectedLineId}
+              onChange={(e) => setSelectedLineId(e ? Number(e.value) : 0)}
+              placeholder="Select..."
+              url="/api/bus-lines-light"
+              sorts={[{ field: "LineNumber", dir: "asc" }]}
+              parseData={(data: PageResult<BusLineLightModel>) =>
+                data.items.map((item) => {
+                  return {
+                    value: item.id,
+                    label: item.lineNumber
+                  };
+                })
+              }
+            />
           </div>
 
           {/* Direction Buttons */}
@@ -154,16 +161,16 @@ export default function LinesPage() {
               Direction
             </label>
             <div className="flex gap-2">
-              {[0, 1].map(dir => (
+              {[1, 2].map(dir => (
                 <button
                   key={dir}
                   onClick={() => setSelectedDirection(dir)}
-                  className={`flex-1 px-4 py-2 rounded-lg font-semibold transition-colors ${selectedDirection === dir
+                  className={`flex-1 px-3 py-2 rounded-lg font-semibold transition-colors text-sm ${selectedDirection === dir
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-200 dark:bg-slate-800 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700'
                     }`}
                 >
-                  Direction {dir + 1}
+                  Dir {dir}
                 </button>
               ))}
             </div>
@@ -174,40 +181,85 @@ export default function LinesPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px]">
           {/* Left Pane - Stops List */}
           <div className="lg:col-span-1 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-6 overflow-y-auto">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              Stops
-            </h2>
-            {stopsForDisplay.length === 0 ? (
-              <p className="text-gray-600 dark:text-gray-400">No stops found for this route.</p>
-            ) : (
-              <div className="space-y-2">
-                {stopsForDisplay.map((rs, idx) => (
-                  <div
-                    key={rs.id}
-                    className="p-3 bg-white dark:bg-slate-800 rounded border border-gray-200 dark:border-slate-700 hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                        <span className="text-white text-sm font-bold">{idx + 1}</span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 dark:text-white truncate">
-                          {rs.stop?.name || 'Unknown Stop'}
-                        </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {rs.estimatedMinutesFromStart} min from start
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+            {!selectedLineId || !selectedDirection || !selectedDate ?
+              <div className="text-center py-12">
+                <p className="text-gray-600 dark:text-gray-400">Please select a bus line and direction to view the route and schedule.</p>
               </div>
+              :
+              !timetable && !isLoading && (
+                <div className="text-center py-12">
+                  <p className="text-gray-600 dark:text-gray-400">No timetable found.</p>
+                </div>
+              )}
+
+            {timetable && (
+              timetable?.timetableRows.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-600 dark:text-gray-400">No stops found for this route.</p>
+                </div>
+              ) : (
+                <div>
+                  {timetable?.timetableRows.map((rs, idx) => {
+                    const nextDeparture = getNextDepartureTime(rs.timesByVariant);
+                    const isLastStop = idx === timetable.timetableRows.length - 1;
+                    return (
+                      <div
+                        key={rs.busStop.id}
+                        className="relative"
+                      >
+                        {/* Stop marker and info */}
+                        <div className="flex items-start gap-2">
+                          {routes.map((route, index) => {
+                            const hasRouteStop = route.stops.some(x => x.busStopId === rs.busStop.id);
+                            const routeColor = ROUTE_COLORS[index % ROUTE_COLORS.length];
+                            if (hasRouteStop) {
+                              return (
+                                <div key={index} className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center z-10 relative" style={{ backgroundColor: routeColor }}>
+                                  <div className="w-3 h-3 rounded-full bg-white"></div>
+                                </div>
+                              )
+                            }
+                            else {
+                              return (
+                                <div key={index} className="w-6 h-6">
+                                  <div className="border-l-4 h-full ml-2.5" style={{ borderColor: routeColor }}></div>
+                                </div>
+                              )
+                            }
+                          })}
+                          <div className="flex-1 min-w-0 flex items-center justify-between gap-2">
+                            <p className="font-medium text-gray-900 dark:text-white truncate" title={rs.busStop.name || 'Unknown'}>
+                              {rs.busStop.name || 'Unknown'}
+                            </p>
+                            <p className="font-medium text-gray-900 dark:text-white shrink-0 w-10">
+                              {nextDeparture}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Connecting line to next stop */}
+                        {!isLastStop && (
+                          <div className="flex items-start gap-2 h-6">
+                            {routes.map((route, index) => {
+                              const routeColor = ROUTE_COLORS[index % ROUTE_COLORS.length];
+                              return (
+                                <div key={index} className="w-6 h-full flex justify-center">
+                                  <div className="w-1 h-full" style={{ backgroundColor: routeColor }}></div>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>)
             )}
           </div>
 
           {/* Right Pane - Map */}
           <div className="lg:col-span-2 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
-            <BusStopMap busStops={busStops} />
+            <RoutesMap routes={routes} />
           </div>
         </div>
       </div>

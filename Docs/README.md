@@ -148,4 +148,4 @@ The application will be available at `http://localhost:3000`
 
 ## License
 
-This project is licensed with **All Rights Reserved - Proprietary License**. See the [LICENSE](https://github.com/lneshev/ShumenTraffic/blob/main/LICENSE) file for details.
+This project is licensed with **All Rights Reserved - Proprietary License**. See the [LICENSE](https://github.com/lneshev/ShumenTraffic/blob/main/LICENSE.md) file for details.

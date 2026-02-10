@@ -89,7 +89,7 @@ ShumenTraffic/
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/ShumenTraffic.git
+git clone https://github.com/lneshev/ShumenTraffic.git
 cd ShumenTraffic
 ```
 
@@ -143,8 +143,8 @@ The application will be available at `http://localhost:3000`
 
 ## Documentation
 
-- [Project Plan](Docs/PROJECT_PLAN.md) - Detailed task list and phases
-- [Clarifications](Docs/CLARIFICATIONS.md) - Project decisions and guidelines
+- [Project Plan](PROJECT_PLAN.md) - Detailed task list and phases
+- [Clarifications](CLARIFICATIONS.md) - Project decisions and guidelines
 
 ## License
 

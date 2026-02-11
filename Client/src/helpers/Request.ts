@@ -1,5 +1,5 @@
 import string from "@/helpers/StringUtility";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/types/common/ApiError";
 import ApiResponse from "@/types/common/ApiResponse";
 import { enhanceGeoJSON } from "@/types/common/GeoJSON";
 import ModelBase from "@/types/common/ModelBase";

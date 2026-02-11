@@ -2,9 +2,9 @@
 
 import EntityMultiselect from '@/components/EntityMultiselect';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { ApiError } from '@/lib/api';
 import BusLinesService from '@/services/BusLinesService';
 import BusLineModel from '@/types/BusLineModel';
+import { ApiError } from '@/types/common/ApiError';
 import PageResult from '@/types/common/PageResult';
 import TransportationCompanyModel from '@/types/TransportationCompanyModel';
 import Link from 'next/link';

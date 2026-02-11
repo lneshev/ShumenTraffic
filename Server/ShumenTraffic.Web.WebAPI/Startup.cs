@@ -48,13 +48,12 @@ using ShumenTraffic.Web.Core.Models.Routes;
 using ShumenTraffic.Web.Core.Models.Schedules;
 using ShumenTraffic.Web.Core.Models.TransportationCompanies;
 using ShumenTraffic.Web.Core.Models.Zones;
-using ShumenTraffic.Web.Services.Interfaces;
 using ShumenTraffic.Web.Services.Interfaces.Timetables;
-using ShumenTraffic.Web.Services.Services;
 using ShumenTraffic.Web.Services.Services.BusLines;
 using ShumenTraffic.Web.Services.Services.BusStops;
 using ShumenTraffic.Web.Services.Services.Routes;
 using ShumenTraffic.Web.Services.Services.Schedules;
+using ShumenTraffic.Web.Services.Services.Timetables;
 using ShumenTraffic.Web.Services.Services.TransportationCompanies;
 using ShumenTraffic.Web.Services.Services.Zones;
 using ShumenTraffic.Web.WebAPI.Infrastructure.Constants;
@@ -230,9 +229,6 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddTransient<IEntityDeleting<Schedule>, ScheduleEntityDeleting>();
             services.AddTransient<ITimetableService, TimetableService>();
 
-            services.AddScoped<IRouteService, RouteService>();
-            services.AddScoped<IScheduleService, ScheduleService>();
-
             // Add Application Services (Web Layer)
             services.AddTransient<IModelsMappingService<TransportationCompanyModel, TransportationCompany>, TransportationCompanyModelsMappingService>();
             services.AddTransient<IModelsMappingService<BusLineModel, BusLine>, BusLineModelsMappingService>();
@@ -245,8 +241,6 @@ namespace ShumenTraffic.Web.WebAPI
             services.AddTransient<IModelsMappingService<ScheduleModel, Schedule>, ScheduleModelsMappingService>();
             services.AddTransient<IModelsMappingService<ScheduleOverviewModel, Schedule>, ScheduleOverviewModelsMappingService>();
             services.AddTransient<ITimetableModelService, TimetableModelService>();
-
-            services.AddScoped<IRouteModelService, RouteModelService>();
         }
 
         /// <summary>

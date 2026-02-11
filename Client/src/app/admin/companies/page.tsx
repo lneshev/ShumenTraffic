@@ -1,8 +1,8 @@
 'use client';
 
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { ApiError } from '@/lib/api';
 import TransportationCompanyService from '@/services/TransportationCompanyService';
+import { ApiError } from '@/types/common/ApiError';
 import TransportationCompanyModel from '@/types/TransportationCompanyModel';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

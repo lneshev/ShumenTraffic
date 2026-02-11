@@ -3,10 +3,10 @@
 import EntityDropdown from '@/components/EntityDropdown';
 import EnumDropdown from '@/components/EnumDropdown';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { ApiError } from '@/lib/api';
 import RouteOverviewService from '@/services/RouteOverviewService';
 import RouteService from '@/services/RouteService';
 import BusLineLightModel from '@/types/BusLineLightModel';
+import { ApiError } from '@/types/common/ApiError';
 import PageResult from '@/types/common/PageResult';
 import RouteOverviewModel from '@/types/RouteOverviewModel';
 import Link from 'next/link';

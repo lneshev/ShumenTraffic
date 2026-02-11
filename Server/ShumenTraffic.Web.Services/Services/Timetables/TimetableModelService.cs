@@ -10,7 +10,7 @@ using ShumenTraffic.Web.Services.Interfaces.Timetables;
 using System;
 using System.Threading.Tasks;
 
-namespace ShumenTraffic.Web.Services.Services
+namespace ShumenTraffic.Web.Services.Services.Timetables
 {
     public class TimetableModelService : ITimetableModelService
     {

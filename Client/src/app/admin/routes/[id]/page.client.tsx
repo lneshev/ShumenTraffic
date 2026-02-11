@@ -4,11 +4,11 @@ import EntityDropdown from "@/components/EntityDropdown";
 import EnumDropdown from "@/components/EnumDropdown";
 import MapLoader from "@/components/maps/MapLoader";
 import { nullifyNegativeIds } from "@/helpers/Request";
-import { ApiError } from "@/lib/api";
 import BusStopService from "@/services/BusStopService";
 import RouteService from "@/services/RouteService";
 import BusLineLightModel from "@/types/BusLineLightModel";
 import BusStopModel from "@/types/BusStopModel";
+import { ApiError } from "@/types/common/ApiError";
 import { GeoPoint } from "@/types/common/GeoJSON";
 import PageResult from "@/types/common/PageResult";
 import RouteModel from "@/types/RouteModel";
@@ -327,18 +327,18 @@ export default function RouteDetails({ id }: { id: number }) {
                                                     </span>
                                                 </p>
                                                 {routeStop.busStopId && (
-                                                <p className="mt-auto">
-                                                    <label className="block text-xs text-gray-400 dark:text-gray-300">
-                                                        Est. minutes from start
-                                                    </label>
-                                                    <input
-                                                        type="number"
-                                                        value={rsEstMins ?? ""}
-                                                        min={0}
-                                                        onChange={(e) => handleRouteStopEstMinsFromStartChange(routeStop, e.target.value !== "" ? parseInt(e.target.value) : undefined)}
-                                                        className={`w-full px-3 py-2 border ${typeof rsEstMins === 'number' && rsEstMins < previousRouteStopEstMins ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'} rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white`}
-                                                    />
-                                                </p>
+                                                    <p className="mt-auto">
+                                                        <label className="block text-xs text-gray-400 dark:text-gray-300">
+                                                            Est. minutes from start
+                                                        </label>
+                                                        <input
+                                                            type="number"
+                                                            value={rsEstMins ?? ""}
+                                                            min={0}
+                                                            onChange={(e) => handleRouteStopEstMinsFromStartChange(routeStop, e.target.value !== "" ? parseInt(e.target.value) : undefined)}
+                                                            className={`w-full px-3 py-2 border ${typeof rsEstMins === 'number' && rsEstMins < previousRouteStopEstMins ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-slate-600'} rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white`}
+                                                        />
+                                                    </p>
                                                 )}
                                             </div>
                                             <div className="text-center">

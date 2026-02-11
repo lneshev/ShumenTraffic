@@ -1,11 +1,11 @@
 'use client';
 
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import api, { ApiError } from '@/lib/api';
-import ZoneModel from '@/types/ZoneModel';
 import ZoneService from '@/services/ZoneService';
+import { ApiError } from '@/types/common/ApiError';
+import ZoneModel from '@/types/ZoneModel';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 function ZonesPage() {
   const initialFormData = {

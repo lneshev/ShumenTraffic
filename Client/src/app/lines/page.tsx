@@ -6,7 +6,6 @@ import { ROUTE_COLORS } from '@/constants/RouteColors';
 import RouteService from '@/services/RouteService';
 import TimetablesService from '@/services/TimetablesService';
 import BusLineLightModel from '@/types/BusLineLightModel';
-import BusStopModel from '@/types/BusStopModel';
 import PageResult from '@/types/common/PageResult';
 import RouteModel from '@/types/RouteModel';
 import TimetableModel from '@/types/TimetableModel';
@@ -26,19 +25,15 @@ export default function LinesPage() {
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [timetable, setTimetable] = useState<TimetableModel | null>(null);
   const [routes, setRoutes] = useState<RouteModel[]>([]);
-  const [busStops, setBusStops] = useState<BusStopModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
 
   useEffect(() => {
-    console.log(`initializing interval`);
-
     const interval = setInterval(() => {
       setCurrentTime(DateTime.now());
     }, 1000);
 
     return () => {
-      console.log(`clearing interval`);
       clearInterval(interval);
     };
   }, []);
@@ -56,7 +51,6 @@ export default function LinesPage() {
   useEffect(() => {
     if (!timetable) {
       setRoutes([]);
-      setBusStops([]);
       return;
     }
     fetchRoutes();
@@ -67,7 +61,6 @@ export default function LinesPage() {
       setIsLoading(true);
       const data = await TimetablesService.get(selectedLineId, selectedDirection, selectedDate);
       setTimetable(data);
-      setBusStops(data?.timetableRows.map(x => x.busStop));
     } catch (error) {
       console.error('Failed to fetch timetable:', error);
     }

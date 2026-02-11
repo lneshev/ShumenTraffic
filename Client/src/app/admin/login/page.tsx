@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { ApiError } from '@/types/common/ApiError';
 import Link from 'next/link';
-import api from '@/lib/api';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function AdminLoginPage() {
   const [username, setUsername] = useState('');
@@ -23,7 +23,7 @@ export default function AdminLoginPage() {
       await login(username, password);
       router.push('/admin');
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : 'Login failed');
+      setError(err instanceof ApiError ? err.message : 'Login failed');
     } finally {
       setIsLoading(false);
     }

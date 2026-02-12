@@ -10,6 +10,7 @@ import PageResult from '@/types/common/PageResult';
 import TransportationCompanyWithBusLinesModel from '@/types/TransportationCompanyWithBusLinesModel';
 import ZoneWithBusLinesModel from '@/types/ZoneWithBusLinesModel';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 // Dynamically import Map to avoid SSR issues
@@ -132,7 +133,16 @@ export default function Home() {
               {transportationCompanies.map(company => (
                 <li key={company.id} className="mb-1">
                   <h3 className="font-bold">{company.name}</h3>
-                  {company.busLines.length > 0 ? company.busLines.map(line => line.lineNumber).join(', ') : "-"}
+                  <div>
+                    {company.busLines.length > 0 ? company.busLines.map((line, index) => (
+                      <span key={line.id}>
+                        {index > 0 && ', '}
+                        <Link href={`/lines?lineNumber=${line.lineNumber}`} className='hover:underline'>
+                          {line.lineNumber}
+                        </Link>
+                      </span>
+                    )) : "-"}
+                  </div>
                 </li>
               ))}
             </ul>
@@ -143,7 +153,16 @@ export default function Home() {
               {zonesWithBusLines.map(zone => (
                 <li key={zone.id} className="mb-1">
                   <h3 className="font-bold">{zone.name}</h3>
-                  {zone.busLines.length > 0 ? zone.busLines.map(line => line.lineNumber).join(', ') : "-"}
+                  <div>
+                    {zone.busLines.length > 0 ? zone.busLines.map((line, index) => (
+                      <span key={line.id}>
+                        {index > 0 && ', '}
+                        <Link href={`/lines?lineNumber=${line.lineNumber}`} className="hover:underline">
+                          {line.lineNumber}
+                        </Link>
+                      </span>
+                    )) : "-"}
+                  </div>
                 </li>
               ))}
             </ul>

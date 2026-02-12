@@ -118,7 +118,7 @@ export default function EntityDropdown<TId extends Id>({
         if (autoBind || !!value) {
             fetchOptions();
         }
-    }, []); // Only run on mount
+    }, [autoBind, value]);
 
     return (
         <div

@@ -5,6 +5,8 @@ import RouteBusStopIndicator from '@/components/bus-lines/RouteBusStopIndicator'
 import DirectionSelector from '@/components/DirectionSelector';
 import EntityDropdown from '@/components/EntityDropdown';
 import MapLoader from '@/components/maps/MapLoader';
+import StringUtility from '@/helpers/StringUtility';
+import BusLinesLightService from '@/services/BusLinesLightService';
 import RouteService from '@/services/RouteService';
 import TimetablesService from '@/services/TimetablesService';
 import BusLineLightModel from '@/types/BusLineLightModel';
@@ -13,7 +15,8 @@ import RouteModel from '@/types/RouteModel';
 import TimetableModel from '@/types/TimetableModel';
 import { DateTime } from 'luxon';
 import dynamic from 'next/dynamic';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { use, useCallback, useEffect, useMemo, useState } from 'react';
 
 // Dynamically import Map to avoid SSR issues
 const RoutesMap = dynamic(() => import('@/components/maps/RoutesMap').then(mod => ({ default: mod.default })), {
@@ -21,7 +24,16 @@ const RoutesMap = dynamic(() => import('@/components/maps/RoutesMap').then(mod =
   loading: () => <MapLoader />
 });
 
-export default function LinesPage() {
+export default function LinesPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const resolvedSearchParams = use(searchParams);
+  const lineNumberUriComponent = resolvedSearchParams.lineNumber;
+  const lineNumber = useMemo(() =>
+    Array.isArray(lineNumberUriComponent) || StringUtility.isNullOrWhiteSpace(lineNumberUriComponent) ? undefined : decodeURIComponent(lineNumberUriComponent!),
+    [lineNumberUriComponent]);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const [userChangedBusLine, setUserChangedBusLine] = useState(false);
   const [selectedLineId, setSelectedLineId] = useState<number>(0);
   const [selectedDirection, setSelectedDirection] = useState<number>(1);
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -30,6 +42,50 @@ export default function LinesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
 
+  // Fetch bus line by line number
+  const fetchBusLine = useCallback(async () => {
+    if (StringUtility.isNullOrWhiteSpace(lineNumber)) {
+      setSelectedLineId(0);
+      return;
+    }
+
+    if (userChangedBusLine) {
+      setUserChangedBusLine(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const data = await BusLinesLightService.read({ lineNumberEquals: lineNumber });
+      const line = data.items[0];
+      if (line) {
+        setSelectedLineId(line.id);
+      }
+      else {
+        setQueryString();
+      }
+    } catch (error) {
+      console.error('Failed to fetch bus line:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [lineNumber]);
+
+  useEffect(() => {
+    fetchBusLine();
+  }, [fetchBusLine]);
+
+
+  const setQueryString = useCallback((lineNumber?: string) => {
+    const params = new URLSearchParams();
+    if (lineNumber) {
+      params.set('lineNumber', lineNumber);
+    }
+    const query = params.toString();
+    router.push(query ? `${pathname}?${query}` : pathname);
+  }, []);
+
+  // Update current time every second
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(DateTime.now());
@@ -141,7 +197,13 @@ export default function LinesPage() {
             </label>
             <EntityDropdown
               value={selectedLineId}
-              onChange={(e) => setSelectedLineId(e ? Number(e.value) : 0)}
+              onChange={(e) => {
+                const newLineId = e ? Number(e.value) : 0;
+                setSelectedLineId(newLineId);
+                setUserChangedBusLine(true);
+                setQueryString(e?.data.lineNumber);
+              }}
+
               placeholder="Select..."
               url="/api/bus-lines-light"
               sorts={[{ field: "LineNumber", dir: "asc" }]}
@@ -149,7 +211,8 @@ export default function LinesPage() {
                 data.items.map((item) => {
                   return {
                     value: item.id,
-                    label: item.lineNumber
+                    label: item.lineNumber,
+                    data: item
                   };
                 })
               }

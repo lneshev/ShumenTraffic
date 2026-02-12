@@ -1,8 +1,10 @@
 'use client';
 
+import RouteBusStopConnector from '@/components/bus-lines/RouteBusStopConnector';
+import RouteBusStopIndicator from '@/components/bus-lines/RouteBusStopIndicator';
+import DirectionSelector from '@/components/DirectionSelector';
 import EntityDropdown from '@/components/EntityDropdown';
 import MapLoader from '@/components/maps/MapLoader';
-import { ROUTE_COLORS } from '@/constants/RouteColors';
 import RouteService from '@/services/RouteService';
 import TimetablesService from '@/services/TimetablesService';
 import BusLineLightModel from '@/types/BusLineLightModel';
@@ -11,7 +13,7 @@ import RouteModel from '@/types/RouteModel';
 import TimetableModel from '@/types/TimetableModel';
 import { DateTime } from 'luxon';
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 // Dynamically import Map to avoid SSR issues
 const RoutesMap = dynamic(() => import('@/components/maps/RoutesMap').then(mod => ({ default: mod.default })), {
@@ -39,80 +41,86 @@ export default function LinesPage() {
   }, []);
 
   // Fetch timetable when a line and direction are selected
-  useEffect(() => {
+  const fetchTimetable = useCallback(async () => {
     if (!selectedLineId || !selectedDirection || !selectedDate) {
       setTimetable(null);
       return;
     }
-    fetchTimetable();
-  }, [selectedLineId, selectedDirection, selectedDate]);
 
-  // Fetch routes when a timetable is fetched
-  useEffect(() => {
-    if (!timetable) {
-      setRoutes([]);
-      return;
-    }
-    fetchRoutes();
-  }, [timetable]);
-
-  const fetchTimetable = async () => {
     try {
       setIsLoading(true);
       const data = await TimetablesService.get(selectedLineId, selectedDirection, selectedDate);
       setTimetable(data);
     } catch (error) {
       console.error('Failed to fetch timetable:', error);
-    }
-    finally {
+      setTimetable(null);
+    } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedLineId, selectedDirection, selectedDate]);
 
-  const fetchRoutes = async () => {
+  // Fetch routes when a timetable is fetched
+  const fetchRoutes = useCallback(async () => {
+    if (!timetable) {
+      setRoutes([]);
+      return;
+    }
+
     try {
       setIsLoading(true);
-      const data = await RouteService.read({ scheduleId: timetable!.schedule.id });
+      const data = await RouteService.read({ scheduleId: timetable.schedule.id });
       setRoutes(data.items);
     } catch (error) {
       console.error('Failed to fetch routes:', error);
-    }
-    finally {
+      setRoutes([]);
+    } finally {
       setIsLoading(false);
     }
-  };
+  }, [timetable]);
+
+  useEffect(() => {
+    fetchTimetable();
+  }, [fetchTimetable]);
+
+  useEffect(() => {
+    fetchRoutes();
+  }, [fetchRoutes]);
 
   // Finds the next departure time for a bus stop
-  const getNextDepartureTime = (timesByVariant: { [key: string]: string | null }): string | null => {
+  const getNextDepartureTime = useCallback((timesByVariant: { [key: string]: string | null }): string | null => {
     if (!timesByVariant) {
       return null;
     }
 
-    // Extract all departure times and filter out nulls
-    const departureTimes = Object.values(timesByVariant)
+    // Extract and parse all valid departure times
+    const parsedTimes = Object.values(timesByVariant)
       .filter((time): time is string => time !== null)
       .map(timeStr => {
-        // Parse time string (format: "HH:mm:ss" or "HH:mm")
         const [hours, minutes] = timeStr.split(':').map(Number);
         return DateTime.now().set({ hour: hours, minute: minutes, second: 0, millisecond: 0 });
       })
-      .sort((a, b) => a.toMillis() - b.toMillis()); // Sort by time
+      .sort((a, b) => a.toMillis() - b.toMillis());
 
-    if (departureTimes.length === 0) {
+    if (parsedTimes.length === 0) {
       return null;
     }
 
-    // Find the next departure time after current time
-    const nextDeparture = departureTimes.find(time => time >= currentTime);
+    // Find the next departure after current time
+    const nextDeparture = parsedTimes.find(time => time >= currentTime);
 
-    if (!nextDeparture) {
-      // No more departures today
-      return null;
-    }
+    return nextDeparture ? nextDeparture.toFormat('HH:mm') : null;
+  }, [currentTime]);
 
-    // Return formatted time
-    return nextDeparture.toFormat('HH:mm');
-  };
+  // Determine if selection is complete
+  const hasSelection = useMemo(() =>
+    selectedLineId > 0 && selectedDirection > 0 && selectedDate != null,
+    [selectedLineId, selectedDirection, selectedDate]
+  );
+
+  // Determine content state
+  const showEmptySelection = !hasSelection;
+  const showNoTimetable = hasSelection && !timetable && !isLoading;
+  const showNoStops = timetable && timetable.timetableRows.length === 0;
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col">
@@ -148,105 +156,63 @@ export default function LinesPage() {
             />
           </div>
 
-          {/* Direction Buttons */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Direction
-            </label>
-            <div className="flex gap-2">
-              {[1, 2].map(dir => (
-                <button
-                  key={dir}
-                  onClick={() => setSelectedDirection(dir)}
-                  className={`flex-1 px-3 py-2 rounded-lg font-semibold transition-colors text-sm ${selectedDirection === dir
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 dark:bg-slate-800 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700'
-                    }`}
-                >
-                  Dir {dir}
-                </button>
-              ))}
-            </div>
-          </div>
+          {/* Direction Selector */}
+          <DirectionSelector
+            selectedDirection={selectedDirection}
+            onDirectionChange={setSelectedDirection}
+          />
         </div>
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px]">
           {/* Left Pane - Stops List */}
           <div className="lg:col-span-1 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-6 overflow-y-auto">
-            {!selectedLineId || !selectedDirection || !selectedDate ?
+            {showEmptySelection && (
               <div className="text-center py-12">
                 <p className="text-gray-600 dark:text-gray-400">Please select a bus line and direction to view the route and schedule.</p>
               </div>
-              :
-              !timetable && !isLoading && (
-                <div className="text-center py-12">
-                  <p className="text-gray-600 dark:text-gray-400">No timetable found.</p>
-                </div>
-              )}
+            )}
 
-            {timetable && (
-              timetable?.timetableRows.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-600 dark:text-gray-400">No stops found for this route.</p>
-                </div>
-              ) : (
-                <div>
-                  {timetable?.timetableRows.map((rs, idx) => {
-                    const nextDeparture = getNextDepartureTime(rs.timesByVariant);
-                    const isLastStop = idx === timetable.timetableRows.length - 1;
-                    return (
-                      <div
-                        key={rs.busStop.id}
-                        className="relative"
-                      >
-                        {/* Stop marker and info */}
-                        <div className="flex items-start gap-2">
-                          {routes.map((route, index) => {
-                            const hasRouteStop = route.stops.some(x => x.busStopId === rs.busStop.id);
-                            const routeColor = ROUTE_COLORS[index % ROUTE_COLORS.length];
-                            if (hasRouteStop) {
-                              return (
-                                <div key={index} className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center z-10 relative" style={{ backgroundColor: routeColor }}>
-                                  <div className="w-3 h-3 rounded-full bg-white"></div>
-                                </div>
-                              )
-                            }
-                            else {
-                              return (
-                                <div key={index} className="w-6 h-6">
-                                  <div className="border-l-4 h-full ml-2.5" style={{ borderColor: routeColor }}></div>
-                                </div>
-                              )
-                            }
-                          })}
-                          <div className="flex-1 min-w-0 flex items-center justify-between gap-2">
-                            <p className="font-medium text-gray-900 dark:text-white truncate" title={rs.busStop.name || 'Unknown'}>
-                              {rs.busStop.name || 'Unknown'}
-                            </p>
-                            <p className="font-medium text-gray-900 dark:text-white shrink-0 w-10">
-                              {nextDeparture}
-                            </p>
-                          </div>
-                        </div>
+            {showNoTimetable && (
+              <div className="text-center py-12">
+                <p className="text-gray-600 dark:text-gray-400">No timetable found.</p>
+              </div>
+            )}
 
-                        {/* Connecting line to next stop */}
-                        {!isLastStop && (
-                          <div className="flex items-start gap-2 h-6">
-                            {routes.map((route, index) => {
-                              const routeColor = ROUTE_COLORS[index % ROUTE_COLORS.length];
-                              return (
-                                <div key={index} className="w-6 h-full flex justify-center">
-                                  <div className="w-1 h-full" style={{ backgroundColor: routeColor }}></div>
-                                </div>
-                              )
-                            })}
-                          </div>
-                        )}
+            {showNoStops && (
+              <div className="text-center py-12">
+                <p className="text-gray-600 dark:text-gray-400">No stops found for this route.</p>
+              </div>
+            )}
+
+            {timetable && routes.length > 0 && (
+              timetable.timetableRows.map((row, idx) => {
+                const nextDeparture = getNextDepartureTime(row.timesByVariant);
+                const isLastStop = idx === timetable.timetableRows.length - 1;
+
+                return (
+                  <div key={row.busStop.id}>
+                    {/* Stop marker and info */}
+                    <div className="flex items-start gap-2">
+                      <RouteBusStopIndicator
+                        routes={routes}
+                        busStopId={row.busStop.id}
+                      />
+                      <div className="flex-1 min-w-0 flex items-center justify-between gap-2">
+                        <p className="font-medium text-gray-900 dark:text-white truncate" title={row.busStop.name || 'Unknown'}>
+                          {row.busStop.name || 'Unknown'}
+                        </p>
+                        <p className="font-medium text-gray-900 dark:text-white shrink-0 w-10">
+                          {nextDeparture}
+                        </p>
                       </div>
-                    );
-                  })}
-                </div>)
+                    </div>
+
+                    {/* Connecting line to next stop */}
+                    {!isLastStop && <RouteBusStopConnector routes={routes} />}
+                  </div>
+                );
+              })
             )}
           </div>
 

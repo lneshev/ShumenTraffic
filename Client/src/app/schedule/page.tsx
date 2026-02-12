@@ -1,5 +1,6 @@
 'use client';
 
+import DirectionSelector from '@/components/DirectionSelector';
 import TimetablesService from '@/services/TimetablesService';
 import BusLineLightModel from '@/types/BusLineLightModel';
 import PageResult from '@/types/common/PageResult';
@@ -77,25 +78,10 @@ export default function SchedulePage() {
           </div>
 
           {/* Direction Buttons */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Direction
-            </label>
-            <div className="flex gap-2">
-              {[1, 2].map(dir => (
-                <button
-                  key={dir}
-                  onClick={() => setSelectedDirection(dir)}
-                  className={`flex-1 px-3 py-2 rounded-lg font-semibold transition-colors text-sm ${selectedDirection === dir
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 dark:bg-slate-800 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700'
-                    }`}
-                >
-                  Dir {dir}
-                </button>
-              ))}
-            </div>
-          </div>
+          <DirectionSelector
+            selectedDirection={selectedDirection}
+            onDirectionChange={setSelectedDirection}
+          />
 
           {/* Date Picker */}
           <div>

@@ -20,6 +20,7 @@ interface EntityDropdownProps<TId extends Id> {
     onChange?: (item: OptionType<TId> | null) => void;
     onOpen?: () => void;
     placeholder?: string;
+    isClearable?: boolean;
     isDisabled?: boolean;
     required?: boolean;
     children?: React.ReactNode;
@@ -49,6 +50,7 @@ export default function EntityDropdown<TId extends Id>({
     onChange,
     onOpen,
     placeholder = "Select...",
+    isClearable = true,
     isDisabled = false,
     required = false,
     children,
@@ -135,7 +137,7 @@ export default function EntityDropdown<TId extends Id>({
                     placeholder={placeholder}
                     noOptionsMessage={() => !!error ? (<span className='text-red-600 dark:text-red-400'>Error loading options</span>) : "No options"}
                     filterOption={filterOption}
-                    isClearable={true}
+                    isClearable={isClearable}
                     isDisabled={isDisabled}
                     required={required}
                     classNamePrefix="react-select-dropdown"
@@ -154,7 +156,7 @@ export default function EntityDropdown<TId extends Id>({
                     placeholder={placeholder}
                     noOptionsMessage={() => !!error ? (<span className='text-red-600 dark:text-red-400'>Error loading options</span>) : "No options"}
                     filterOption={filterOption}
-                    isClearable={true}
+                    isClearable={isClearable}
                     isDisabled={isDisabled}
                     required={required}
                     classNamePrefix="react-select-dropdown"

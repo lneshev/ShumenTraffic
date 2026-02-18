@@ -1,3 +1,9 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Информация - Шумен Трафик'
+}
+
 export default function InfoPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">

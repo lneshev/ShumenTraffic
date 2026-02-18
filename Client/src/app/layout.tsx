@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { METADATA } from "@/constants/Metadata";
 import { AuthProvider } from "@/context/AuthContext";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -16,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ShumenTraffic - Real-time Bus Tracking",
-  description: "Real-time bus tracking and schedule information for Shumen, Bulgaria",
+  title: METADATA.title,
+  description: METADATA.description,
 };
 
 export default function RootLayout({

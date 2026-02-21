@@ -8,6 +8,8 @@ import RouteService from '@/services/RouteService';
 import ScheduleService from '@/services/ScheduleService';
 import NumberFlow from '@number-flow/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 import { useEffect, useState } from 'react';
 
 function AdminDashboard() {
@@ -18,8 +20,9 @@ function AdminDashboard() {
     { label: 'Total Bus Lines', value: "0", color: 'orange', isError: false },
   ];
 
-  const { user, logout } = useAuth();
+  const { user, logout, isLoading } = useAuth();
   const [statistics, setStatistics] = useState([...initialStatistics]);
+  const router = useRouter();
 
   useEffect(() => {
     fetchStatistics();
@@ -59,11 +62,11 @@ function AdminDashboard() {
               Admin Dashboard
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Welcome, {user?.username}!
+              Welcome, {!isLoading ? user?.username : '...'}!
             </p>
           </div>
           <button
-            onClick={logout}
+            onClick={() => { logout(); router.push('/admin/login'); }}
             className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors"
           >
             Logout

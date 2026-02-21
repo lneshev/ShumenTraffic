@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface User {
   userId: string;
@@ -23,38 +23,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if user is already logged in on mount
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        // Check authentication status with backend using cookies
-        const response = await fetch('http://localhost:5000/api/auth/me', {
-          credentials: 'include', // Include cookies in the request
-        });
-
-        if (response.ok) {
-          const result = await response.json();
-          setUser(result.data);
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     checkAuth();
   }, []);
+
+  // Check if user is already logged in
+  const checkAuth = async () => {
+    setIsLoading(true);
+    try {
+      const identity = await cookieStore.get('identity');
+      if (identity && identity.value) {
+        setUser(JSON.parse(identity.value));
+      }
+    }
+    finally {
+      setIsLoading(false);
+    }
+  };
 
   const login = async (username: string, password: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_WEB_API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Include cookies in the request
+        credentials: 'include',
         body: JSON.stringify({ username, password }),
       });
 
@@ -65,6 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const result = await response.json();
       setUser(result.data);
+      cookieStore.set('identity', `${JSON.stringify(result.data)}`);
     } finally {
       setIsLoading(false);
     }
@@ -73,12 +69,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     setIsLoading(true);
     try {
-      await fetch('http://localhost:5000/api/auth/logout', {
+      await fetch(`${process.env.NEXT_PUBLIC_WEB_API_BASE_URL}/api/auth/logout`, {
         method: 'POST',
-        credentials: 'include', // Include cookies in the request
+        credentials: 'include'
       });
     } finally {
       setUser(null);
+      cookieStore.delete('identity');
       setIsLoading(false);
     }
   };
@@ -90,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         login,
         logout,
-        isAuthenticated: !!user,
+        isAuthenticated: !!user
       }}
     >
       {children}
@@ -105,4 +102,3 @@ export function useAuth() {
   }
   return context;
 }
-

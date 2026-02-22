@@ -48,15 +48,8 @@ export default function SchedulePage({
     }, [fetchTimetable]);
 
     return (
-        <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col">
-            <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
-                <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                    Bus Schedule
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400 text-lg mb-8">
-                    View detailed schedules for all bus lines.
-                </p>
-
+        <div className="h-full bg-white dark:bg-slate-950 flex flex-col">
+            <div className="w-full p-6">
                 {/* Controls */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                     {/* Line Selector */}
@@ -116,7 +109,7 @@ export default function SchedulePage({
                     )}
 
                 {timetable && (
-                    <div className={`bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-x-auto`}>
+                    <div className={`bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-auto`}>
                         <table className="w-full text-sm border-separate border-spacing-0">
                             <thead>
                                 <tr className="bg-gray-100 dark:bg-slate-800">

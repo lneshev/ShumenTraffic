@@ -10,11 +10,11 @@ export default function DirectionSelector({
   directions = [1, 2]
 }: DirectionSelectorProps) {
   return (
-    <div>
+    <div className="w-[100px]">
       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
         Direction
       </label>
-      <div className="flex gap-2">
+      <div className="flex gap-1">
         {directions.map(dir => (
           <button
             key={dir}
@@ -24,7 +24,7 @@ export default function DirectionSelector({
               : 'bg-gray-200 dark:bg-slate-800 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700'
               }`}
           >
-            Dir {dir}
+            {dir}
           </button>
         ))}
       </div>

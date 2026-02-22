@@ -96,12 +96,12 @@ export default function HomePage() {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-950 min-h-screen flex flex-col">
+    <div className="h-full bg-white dark:bg-slate-950 flex flex-col">
       {/* Main Content - Two Column Layout */}
-      <section className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[800px]">
+      <section className="flex-1 overflow-y-auto lg:overflow-hidden flex flex-col mx-auto w-full">
+        <div className="flex flex-col lg:flex-row lg:flex-1 lg:min-h-0">
           {/* Left Pane - Search and Info */}
-          <div className="lg:col-span-1 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-6 overflow-y-auto">
+          <div className="w-full lg:w-[400px] lg:shrink-0 bg-gray-50 dark:bg-slate-900 p-6 lg:overflow-y-auto border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-slate-700">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
               Find a Bus Stop
             </h2>
@@ -169,7 +169,7 @@ export default function HomePage() {
           </div>
 
           {/* Right Pane - Map */}
-          <div className="lg:col-span-2 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div className="w-full h-[400px] lg:h-auto lg:flex-1 lg:min-h-0 bg-gray-100 dark:bg-slate-800 overflow-hidden">
             <BusStopMap
               busStops={busStops}
               selectedStopId={selectedStop?.id}

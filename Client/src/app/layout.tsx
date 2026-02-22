@@ -24,12 +24,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-white dark:bg-slate-950`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen overflow-hidden bg-white dark:bg-slate-950`}>
         <AuthProvider>
           <Header />
-          <main className="flex-1">
+          <main className="flex-1 overflow-y-auto">
             {children}
           </main>
           <Footer />

@@ -179,112 +179,112 @@ export default function LinesPage({ searchParams }: { searchParams: Promise<{ [k
   const showNoStops = timetable && timetable.timetableRows.length === 0;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col">
-      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          Bus Lines
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 text-lg mb-8">
-          Select a bus line and direction to view the route and schedule.
-        </p>
+    <div className="h-full bg-white dark:bg-slate-950 flex flex-col">
+      {/* Main Content - Two Column Layout */}
+      <section className="flex-1 overflow-y-auto lg:overflow-hidden flex flex-col mx-auto w-full">
+        <div className="flex flex-col lg:flex-row lg:flex-1 lg:min-h-0">
+          {/* Left Pane - Controls and Stops List */}
+          <div className="w-full lg:w-[400px] lg:shrink-0 bg-gray-50 dark:bg-slate-900 flex flex-col lg:overflow-hidden border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-slate-700">
+            {/* Controls */}
+            <div className="p-6 border-b border-gray-200 dark:border-slate-700">
+              <div className="flex gap-2">
+                {/* Line Selector */}
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Bus Line
+                  </label>
+                  <EntityDropdown
+                    value={selectedLineId}
+                    onChange={(e) => {
+                      const newLineId = e ? Number(e.value) : 0;
+                      setSelectedLineId(newLineId);
+                      setUserChangedBusLine(true);
+                      setQueryString(e?.data.lineNumber);
+                    }}
 
-        {/* Controls */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          {/* Line Selector */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Bus Line
-            </label>
-            <EntityDropdown
-              value={selectedLineId}
-              onChange={(e) => {
-                const newLineId = e ? Number(e.value) : 0;
-                setSelectedLineId(newLineId);
-                setUserChangedBusLine(true);
-                setQueryString(e?.data.lineNumber);
-              }}
+                    placeholder="Select..."
+                    url="/api/bus-lines-light"
+                    sorts={[{ field: "LineNumber", dir: "asc" }]}
+                    parseData={(data: PageResult<BusLineLightModel>) =>
+                      data.items.map((item) => {
+                        return {
+                          value: item.id,
+                          label: item.lineNumber,
+                          data: item
+                        };
+                      })
+                    }
+                  />
+                </div>
 
-              placeholder="Select..."
-              url="/api/bus-lines-light"
-              sorts={[{ field: "LineNumber", dir: "asc" }]}
-              parseData={(data: PageResult<BusLineLightModel>) =>
-                data.items.map((item) => {
-                  return {
-                    value: item.id,
-                    label: item.lineNumber,
-                    data: item
-                  };
-                })
-              }
-            />
-          </div>
-
-          {/* Direction Selector */}
-          <DirectionSelector
-            selectedDirection={selectedDirection}
-            onDirectionChange={setSelectedDirection}
-          />
-        </div>
-
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px]">
-          {/* Left Pane - Stops List */}
-          <div className="lg:col-span-1 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-6 overflow-y-auto">
-            {showEmptySelection && (
-              <div className="text-center py-12">
-                <p className="text-gray-600 dark:text-gray-400">Please select a bus line and direction to view the route and schedule.</p>
+                {/* Direction Selector */}
+                <div className="shrink-0">
+                  <DirectionSelector
+                    selectedDirection={selectedDirection}
+                    onDirectionChange={setSelectedDirection}
+                  />
+                </div>
               </div>
-            )}
+            </div>
 
-            {showNoTimetable && (
-              <div className="text-center py-12">
-                <p className="text-gray-600 dark:text-gray-400">No timetable found.</p>
-              </div>
-            )}
+            {/* Stops List */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {showEmptySelection && (
+                <div className="text-center py-12">
+                  <p className="text-gray-600 dark:text-gray-400">Please select a bus line and direction to view the route and schedule.</p>
+                </div>
+              )}
 
-            {showNoStops && (
-              <div className="text-center py-12">
-                <p className="text-gray-600 dark:text-gray-400">No stops found for this route.</p>
-              </div>
-            )}
+              {showNoTimetable && (
+                <div className="text-center py-12">
+                  <p className="text-gray-600 dark:text-gray-400">No timetable found.</p>
+                </div>
+              )}
 
-            {timetable && routes.length > 0 && (
-              timetable.timetableRows.map((row, idx) => {
-                const nextDeparture = getNextDepartureTime(row.timesByVariant);
-                const isLastStop = idx === timetable.timetableRows.length - 1;
+              {showNoStops && (
+                <div className="text-center py-12">
+                  <p className="text-gray-600 dark:text-gray-400">No stops found for this route.</p>
+                </div>
+              )}
 
-                return (
-                  <div key={row.busStop.id}>
-                    {/* Stop marker and info */}
-                    <div className="flex items-start gap-2">
-                      <RouteBusStopIndicator
-                        routes={routes}
-                        busStopId={row.busStop.id}
-                      />
-                      <div className="flex-1 min-w-0 flex items-center justify-between gap-2">
-                        <p className="font-medium text-gray-900 dark:text-white truncate" title={row.busStop.name || 'Unknown'}>
-                          {row.busStop.name || 'Unknown'}
-                        </p>
-                        <p className="font-medium text-gray-900 dark:text-white shrink-0 w-10">
-                          {nextDeparture}
-                        </p>
+              {timetable && routes.length > 0 && (
+                timetable.timetableRows.map((row, idx) => {
+                  const nextDeparture = getNextDepartureTime(row.timesByVariant);
+                  const isLastStop = idx === timetable.timetableRows.length - 1;
+
+                  return (
+                    <div key={row.busStop.id}>
+                      {/* Stop marker and info */}
+                      <div className="flex items-center gap-1">
+                        <RouteBusStopIndicator
+                          routes={routes}
+                          busStopId={row.busStop.id}
+                        />
+                        <div className="flex-1 min-w-0 flex items-center justify-between gap-1">
+                          <p className="text-sm text-gray-900 dark:text-white truncate" title={row.busStop.name || 'Unknown'}>
+                            {row.busStop.name || 'Unknown'}
+                          </p>
+                          <p className="text-sm text-gray-900 dark:text-white shrink-0 w-8">
+                            {nextDeparture}
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Connecting line to next stop */}
-                    {!isLastStop && <RouteBusStopConnector routes={routes} />}
-                  </div>
-                );
-              })
-            )}
+                      {/* Connecting line to next stop */}
+                      {!isLastStop && <RouteBusStopConnector routes={routes} />}
+                    </div>
+                  );
+                })
+              )}
+            </div>
           </div>
 
           {/* Right Pane - Map */}
-          <div className="lg:col-span-2 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div className="w-full h-[400px] lg:h-auto lg:flex-1 lg:min-h-0 bg-gray-100 dark:bg-slate-800 overflow-hidden">
             <RoutesMap routes={routes} />
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

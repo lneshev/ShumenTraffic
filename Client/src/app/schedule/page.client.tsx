@@ -33,7 +33,7 @@ export default function SchedulePage({
 
     const fetchTimetable = useCallback(async () => {
         setTimetable(null);
-        if (selectedLineId) {
+        if (selectedLineId && selectedDirection && selectedDate) {
             try {
                 const data = await TimetablesService.get(selectedLineId, selectedDirection, selectedDate);
                 setTimetable(data);
@@ -51,36 +51,40 @@ export default function SchedulePage({
         <div className="h-full bg-white dark:bg-slate-950 flex flex-col">
             <div className="w-full p-6">
                 {/* Controls */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                    {/* Line Selector */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Bus Line
-                        </label>
-                        <EntityDropdown
-                            value={selectedLineId}
-                            onChange={(e) => router.push(`/schedule?lineNumber=${e?.data.lineNumber}&direction=${selectedDirection}`)}
-                            placeholder="Select..."
-                            url="/api/bus-lines-light"
-                            sorts={[{ field: "LineNumber", dir: "asc" }]}
-                            parseData={(data: PageResult<BusLineLightModel>) =>
-                                data.items.map((item) => {
-                                    return {
-                                        value: item.id,
-                                        label: item.lineNumber,
-                                        data: item
-                                    };
-                                })
-                            }
-                            isClearable={false}
-                        />
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-8 max-w-4xl">
+                    <div className="flex gap-2">
+                        {/* Line Selector */}
+                        <div className="flex-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Bus Line
+                            </label>
+                            <EntityDropdown
+                                value={selectedLineId}
+                                onChange={(e) => router.push(`/schedule?lineNumber=${e?.data.lineNumber}&direction=${selectedDirection}`)}
+                                placeholder="Select..."
+                                url="/api/bus-lines-light"
+                                sorts={[{ field: "LineNumber", dir: "asc" }]}
+                                parseData={(data: PageResult<BusLineLightModel>) =>
+                                    data.items.map((item) => {
+                                        return {
+                                            value: item.id,
+                                            label: item.lineNumber,
+                                            data: item
+                                        };
+                                    })
+                                }
+                                isClearable={false}
+                            />
+                        </div>
 
-                    {/* Direction Buttons */}
-                    <DirectionSelector
-                        selectedDirection={selectedDirection}
-                        onDirectionChange={(direction) => router.push(`/schedule?lineNumber=${selectedLineNumber}&direction=${direction}`)}
-                    />
+                        {/* Direction Buttons */}
+                        <div className="shrink-0">
+                            <DirectionSelector
+                                selectedDirection={selectedDirection}
+                                onDirectionChange={(direction) => router.push(`/schedule?lineNumber=${selectedLineNumber}&direction=${direction}`)}
+                            />
+                        </div>
+                    </div>
 
                     {/* Date Picker */}
                     <div>
@@ -110,7 +114,7 @@ export default function SchedulePage({
 
                 {timetable && (
                     <div className={`bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-auto`}>
-                        <table className="w-full text-sm border-separate border-spacing-0">
+                        <table className="w-full text-sm border-spacing-0">
                             <thead>
                                 <tr className="bg-gray-100 dark:bg-slate-800">
                                     <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border-r border-b border-gray-200 sticky left-0 bg-gray-100 dark:bg-slate-800 z-10">
@@ -140,13 +144,10 @@ export default function SchedulePage({
                                     timetable?.timetableRows.map((rs, idx) => (
                                         <tr
                                             key={rs.busStop.id}
-                                            className={`border-b border-gray-200 dark:border-slate-700 transition-colors ${highlightedStop === rs.busStop.id
-                                                ? 'bg-blue-50 dark:bg-blue-900/20'
-                                                : ''
-                                                }`}
+                                            className={`border-b last:border-b-0 border-gray-200 dark:border-slate-700 transition-colors ${highlightedStop === rs.busStop.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
                                         >
                                             <td
-                                                className={`py-3 px-4 font-medium text-gray-900 dark:text-white border-r border-b border-gray-200 sticky left-0 z-10 transition-colors ${highlightedStop === rs.busStop.id
+                                                className={`py-3 px-4 font-medium text-gray-900 dark:text-white border-r border-gray-200 dark:border-slate-700 sticky left-0 z-10 transition-colors ${highlightedStop === rs.busStop.id
                                                     ? 'bg-blue-50 dark:bg-blue-900/20'
                                                     : 'bg-gray-50 dark:bg-slate-900'
                                                     }`}
@@ -161,7 +162,7 @@ export default function SchedulePage({
                                             {timetable.schedule.scheduleCourses.map(course => (
                                                 <td
                                                     key={`${rs.busStop.id}-${course.id}`}
-                                                    className={`text-center py-3 px-2 text-gray-900 dark:text-white border-r border-b last:border-r-0 border-gray-200 transition-colors cursor-pointer ${highlightedCourse === course.id
+                                                    className={`text-center py-3 px-2 text-gray-900 dark:text-white border-r last:border-r-0 border-gray-200 transition-colors cursor-pointer ${highlightedCourse === course.id
                                                         ? 'bg-blue-50 dark:bg-blue-900/20'
                                                         : ''
                                                         }`}

@@ -27,7 +27,7 @@ export default function Header() {
               <span className="text-white font-bold text-lg">ST</span>
             </div>
             <span className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-              ShumenTraffic
+              Shumen Traffic
             </span>
           </Link>
 

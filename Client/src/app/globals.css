@@ -71,5 +71,5 @@ select {
 
 /* Increase z-index for react-select dropdowns, because of leaflet's map */
 .react-select-dropdown__menu {
-  z-index: 401 !important;
+  z-index: 1001 !important;
 }

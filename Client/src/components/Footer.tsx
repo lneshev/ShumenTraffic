@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="mx-auto px-6 py-2">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-600 dark:text-gray-400 text-sm">
-            &copy; 2025-{currentYear} ShumenTraffic. All rights reserved.
+            &copy; 2025-{currentYear} Shumen Traffic. All rights reserved.
           </p>
         </div>
       </div>

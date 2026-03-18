@@ -13,6 +13,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 function AdminDashboard() {
+  const statStyles: Record<string, string> = {
+    purple: "bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-700",
+    green: "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700",
+    blue: "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700",
+    orange: "bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-700"
+  };
+
   const initialStatistics = [
     { label: 'Total Schedules', value: "0", color: 'purple', isError: false },
     { label: 'Total Routes', value: "0", color: 'green', isError: false },
@@ -145,7 +152,7 @@ function AdminDashboard() {
             {statistics.map((stat, i) => (
               <div
                 key={i}
-                className={`p-6 bg-${stat.color}-50 dark:bg-${stat.color}-900/20 rounded-lg border border-${stat.color}-200 dark:border-${stat.color}-700`}
+                className={`${statStyles[stat.color]} p-6 rounded-lg border`}
               >
                 <p className="text-sm font-medium mb-2">
                   {stat.label}

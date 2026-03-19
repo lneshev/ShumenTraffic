@@ -3,7 +3,6 @@
 import RouteBusStopConnector from '@/components/bus-lines/RouteBusStopConnector';
 import RouteBusStopIndicator from '@/components/bus-lines/RouteBusStopIndicator';
 import DirectionSelector from '@/components/DirectionSelector';
-import EntityDropdown from '@/components/EntityDropdown';
 import MapLoader from '@/components/maps/MapLoader';
 import StringUtility from '@/helpers/StringUtility';
 import BusLinesLightService from '@/services/BusLinesLightService';
@@ -23,6 +22,9 @@ const RoutesMap = dynamic(() => import('@/components/maps/RoutesMap').then(mod =
   ssr: false,
   loading: () => <MapLoader />
 });
+
+// Dynamically import EntityDropdown to avoid SSR issues
+const EntityDropdown = dynamic(() => import("@/components/EntityDropdown"), { ssr: false });
 
 export default function LinesPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const resolvedSearchParams = use(searchParams);
@@ -184,7 +186,7 @@ export default function LinesPage({ searchParams }: { searchParams: Promise<{ [k
       <section className="flex-1 overflow-y-auto lg:overflow-hidden flex flex-col mx-auto w-full">
         <div className="flex flex-col lg:flex-row lg:flex-1 lg:min-h-0">
           {/* Left Pane - Controls and Stops List */}
-          <div className="w-full lg:w-[400px] lg:shrink-0 bg-gray-50 dark:bg-slate-900 flex flex-col lg:overflow-hidden border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-slate-700">
+          <div className="w-full lg:w-100 lg:shrink-0 bg-gray-50 dark:bg-slate-900 flex flex-col lg:overflow-hidden border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-slate-700">
             {/* Controls */}
             <div className="p-6 border-b border-gray-200 dark:border-slate-700">
               <div className="flex gap-2">
@@ -280,7 +282,7 @@ export default function LinesPage({ searchParams }: { searchParams: Promise<{ [k
           </div>
 
           {/* Right Pane - Map */}
-          <div className="w-full h-[400px] lg:h-auto lg:flex-1 lg:min-h-0 bg-gray-100 dark:bg-slate-800 overflow-hidden">
+          <div className="w-full h-100 lg:h-auto lg:flex-1 lg:min-h-0 bg-gray-100 dark:bg-slate-800 overflow-hidden">
             <RoutesMap routes={routes} />
           </div>
         </div>

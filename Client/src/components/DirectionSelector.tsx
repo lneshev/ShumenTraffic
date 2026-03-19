@@ -10,7 +10,7 @@ export default function DirectionSelector({
   directions = [1, 2]
 }: DirectionSelectorProps) {
   return (
-    <div className="w-[100px]">
+    <div className="w-25">
       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
         Direction
       </label>

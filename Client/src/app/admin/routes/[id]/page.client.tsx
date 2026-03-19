@@ -305,7 +305,7 @@ export default function RouteDetails({ id }: { id: number }) {
                             {route.stops.length === 0 && (
                                 <p className="text-gray-600 dark:text-gray-400">None</p>
                             )}
-                            <ul className="h-[600px] overflow-auto">
+                            <ul className="h-150 overflow-auto">
                                 {route.stops.sort((a, b) => a.stopOrder - b.stopOrder).map((routeStop, i) => {
                                     previousRouteStopEstMins = Math.max(previousRouteStopEstMins, route.stops[i - 1]?.estimatedMinutesFromStart || -1);
                                     const rsEstMins = routeStop.estimatedMinutesFromStart;
@@ -384,7 +384,7 @@ export default function RouteDetails({ id }: { id: number }) {
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Map
                             </label>
-                            <div className="h-[600px] bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+                            <div className="h-150 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
                                 <RouteMap
                                     busStops={busStops}
                                     routeStops={route.stops}

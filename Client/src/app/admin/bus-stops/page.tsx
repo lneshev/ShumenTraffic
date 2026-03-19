@@ -295,7 +295,7 @@ function BusStopsPage() {
           </form>
         )}
 
-        <div className="grid grid-cols-1 gap-6 h-[600px] mb-6">
+        <div className="grid grid-cols-1 gap-6 h-150 mb-6">
           <div className="lg:col-span-2 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
             <BusStopMap
               busStops={busStops}

@@ -1,6 +1,7 @@
 'use client';
 
 import DirectionSelector from "@/components/DirectionSelector";
+import { EntityDropdownLoader } from "@/components/EntityDropdown";
 import TimetablesService from "@/services/TimetablesService";
 import BusLineLightModel from "@/types/BusLineLightModel";
 import PageResult from "@/types/common/PageResult";
@@ -9,9 +10,13 @@ import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
 
 // Dynamically import EntityDropdown to avoid SSR issues
-const EntityDropdown = dynamic(() => import("@/components/EntityDropdown"), { ssr: false });
+const EntityDropdown = dynamic(() => import("@/components/EntityDropdown"), {
+    ssr: false,
+    loading: () => <EntityDropdownLoader />
+});
 
 type SchedulePageProps = {
     selectedLineId: number;
@@ -26,7 +31,7 @@ export default function SchedulePage({
 }: SchedulePageProps) {
     const router = useRouter();
 
-    const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     const [timetable, setTimetable] = useState<TimetableModel | null>(null);
     const [highlightedStop, setHighlightedStop] = useState<number | null>(null);
     const [highlightedCourse, setHighlightedCourse] = useState<number | null>(null);
@@ -35,7 +40,8 @@ export default function SchedulePage({
         setTimetable(null);
         if (selectedLineId && selectedDirection && selectedDate) {
             try {
-                const data = await TimetablesService.get(selectedLineId, selectedDirection, selectedDate);
+                const dateString = selectedDate.toISOString().split('T')[0];
+                const data = await TimetablesService.get(selectedLineId, selectedDirection, dateString);
                 setTimetable(data);
             } catch (error) {
                 console.error('Failed to fetch timetable:', error);
@@ -51,51 +57,49 @@ export default function SchedulePage({
         <div className="h-full bg-white dark:bg-slate-950 flex flex-col">
             <div className="w-full p-6">
                 {/* Controls */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-8 max-w-4xl">
-                    <div className="flex gap-2">
-                        {/* Line Selector */}
-                        <div className="flex-1">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Bus Line
-                            </label>
-                            <EntityDropdown
-                                value={selectedLineId}
-                                onChange={(e) => router.push(`/schedule?lineNumber=${e?.data.lineNumber}&direction=${selectedDirection}`)}
-                                placeholder="Select..."
-                                url="/api/bus-lines-light"
-                                sorts={[{ field: "LineNumber", dir: "asc" }]}
-                                parseData={(data: PageResult<BusLineLightModel>) =>
-                                    data.items.map((item) => {
-                                        return {
-                                            value: item.id,
-                                            label: item.lineNumber,
-                                            data: item
-                                        };
-                                    })
-                                }
-                                isClearable={false}
-                            />
-                        </div>
+                <div className="flex gap-2 mb-8 max-w-xl">
+                    {/* Line Selector */}
+                    <div className="flex-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Bus Line
+                        </label>
+                        <EntityDropdown
+                            value={selectedLineId}
+                            onChange={(e) => router.push(`/schedule?lineNumber=${e?.data.lineNumber}&direction=${selectedDirection}`)}
+                            placeholder="Select..."
+                            url="/api/bus-lines-light"
+                            sorts={[{ field: "LineNumber", dir: "asc" }]}
+                            parseData={(data: PageResult<BusLineLightModel>) =>
+                                data.items.map((item) => {
+                                    return {
+                                        value: item.id,
+                                        label: item.lineNumber,
+                                        data: item
+                                    };
+                                })
+                            }
+                            isClearable={false}
+                        />
+                    </div>
 
-                        {/* Direction Buttons */}
-                        <div className="shrink-0">
-                            <DirectionSelector
-                                selectedDirection={selectedDirection}
-                                onDirectionChange={(direction) => router.push(`/schedule?lineNumber=${selectedLineNumber}&direction=${direction}`)}
-                            />
-                        </div>
+                    {/* Direction Buttons */}
+                    <div className="shrink-0">
+                        <DirectionSelector
+                            selectedDirection={selectedDirection}
+                            onDirectionChange={(direction) => router.push(`/schedule?lineNumber=${selectedLineNumber}&direction=${direction}`)}
+                        />
                     </div>
 
                     {/* Date Picker */}
-                    <div>
+                    <div className="flex-1">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Date
                         </label>
-                        <input
-                            type="date"
-                            value={selectedDate}
-                            onChange={(e) => setSelectedDate(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        <DatePicker
+                            selected={selectedDate}
+                            onChange={setSelectedDate}
+                            dateFormat={"dd/MM/yyyy"}
+                            placeholderText="Select..."
                         />
                     </div>
                 </div>

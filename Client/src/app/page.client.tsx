@@ -1,5 +1,6 @@
 'use client';
 
+import { EntityDropdownLoader } from '@/components/EntityDropdown';
 import MapLoader from '@/components/maps/MapLoader';
 import BusLinesService from '@/services/BusLinesService';
 import BusStopService from "@/services/BusStopService";
@@ -13,14 +14,17 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
+// Dynamically import EntityDropdown to avoid SSR issues
+const EntityDropdown = dynamic(() => import("@/components/EntityDropdown"), {
+  ssr: false,
+  loading: () => <EntityDropdownLoader />
+});
+
 // Dynamically import Map to avoid SSR issues
 const BusStopMap = dynamic(() => import('@/components/maps/BusStopMap').then(mod => ({ default: mod.default })), {
   ssr: false,
   loading: () => <MapLoader />
 });
-
-// Dynamically import EntityDropdown to avoid SSR issues
-const EntityDropdown = dynamic(() => import("@/components/EntityDropdown"), { ssr: false });
 
 export default function HomePage() {
   const [selectedStop, setSelectedStop] = useState<BusStopModel | null>(null);

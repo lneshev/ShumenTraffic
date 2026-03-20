@@ -3,6 +3,7 @@
 import RouteBusStopConnector from '@/components/bus-lines/RouteBusStopConnector';
 import RouteBusStopIndicator from '@/components/bus-lines/RouteBusStopIndicator';
 import DirectionSelector from '@/components/DirectionSelector';
+import { EntityDropdownLoader } from '@/components/EntityDropdown';
 import MapLoader from '@/components/maps/MapLoader';
 import StringUtility from '@/helpers/StringUtility';
 import BusLinesLightService from '@/services/BusLinesLightService';
@@ -17,14 +18,17 @@ import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { use, useCallback, useEffect, useMemo, useState } from 'react';
 
+// Dynamically import EntityDropdown to avoid SSR issues
+const EntityDropdown = dynamic(() => import("@/components/EntityDropdown"), {
+  ssr: false,
+  loading: () => <EntityDropdownLoader />
+});
+
 // Dynamically import Map to avoid SSR issues
 const RoutesMap = dynamic(() => import('@/components/maps/RoutesMap').then(mod => ({ default: mod.default })), {
   ssr: false,
   loading: () => <MapLoader />
 });
-
-// Dynamically import EntityDropdown to avoid SSR issues
-const EntityDropdown = dynamic(() => import("@/components/EntityDropdown"), { ssr: false });
 
 export default function LinesPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const resolvedSearchParams = use(searchParams);

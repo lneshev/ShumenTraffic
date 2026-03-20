@@ -1,15 +1,19 @@
 @import "tailwindcss";
+@import "../styles/react-select.override.css";
+@import "react-datepicker/dist/react-datepicker.css";
+@import "../styles/react-datepicker.override.css";
 
 :root {
   /* Light mode colors */
   --background: #ffffff;
   --foreground: #1f2937;
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --primary-light: #3b82f6;
-  --secondary: #0ea5e9;
+  --primary: #007000;
+  --primary-dark: #004d00;
+  --primary-light: #008b00;
+  --secondary: #00b400;
   --accent: #f59e0b;
   --border: #e5e7eb;
+  --border-element: #d1d5dc;
   --text-muted: #6b7280;
 }
 
@@ -32,12 +36,13 @@
     /* Dark mode colors */
     --background: #0f172a;
     --foreground: #f1f5f9;
-    --primary: #3b82f6;
-    --primary-dark: #1e40af;
-    --primary-light: #60a5fa;
-    --secondary: #06b6d4;
+    --primary: #007000;
+    --primary-dark: #004d00;
+    --primary-light: #008b00;
+    --secondary: #00b400;
     --accent: #fbbf24;
     --border: #334155;
+    --border-element: #45556c;
     --text-muted: #94a3b8;
   }
 }
@@ -54,12 +59,11 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Focus styles for accessibility */
+/* Reset focus styles */
 button:focus,
 a:focus,
 input:focus {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+  outline: none;
 }
 
 /* Pointer cursor for clickable elements */
@@ -67,9 +71,4 @@ button:hover,
 a:hover,
 select {
   cursor: pointer;
-}
-
-/* Increase z-index for react-select dropdowns, because of leaflet's map */
-.react-select-dropdown__menu {
-  z-index: 1001 !important;
 }

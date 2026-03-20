@@ -1,0 +1,18 @@
+/* Increase z-index for react-select dropdowns, because of leaflet's map */
+.react-select-dropdown__menu {
+    z-index: 1001 !important;
+}
+
+/* Consistent styles for react-select controls */
+.react-select-dropdown__control {
+    min-height: 40px !important;
+    border: 1px solid var(--border) !important;
+    border-color: var(--border-element) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: none !important;
+}
+
+/* Consistent cursor for react-select dropdowns */
+.react-select-dropdown__indicator {
+    cursor: pointer;
+}

@@ -1,0 +1,46 @@
+/* Increase z-index for react-datepicker, because of table's overflow */
+.react-datepicker-popper {
+    z-index: 11 !important;
+}
+
+.react-datepicker-wrapper {
+    display: block;
+}
+
+.react-datepicker-wrapper input {
+    width: 100%;
+    height: calc(var(--spacing)*10);
+    border: 1px solid var(--border);
+    border-color: var(--border-element);
+    border-radius: var(--radius-lg);
+    background-color: var(--background);
+    color: var(--foreground);
+    padding: calc(var(--spacing)*2.5);
+    outline: none;
+    box-shadow: none;
+}
+
+.react-datepicker-wrapper .react-datepicker__close-icon {
+    padding: 8px;
+}
+
+.react-datepicker-wrapper .react-datepicker__close-icon::after {
+    background-color: #ccc !important;
+    content: "";
+    outline: none;
+    width: 20px;
+    height: 20px;
+    -webkit-mask: url('/icons/clear.svg') no-repeat center;
+    -webkit-mask-size: contain;
+    mask: url('/icons/clear.svg') no-repeat center;
+    mask-size: contain;
+    padding: 0;
+}
+
+.react-datepicker-wrapper .react-datepicker__close-icon:hover::after {
+    background-color: #999 !important;
+}
+
+.react-datepicker-wrapper .react-datepicker__close-icon:active::after {
+    background-color: #666 !important;
+}

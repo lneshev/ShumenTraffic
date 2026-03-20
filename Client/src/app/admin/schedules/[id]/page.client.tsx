@@ -16,6 +16,7 @@ import { DateTime } from "luxon";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import DatePicker from "react-datepicker";
 
 export default function ScheduleDetails({ id }: { id: number }) {
     const initialScheduleCourse: ScheduleCourseModel = {
@@ -182,11 +183,11 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Start Date
                                 </label>
-                                <input
-                                    type="date"
-                                    value={schedule.startDate}
-                                    onChange={(e) => setSchedule({ ...schedule, startDate: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                                <DatePicker
+                                    selected={schedule.startDate ? DateTime.fromISO(schedule.startDate).toJSDate() : null}
+                                    onChange={(e: Date | null) => setSchedule({ ...schedule, startDate: DateTime.fromJSDate(e!).toISODate()! })}
+                                    dateFormat={"dd/MM/yyyy"}
+                                    placeholderText="Select..."
                                     required
                                 />
                             </div>
@@ -194,11 +195,12 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     End Date
                                 </label>
-                                <input
-                                    type="date"
-                                    value={schedule.endDate || ''}
-                                    onChange={(e) => setSchedule({ ...schedule, endDate: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                                <DatePicker
+                                    selected={schedule.endDate ? DateTime.fromISO(schedule.endDate).toJSDate() : null}
+                                    onChange={(e: Date | null) => setSchedule({ ...schedule, endDate: e ? DateTime.fromJSDate(e).toISODate()! : undefined })}
+                                    dateFormat={"dd/MM/yyyy"}
+                                    placeholderText="Select..."
+                                    isClearable
                                 />
                             </div>
                             <div>

@@ -229,16 +229,21 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                             key={scheduleCourse.id}
                                             className="grid grid-cols-3 gap-4 justify-between border border-b-0 last:border-b border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 p-2"
                                         >
-                                            <input
-                                                type="time"
-                                                value={scheduleCourse.departureTime}
-                                                onChange={(e) => setSchedule({
-                                                    ...schedule,
-                                                    scheduleCourses: schedule.scheduleCourses.map(x => x.id === scheduleCourse.id ? { ...x, departureTime: e.target.value } : x)
-                                                })}
-                                                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-                                                required
-                                            />
+                                            <div>
+                                                <DatePicker
+                                                    selected={scheduleCourse.departureTime ? DateTime.fromISO(scheduleCourse.departureTime).toJSDate() : null}
+                                                    onChange={(e: Date | null) => setSchedule({
+                                                        ...schedule,
+                                                        scheduleCourses: schedule.scheduleCourses.map(x => x.id === scheduleCourse.id ? { ...x, departureTime: DateTime.fromJSDate(e!).toISOTime({ precision: 'minutes', includeOffset: false })! } : x)
+                                                    })}
+                                                    showTimeSelect
+                                                    showTimeSelectOnly
+                                                    dateFormat={"HH:mm"}
+                                                    timeFormat={"HH:mm"}
+                                                    placeholderText="Select..."
+                                                    required
+                                                />
+                                            </div>
                                             <EntityDropdown
                                                 value={scheduleCourse.routeId}
                                                 onChange={(e) => setSchedule({
@@ -283,13 +288,18 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                     <li
                                         className="grid grid-cols-3 gap-4 justify-between border border-b-0 last:border-b border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 p-2"
                                     >
-                                        <input
-                                            type="time"
-                                            value={newScheduleCourse.departureTime}
-                                            onChange={(e) => setNewScheduleCourse({ ...newScheduleCourse, departureTime: e.target.value })}
-                                            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-                                            required
-                                        />
+                                        <div>
+                                            <DatePicker
+                                                selected={newScheduleCourse.departureTime ? DateTime.fromISO(newScheduleCourse.departureTime).toJSDate() : null}
+                                                onChange={(e: Date | null) => setNewScheduleCourse({ ...newScheduleCourse, departureTime: DateTime.fromJSDate(e!).toISOTime({ precision: 'minutes', includeOffset: false })! })}
+                                                showTimeSelect
+                                                showTimeSelectOnly
+                                                dateFormat={"HH:mm"}
+                                                timeFormat={"HH:mm"}
+                                                placeholderText="Select..."
+                                                required
+                                            />
+                                        </div>
                                         <EntityDropdown
                                             value={newScheduleCourse.routeId}
                                             onChange={(e) => setNewScheduleCourse({ ...newScheduleCourse, routeId: e ? e.value : 0 })}

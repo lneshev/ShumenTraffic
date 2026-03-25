@@ -108,7 +108,7 @@ function RoutesPage() {
           <form onSubmit={handleSubmit} className="mb-8 p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="label-standard">
                   Route Name
                 </label>
                 <input
@@ -121,7 +121,7 @@ function RoutesPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="label-standard">
                   Bus Line
                 </label>
                 <EntityDropdown
@@ -144,7 +144,7 @@ function RoutesPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="label-standard">
                   Direction
                 </label>
                 <EnumDropdown

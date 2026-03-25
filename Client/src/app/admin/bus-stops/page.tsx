@@ -215,7 +215,7 @@ function BusStopsPage() {
         {showForm && (
           <form onSubmit={handleSubmit} className="mb-8 p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="label-standard">
                 Stop Name
               </label>
               <input
@@ -228,7 +228,7 @@ function BusStopsPage() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="label-standard">
                 Zone
               </label>
               <EntityDropdown
@@ -252,7 +252,7 @@ function BusStopsPage() {
             </div>
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="label-standard">
                   Latitude
                 </label>
                 <input
@@ -269,7 +269,7 @@ function BusStopsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="label-standard">
                   Longitude
                 </label>
                 <input

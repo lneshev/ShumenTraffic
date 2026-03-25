@@ -60,7 +60,7 @@ export default function SchedulePage({
                 <div className="flex gap-2 mb-8 max-w-xl">
                     {/* Line Selector */}
                     <div className="flex-1">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="label-standard">
                             Bus Line
                         </label>
                         <EntityDropdown
@@ -92,7 +92,7 @@ export default function SchedulePage({
 
                     {/* Date Picker */}
                     <div className="flex-1">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label className="label-standard">
                             Date
                         </label>
                         <DatePicker

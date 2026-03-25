@@ -11,7 +11,7 @@ export default function DirectionSelector({
 }: DirectionSelectorProps) {
   return (
     <div className="w-25">
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+      <label className="label-standard">
         Direction
       </label>
       <div className="flex gap-1 h-10">

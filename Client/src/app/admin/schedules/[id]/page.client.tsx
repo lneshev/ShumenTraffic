@@ -124,7 +124,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                     <form onSubmit={handleSubmit} ref={formRef}>
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label className="label-standard">
                                     Bus Line
                                 </label>
                                 <EntityDropdown
@@ -148,7 +148,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label className="label-standard">
                                     Direction
                                 </label>
                                 <EnumDropdown
@@ -160,7 +160,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label className="label-standard">
                                     Days of Week
                                 </label>
                                 <FlagsEnumMultiselect
@@ -180,7 +180,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label className="label-standard">
                                     Start Date
                                 </label>
                                 <DatePicker
@@ -192,7 +192,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label className="label-standard">
                                     End Date
                                 </label>
                                 <DatePicker
@@ -204,7 +204,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label className="label-standard">
                                     Priority
                                 </label>
                                 <EnumDropdown
@@ -219,7 +219,7 @@ export default function ScheduleDetails({ id }: { id: number }) {
                     </form>
                     <div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="label-standard">
                                 Schedule Courses ({schedule.scheduleCourses.length})
                             </label>
                             <ul>

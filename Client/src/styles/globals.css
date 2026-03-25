@@ -6,7 +6,10 @@
 :root {
   /* Light mode colors */
   --background: #ffffff;
+  --background-secondary: #f5f5f5;
+  --background-light: #d7fad7;
   --foreground: #1f2937;
+  --foreground-light: var(--text-gray-700);
   --primary: #007000;
   --primary-dark: #004d00;
   --primary-light: #008b00;
@@ -15,18 +18,26 @@
   --border: #e5e7eb;
   --border-element: #d1d5dc;
   --text-muted: #6b7280;
+  --selected-background: #007000;
+  --selected-foreground: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+  --color-background-light: var(--background-light);
   --color-foreground: var(--foreground);
+  --color-foreground-light: var(--foreground-light);
   --color-primary: var(--primary);
   --color-primary-dark: var(--primary-dark);
   --color-primary-light: var(--primary-light);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
   --color-border: var(--border);
+  --color-border-element: var(--border-element);
   --color-text-muted: var(--text-muted);
+  --color-selected-background: var(--selected-background);
+  --color-selected-foreground: var(--selected-foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -35,7 +46,10 @@
   :root {
     /* Dark mode colors */
     --background: #0f172a;
+    --background-secondary: #1e293b;
+    --background-light: var(--color-slate-800);
     --foreground: #f1f5f9;
+    --foreground-light: var(--text-gray-300);
     --primary: #007000;
     --primary-dark: #004d00;
     --primary-light: #008b00;
@@ -44,6 +58,8 @@
     --border: #334155;
     --border-element: #45556c;
     --text-muted: #94a3b8;
+    --selected-background: #007000;
+    --selected-foreground: #ffffff;
   }
 }
 

@@ -14,7 +14,7 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const { login } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
@@ -24,21 +24,20 @@ export default function AdminLoginPage() {
       router.push('/admin');
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Login failed');
-    } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 to-blue-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center px-4">
+    <div className="min-h-full bg-linear-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         {/* Logo Section */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-br from-blue-600 to-blue-800 rounded-lg mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-br from-green-600 to-green-800 rounded-lg mb-4">
             <span className="text-white font-bold text-2xl">ST</span>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            ShumenTraffic
+            Shumen Traffic
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
             Admin Portal

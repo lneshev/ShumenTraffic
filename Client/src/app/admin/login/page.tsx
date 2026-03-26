@@ -29,24 +29,24 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-full bg-linear-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center px-4">
+    <div className="min-h-full bg-linear-to-br from-background-secondary to-background-secondary flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         {/* Logo Section */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-br from-green-600 to-green-800 rounded-lg mb-4">
             <span className="text-white font-bold text-2xl">ST</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-foreground">
             Shumen Traffic
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
+          <p className="text-text-muted mt-2">
             Admin Portal
           </p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8 border border-gray-200 dark:border-slate-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+        <div className="bg-background rounded-lg shadow-lg p-8 border border-border">
+          <h2 className="text-2xl font-bold text-foreground mb-6">
             Sign In
           </h2>
 
@@ -71,7 +71,7 @@ export default function AdminLoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter your username"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground placeholder-text-muted"
                 required
                 disabled={isLoading}
               />
@@ -91,7 +91,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground placeholder-text-muted"
                 required
                 disabled={isLoading}
               />
@@ -108,8 +108,8 @@ export default function AdminLoginPage() {
           </form>
 
           {/* Footer */}
-          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700">
-            <p className="text-center text-gray-600 dark:text-gray-400 text-sm">
+          <div className="mt-6 pt-6 border-t border-border">
+            <p className="text-center text-text-muted text-sm">
               Back to{' '}
               <Link
                 href="/"

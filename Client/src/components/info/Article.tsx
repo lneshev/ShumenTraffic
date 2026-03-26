@@ -10,16 +10,16 @@ export default function Article({
     children: React.ReactNode
 }) {
     return (
-        <article className="p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
+        <article className="p-6 bg-background-secondary rounded-lg border border-border">
             <div className="flex justify-between items-start mb-3">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                <h3 className="text-lg font-semibold">
                     {title}
                 </h3>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
+                <span className="text-sm">
                     {DateTime.fromISO(date).toLocaleString(DateTime.DATE_SHORT, { locale: 'bg-BG' })}
                 </span>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p>
                 {children}
             </p>
         </article>

@@ -185,14 +185,14 @@ export default function LinesPage({ searchParams }: { searchParams: Promise<{ [k
   const showNoStops = timetable && timetable.timetableRows.length === 0;
 
   return (
-    <div className="h-full bg-white dark:bg-slate-950 flex flex-col">
+    <div className="h-full bg-background flex flex-col">
       {/* Main Content - Two Column Layout */}
       <section className="flex-1 overflow-y-auto lg:overflow-hidden flex flex-col mx-auto w-full">
         <div className="flex flex-col lg:flex-row lg:flex-1 lg:min-h-0">
           {/* Left Pane - Controls and Stops List */}
-          <div className="w-full lg:w-100 lg:shrink-0 bg-gray-50 dark:bg-slate-900 flex flex-col lg:overflow-hidden border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-slate-700">
+          <div className="w-full lg:w-100 lg:shrink-0 bg-background flex flex-col lg:overflow-hidden border-b lg:border-b-0 lg:border-r border-border">
             {/* Controls */}
-            <div className="p-6 border-b border-gray-200 dark:border-slate-700">
+            <div className="p-6 border-b border-border">
               <div className="flex gap-2">
                 {/* Line Selector */}
                 <div className="flex-1">
@@ -237,19 +237,19 @@ export default function LinesPage({ searchParams }: { searchParams: Promise<{ [k
             <div className="flex-1 overflow-y-auto p-6">
               {showEmptySelection && (
                 <div className="text-center py-12">
-                  <p className="text-gray-600 dark:text-gray-400">Please select a bus line and direction to view the route and schedule.</p>
+                  <p className="text-text-muted">Please select a bus line and direction to view the route and schedule.</p>
                 </div>
               )}
 
               {showNoTimetable && (
                 <div className="text-center py-12">
-                  <p className="text-gray-600 dark:text-gray-400">No timetable found.</p>
+                  <p className="text-text-muted">No timetable found.</p>
                 </div>
               )}
 
               {showNoStops && (
                 <div className="text-center py-12">
-                  <p className="text-gray-600 dark:text-gray-400">No stops found for this route.</p>
+                  <p className="text-text-muted">No stops found for this route.</p>
                 </div>
               )}
 
@@ -267,10 +267,10 @@ export default function LinesPage({ searchParams }: { searchParams: Promise<{ [k
                           busStopId={row.busStop.id}
                         />
                         <div className="flex-1 min-w-0 flex items-center justify-between gap-1">
-                          <p className="text-sm text-gray-900 dark:text-white truncate" title={row.busStop.name || 'Unknown'}>
+                          <p className="text-sm text-foreground truncate" title={row.busStop.name || 'Unknown'}>
                             {row.busStop.name || 'Unknown'}
                           </p>
-                          <p className="text-sm text-gray-900 dark:text-white shrink-0 w-8">
+                          <p className="text-sm text-foreground shrink-0 w-8">
                             {nextDeparture}
                           </p>
                         </div>
@@ -286,7 +286,7 @@ export default function LinesPage({ searchParams }: { searchParams: Promise<{ [k
           </div>
 
           {/* Right Pane - Map */}
-          <div className="w-full h-100 lg:h-auto lg:flex-1 lg:min-h-0 bg-gray-100 dark:bg-slate-800 overflow-hidden">
+          <div className="w-full h-100 lg:h-auto lg:flex-1 lg:min-h-0 bg-background-secondary overflow-hidden">
             <RoutesMap routes={routes} />
           </div>
         </div>

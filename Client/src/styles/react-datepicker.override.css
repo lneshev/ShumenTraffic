@@ -125,8 +125,18 @@
     background-color: var(--selected-background) !important;
 }
 
-.react-datepicker__time-container .react-datepicker__time {
-    background-color: var(--background) !important;
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker__year-text--keyboard-selected .react-datepicker__time-container .react-datepicker__time {
+    background-color: var(--background-light) !important;
+}
+
+.react-datepicker__day--keyboard-selected:not([aria-disabled="true"]):hover,
+.react-datepicker__month-text--keyboard-selected:not([aria-disabled="true"]):hover,
+.react-datepicker__quarter-text--keyboard-selected:not([aria-disabled="true"]):hover,
+.react-datepicker__year-text--keyboard-selected:not([aria-disabled="true"]):hover {
+    color: var(--foreground) !important;
 }
 
 .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item:hover {

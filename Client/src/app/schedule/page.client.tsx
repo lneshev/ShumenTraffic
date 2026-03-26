@@ -54,7 +54,7 @@ export default function SchedulePage({
     }, [fetchTimetable]);
 
     return (
-        <div className="h-full bg-white dark:bg-slate-950 flex flex-col">
+        <div className="h-full bg-background flex flex-col">
             <div className="w-full p-6">
                 {/* Controls */}
                 <div className="flex gap-2 mb-8 max-w-xl">
@@ -107,28 +107,28 @@ export default function SchedulePage({
                 {/* Schedule Table */}
                 {!selectedLineId || !selectedDirection || !selectedDate ?
                     <div className="text-center py-12">
-                        <p className="text-gray-600 dark:text-gray-400">Please select a bus line, direction and date to view the timetable.</p>
+                        <p className="text-text-muted">Please select a bus line, direction and date to view the timetable.</p>
                     </div>
                     :
                     !timetable && (
                         <div className="text-center py-12">
-                            <p className="text-gray-600 dark:text-gray-400">No timetable found.</p>
+                            <p className="text-text-muted">No timetable found.</p>
                         </div>
                     )}
 
                 {timetable && (
-                    <div className={`bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-auto`}>
+                    <div className={`bg-background-secondary rounded-lg border border-border overflow-auto`}>
                         <table className="w-full text-sm border-spacing-0">
                             <thead>
-                                <tr className="bg-gray-100 dark:bg-slate-800">
-                                    <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white border-r border-b border-gray-200 sticky left-0 bg-gray-100 dark:bg-slate-800 z-10">
+                                <tr className="bg-background-secondary">
+                                    <th className="text-left py-3 px-4 font-semibold text-foreground border-r border-b border-border sticky left-0 bg-background-secondary z-10">
                                         Bus Stop
                                     </th>
                                     {timetable?.schedule.scheduleCourses.map(course => (
                                         <th
                                             key={course.id}
-                                            className={`text-center py-3 px-2 font-semibold text-gray-900 dark:text-white border-r border-b last:border-r-0 border-gray-200 whitespace-nowrap transition-colors ${highlightedCourse === course.id
-                                                ? 'bg-blue-50 dark:bg-blue-900/20'
+                                            className={`text-center py-3 px-2 font-semibold text-foreground border-r border-b last:border-r-0 border-border whitespace-nowrap transition-colors ${highlightedCourse === course.id
+                                                ? 'bg-background-light'
                                                 : ''
                                                 }`}
                                         >
@@ -140,7 +140,7 @@ export default function SchedulePage({
                             <tbody>
                                 {timetable?.timetableRows.length === 0 ? (
                                     <tr>
-                                        <td colSpan={timetable.schedule.scheduleCourses.length + 1} className="py-8 px-4 text-center text-gray-600 dark:text-gray-400">
+                                        <td colSpan={timetable.schedule.scheduleCourses.length + 1} className="py-8 px-4 text-center text-text-muted">
                                             No stops found for this route.
                                         </td>
                                     </tr>
@@ -148,16 +148,16 @@ export default function SchedulePage({
                                     timetable?.timetableRows.map((rs, idx) => (
                                         <tr
                                             key={rs.busStop.id}
-                                            className={`border-b last:border-b-0 border-gray-200 dark:border-slate-700 transition-colors ${highlightedStop === rs.busStop.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
+                                            className={`border-b last:border-b-0 border-border transition-colors ${highlightedStop === rs.busStop.id ? 'bg-background-light' : ''}`}
                                         >
                                             <td
-                                                className={`py-3 px-4 font-medium text-gray-900 dark:text-white border-r border-gray-200 dark:border-slate-700 sticky left-0 z-10 transition-colors ${highlightedStop === rs.busStop.id
-                                                    ? 'bg-blue-50 dark:bg-blue-900/20'
-                                                    : 'bg-gray-50 dark:bg-slate-900'
+                                                className={`py-3 px-4 font-medium text-foreground border-r border-border sticky left-0 z-10 transition-colors ${highlightedStop === rs.busStop.id
+                                                    ? 'bg-background-light'
+                                                    : 'bg-background-secondary'
                                                     }`}
                                             >
                                                 <div className="flex items-center gap-2">
-                                                    <span className="shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                                                    <span className="shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">
                                                         {idx + 1}
                                                     </span>
                                                     <span className="truncate">{rs.busStop.name || 'Unknown'}</span>
@@ -166,8 +166,8 @@ export default function SchedulePage({
                                             {timetable.schedule.scheduleCourses.map(course => (
                                                 <td
                                                     key={`${rs.busStop.id}-${course.id}`}
-                                                    className={`text-center py-3 px-2 text-gray-900 dark:text-white border-r last:border-r-0 border-gray-200 transition-colors cursor-pointer ${highlightedCourse === course.id
-                                                        ? 'bg-blue-50 dark:bg-blue-900/20'
+                                                    className={`text-center py-3 px-2 text-foreground border-r last:border-r-0 border-border transition-colors cursor-pointer ${highlightedCourse === course.id
+                                                        ? 'bg-background-light'
                                                         : ''
                                                         }`}
                                                     onClick={() => { setHighlightedStop(rs.busStop.id); setHighlightedCourse(course.id); }}

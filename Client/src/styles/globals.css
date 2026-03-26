@@ -7,7 +7,7 @@
   /* Light mode colors */
   --background: #ffffff;
   --background-secondary: #f5f5f5;
-  --background-light: #d7fad7;
+  --background-light: #e3fce3;
   --foreground: #1f2937;
   --foreground-light: var(--text-gray-700);
   --primary: #007000;
@@ -47,7 +47,7 @@
     /* Dark mode colors */
     --background: #0f172a;
     --background-secondary: #1e293b;
-    --background-light: var(--color-slate-800);
+    --background-light: #1f3f1f;
     --foreground: #f1f5f9;
     --foreground-light: var(--text-gray-300);
     --primary: #007000;

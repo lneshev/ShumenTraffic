@@ -15,20 +15,20 @@ const news = [
 
 export default function InfoPage() {
   return (
-    <div className="bg-white dark:bg-slate-950">
+    <div className="bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        <h1 className="text-4xl font-bold text-foreground mb-4">
           Information
         </h1>
 
         {/* Latest News */}
         <section className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-2xl font-bold text-foreground mb-6">
             Latest News
           </h2>
           <div className="space-y-6">
-            {true ? (
-              <article className="p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
+            {false ? (
+              <article className="p-6 bg-background-secondary rounded-lg border border-border">
                 No news
               </article>
             ) : (
@@ -43,7 +43,7 @@ export default function InfoPage() {
 
         {/* General Information for buses in Shumen */}
         <section className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-2xl font-bold text-foreground mb-6">
             General Information for buses in Shumen
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -72,12 +72,12 @@ export default function InfoPage() {
 
         {/* About Shumen Traffic */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-2xl font-bold text-foreground mb-6">
             About Shumen Traffic
           </h2>
-          <div className="p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
+          <div className="p-6 bg-background-secondary rounded-lg border border-border">
             {true ? (
-              <p className="text-gray-600 dark:text-gray-400">
+              <p>
                 Shumen Traffic is a website for tracking city buses in the city of Shumen, and more precisely their schedules, routes and stops.
                 <br />
                 <br />
@@ -87,7 +87,7 @@ export default function InfoPage() {
                 The data is collected from official sources, media and volunteers. It is updated frequently, but there is no guarantee of its accuracy. The website is not responsible for any troubles that may occur due to inaccurate or outdated data.
               </p>
             ) : (
-              <p className="text-gray-600 dark:text-gray-400">
+              <p>
                 Shumen Traffic е уебсайт за проследяване на градските автобуси в град Шумен и по-точно техните разписания, маршрути и спирки.
                 <br />
                 Уебсайтът е създаден и поддържан доброволно в полза на жителите и гостите на град Шумен. Не е финансиран по никакъв начин от официалните институции и органи!

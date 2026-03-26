@@ -169,6 +169,6 @@ export default function EntityDropdown<TId extends Id>({
 
 export const EntityDropdownLoader = () => {
     return (
-        <div className="react-select-dropdown animate-pulse h-10 w-full bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700"></div>
+        <div className="react-select-dropdown animate-pulse h-10 w-full bg-background rounded-lg border border-border"></div>
     );
 };

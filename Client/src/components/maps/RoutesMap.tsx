@@ -65,11 +65,11 @@ function RoutesMap({
                                 >
                                     <Tooltip offset={[10, 0]} opacity={1} direction={'right'}>{busStop.name}</Tooltip>
                                     <Popup>
-                                        <div className="font-semibold text-gray-900">
+                                        <div className="font-semibold text-foreground">
                                             {busStop.name}<br />
                                             {busStop.zoneName}
                                         </div>
-                                        <p className="text-gray-600 text-xs">
+                                        <p className="text-text-muted text-xs">
                                             {busStop.location.latitude}, {busStop.location.longitude}
                                         </p>
                                     </Popup>

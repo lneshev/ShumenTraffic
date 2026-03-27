@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/context/AuthContext';
 import { ApiError } from '@/types/common/ApiError';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -33,10 +34,10 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md">
         {/* Logo Section */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-br from-green-600 to-green-800 rounded-lg mb-4">
-            <span className="text-white font-bold text-2xl">ST</span>
+          <div className="inline-flex items-center justify-center mb-4">
+            <Image src="/logo.svg" alt="Shumen Traffic" width={64} height={64} />
           </div>
-          <h1 className="text-3xl font-bold text-foreground">
+          <h1 className="text-3xl font-bold text-primary font-noName37-regular">
             Shumen Traffic
           </h1>
           <p className="text-text-muted mt-2">
@@ -46,7 +47,7 @@ export default function AdminLoginPage() {
 
         {/* Login Form */}
         <div className="bg-background rounded-lg shadow-lg p-8 border border-border">
-          <h2 className="text-2xl font-bold text-foreground mb-6">
+          <h2 className="text-2xl font-bold text-foreground mb-6 text-center">
             Sign In
           </h2>
 
@@ -113,7 +114,7 @@ export default function AdminLoginPage() {
               Back to{' '}
               <Link
                 href="/"
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                className="text-primary"
               >
                 Home
               </Link>

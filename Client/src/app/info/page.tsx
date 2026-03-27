@@ -27,7 +27,7 @@ export default function InfoPage() {
             Latest News
           </h2>
           <div className="space-y-6">
-            {false ? (
+            {true ? (
               <article className="p-6 bg-background-secondary rounded-lg border border-border">
                 No news
               </article>

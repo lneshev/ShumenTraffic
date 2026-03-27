@@ -117,17 +117,17 @@ export default function SchedulePage({
                     )}
 
                 {timetable && (
-                    <div className={`bg-background-secondary rounded-lg border border-border overflow-auto`}>
+                    <div className={`bg-gray-50 dark:bg-slate-900 rounded-lg border border-border overflow-auto`}>
                         <table className="w-full text-sm border-spacing-0">
                             <thead>
                                 <tr className="bg-background-secondary">
-                                    <th className="text-left py-3 px-4 font-semibold text-foreground border-r border-b border-border sticky left-0 bg-background-secondary z-10">
+                                    <th className="text-left py-3 px-4 font-semibold text-foreground border-r border-b border-border sticky left-0 z-10">
                                         Bus Stop
                                     </th>
                                     {timetable?.schedule.scheduleCourses.map(course => (
                                         <th
                                             key={course.id}
-                                            className={`text-center py-3 px-2 font-semibold text-foreground border-r border-b last:border-r-0 border-border whitespace-nowrap transition-colors ${highlightedCourse === course.id
+                                            className={`text-center py-3 px-2 font-semibold text-foreground border-r border-b last:border-r-0 border-border whitespace-nowrap ${highlightedCourse === course.id
                                                 ? 'bg-background-light'
                                                 : ''
                                                 }`}
@@ -148,10 +148,10 @@ export default function SchedulePage({
                                     timetable?.timetableRows.map((rs, idx) => (
                                         <tr
                                             key={rs.busStop.id}
-                                            className={`border-b last:border-b-0 border-border transition-colors ${highlightedStop === rs.busStop.id ? 'bg-background-light' : ''}`}
+                                            className={`border-b last:border-b-0 border-border ${highlightedStop === rs.busStop.id ? 'bg-background-light' : ''}`}
                                         >
                                             <td
-                                                className={`py-3 px-4 font-medium text-foreground border-r border-border sticky left-0 z-10 transition-colors ${highlightedStop === rs.busStop.id
+                                                className={`py-3 px-4 font-medium text-foreground border-r border-border sticky left-0 z-10 ${highlightedStop === rs.busStop.id
                                                     ? 'bg-background-light'
                                                     : 'bg-background-secondary'
                                                     }`}
@@ -166,7 +166,7 @@ export default function SchedulePage({
                                             {timetable.schedule.scheduleCourses.map(course => (
                                                 <td
                                                     key={`${rs.busStop.id}-${course.id}`}
-                                                    className={`text-center py-3 px-2 text-foreground border-r last:border-r-0 border-border transition-colors cursor-pointer ${highlightedCourse === course.id
+                                                    className={`text-center py-3 px-2 text-foreground border-r last:border-r-0 border-border cursor-pointer ${highlightedCourse === course.id
                                                         ? 'bg-background-light'
                                                         : ''
                                                         }`}

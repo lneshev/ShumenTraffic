@@ -26,7 +26,7 @@ export default function Header() {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">ST</span>
             </div>
-            <span className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+            <span className="text-xl font-bold group-hover:text-primary">
               Shumen Traffic
             </span>
           </Link>
@@ -37,7 +37,7 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-foreground hover:text-primary font-medium transition-colors"
+                className="hover:text-primary"
               >
                 {item.label}
               </Link>
@@ -48,7 +48,7 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-4">
             <Link
               href="/admin"
-              className="px-4 py-2 text-foreground hover:text-primary font-medium transition-colors"
+              className="px-4 py-2 hover:text-primary"
             >
               Admin
             </Link>

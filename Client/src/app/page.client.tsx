@@ -141,7 +141,7 @@ export default function HomePage() {
                     {company.busLines.length > 0 ? company.busLines.map((line, index) => (
                       <span key={line.id}>
                         {index > 0 && ', '}
-                        <Link href={`/lines?lineNumber=${line.lineNumber}`} className='hover:underline'>
+                        <Link href={`/lines?lineNumber=${line.lineNumber}`} className="hover:text-primary">
                           {line.lineNumber}
                         </Link>
                       </span>
@@ -161,7 +161,7 @@ export default function HomePage() {
                     {zone.busLines.length > 0 ? zone.busLines.map((line, index) => (
                       <span key={line.id}>
                         {index > 0 && ', '}
-                        <Link href={`/lines?lineNumber=${line.lineNumber}`} className="hover:underline">
+                        <Link href={`/lines?lineNumber=${line.lineNumber}`} className="hover:text-primary">
                           {line.lineNumber}
                         </Link>
                       </span>

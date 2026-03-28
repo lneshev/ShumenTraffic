@@ -2,7 +2,6 @@
 
 import { useAuth } from '@/context/AuthContext';
 import { ApiError } from '@/types/common/ApiError';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -35,7 +34,7 @@ export default function AdminLoginPage() {
         {/* Logo Section */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center mb-4">
-            <Image src="/logo.svg" alt="Shumen Traffic" width={64} height={64} />
+            <img src="/logo.svg" alt="Shumen Traffic" width={64} height={64} />
           </div>
           <h1 className="text-3xl font-bold text-primary font-noName37-regular">
             Shumen Traffic

@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -24,7 +23,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 hover:scale-105 transition-all duration-200 ease-in-out">
-            <Image src="/logo.svg" alt="Shumen Traffic" width={32} height={32} />
+            <img src="/logo.svg" alt="Shumen Traffic" width={32} height={32} />
             <span className="text-2xl font-bold text-primary font-noName37-regular">
               Shumen Traffic
             </span>

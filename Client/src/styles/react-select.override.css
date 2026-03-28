@@ -1,6 +1,9 @@
 /* Increase z-index for react-select dropdowns, because of leaflet's map */
 .react-select-dropdown__menu {
     z-index: 1001 !important;
+    background-color: var(--background) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.1) !important;
 }
 
 .react-select-dropdown__control {
@@ -32,11 +35,6 @@
 
 .react-select-dropdown__indicator-separator {
     background-color: var(--border) !important;
-}
-
-.react-select-dropdown__menu {
-    background-color: var(--background) !important;
-    border-color: var(--border) !important;
 }
 
 .react-select-dropdown__option--is-focused {

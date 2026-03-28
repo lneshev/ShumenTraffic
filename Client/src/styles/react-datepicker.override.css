@@ -1,6 +1,8 @@
 /* Increase z-index for react-datepicker, because of table's overflow */
 .react-datepicker-popper {
     z-index: 11 !important;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.1) !important;
+    border-radius: var(--radius-lg);
 }
 
 .react-datepicker-wrapper {

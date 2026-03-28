@@ -10,21 +10,21 @@ export default function DirectionSelector({
   directions = [1, 2]
 }: DirectionSelectorProps) {
   return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+    <div className="w-25">
+      <label className="label-standard">
         Direction
       </label>
-      <div className="flex gap-2">
+      <div className="flex gap-1 h-10">
         {directions.map(dir => (
           <button
             key={dir}
             onClick={() => onDirectionChange(dir)}
-            className={`flex-1 px-3 py-2 rounded-lg font-semibold transition-colors text-sm ${selectedDirection === dir
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 dark:bg-slate-800 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-slate-700'
+            className={`border flex-1 px-3 rounded-lg font-semibold text-sm ${selectedDirection === dir
+              ? 'bg-selected-background text-selected-foreground font-bold border-selected-background'
+              : 'bg-background-secondary hover:bg-background-light border-border'
               }`}
           >
-            Dir {dir}
+            {dir}
           </button>
         ))}
       </div>

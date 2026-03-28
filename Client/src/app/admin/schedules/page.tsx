@@ -14,6 +14,7 @@ import ScheduleOverviewModel from '@/types/ScheduleOverviewModel';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
 
 function SchedulesPage() {
   const initialFormData: ScheduleOverviewModel = {
@@ -122,7 +123,7 @@ function SchedulesPage() {
           <form onSubmit={handleSubmit} className="mb-8 p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="label-standard">
                   Bus Line
                 </label>
                 <EntityDropdown
@@ -145,7 +146,7 @@ function SchedulesPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="label-standard">
                   Direction
                 </label>
                 <EnumDropdown
@@ -156,7 +157,7 @@ function SchedulesPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="label-standard">
                   Days of Week
                 </label>
                 <FlagsEnumMultiselect
@@ -176,30 +177,31 @@ function SchedulesPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="label-standard">
                   Start Date
                 </label>
-                <input
-                  type="date"
-                  value={formData.startDate}
-                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                <DatePicker
+                  selected={formData.startDate ? DateTime.fromISO(formData.startDate).toJSDate() : null}
+                  onChange={(e: Date | null) => setFormData({ ...formData, startDate: DateTime.fromJSDate(e!).toISODate()! })}
+                  dateFormat={"dd/MM/yyyy"}
+                  placeholderText="Select..."
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="label-standard">
                   End Date
                 </label>
-                <input
-                  type="date"
-                  value={formData.endDate}
-                  onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                <DatePicker
+                  selected={formData.endDate ? DateTime.fromISO(formData.endDate).toJSDate() : null}
+                  onChange={(e: Date | null) => setFormData({ ...formData, endDate: e ? DateTime.fromJSDate(e).toISODate()! : undefined })}
+                  dateFormat={"dd/MM/yyyy"}
+                  placeholderText="Select..."
+                  isClearable
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="label-standard">
                   Priority
                 </label>
                 <EnumDropdown

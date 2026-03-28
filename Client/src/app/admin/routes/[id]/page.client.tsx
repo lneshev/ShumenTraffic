@@ -250,7 +250,7 @@ export default function RouteDetails({ id }: { id: number }) {
                 <form onSubmit={handleSubmit} ref={formRef} className="mb-8 p-6 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="label-standard">
                                 Route Name
                             </label>
                             <input
@@ -263,7 +263,7 @@ export default function RouteDetails({ id }: { id: number }) {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="label-standard">
                                 Bus Line
                             </label>
                             <EntityDropdown
@@ -286,7 +286,7 @@ export default function RouteDetails({ id }: { id: number }) {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="label-standard">
                                 Direction
                             </label>
                             <EnumDropdown
@@ -299,13 +299,13 @@ export default function RouteDetails({ id }: { id: number }) {
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-10 gap-4">
                         <div className="lg:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="label-standard">
                                 Route Stops
                             </label>
                             {route.stops.length === 0 && (
                                 <p className="text-gray-600 dark:text-gray-400">None</p>
                             )}
-                            <ul className="h-[600px] overflow-auto">
+                            <ul className="h-150 overflow-auto">
                                 {route.stops.sort((a, b) => a.stopOrder - b.stopOrder).map((routeStop, i) => {
                                     previousRouteStopEstMins = Math.max(previousRouteStopEstMins, route.stops[i - 1]?.estimatedMinutesFromStart || -1);
                                     const rsEstMins = routeStop.estimatedMinutesFromStart;
@@ -328,7 +328,7 @@ export default function RouteDetails({ id }: { id: number }) {
                                                 </p>
                                                 {routeStop.busStopId && (
                                                     <p className="mt-auto">
-                                                        <label className="block text-xs text-gray-400 dark:text-gray-300">
+                                                        <label className="text-xs text-text-muted">
                                                             Est. minutes from start
                                                         </label>
                                                         <input
@@ -381,10 +381,10 @@ export default function RouteDetails({ id }: { id: number }) {
                             </ul>
                         </div>
                         <div className="lg:col-span-8">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="label-standard">
                                 Map
                             </label>
-                            <div className="h-[600px] bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+                            <div className="h-150 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
                                 <RouteMap
                                     busStops={busStops}
                                     routeStops={route.stops}

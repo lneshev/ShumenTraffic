@@ -50,7 +50,7 @@ export function BusStopMarker({
             {tooltip}
             <Popup>
                 <form onSubmit={(e) => { e.preventDefault(); onButtonSaveClick?.(busStop); }} className="text-sm">
-                    <div className="font-semibold text-gray-900">
+                    <div className="font-semibold text-foreground">
                         {mode === BusStopMapMode.View && (
                             <>
                                 {busStop.name}<br />
@@ -64,7 +64,7 @@ export function BusStopMarker({
                                     name="busStopName"
                                     value={busStop.name}
                                     onChange={(e) => onBusStopNameChange?.(busStop, e.target.value)}
-                                    className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+                                    className="px-4 py-2 border border-border rounded-lg bg-background text-foreground"
                                     required
                                     maxLength={255}
                                     autoFocus
@@ -90,7 +90,7 @@ export function BusStopMarker({
                             </>
                         )}
                     </div>
-                    <p className="text-gray-600 text-xs">
+                    <p className="text-text-muted text-xs">
                         {busStop.location.latitude}, {busStop.location.longitude}
                     </p>
                     {mode == BusStopMapMode.Edit && (

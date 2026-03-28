@@ -1,5 +1,6 @@
 'use client';
 
+import { EntityDropdownLoader } from '@/components/EntityDropdown';
 import MapLoader from '@/components/maps/MapLoader';
 import BusLinesService from '@/services/BusLinesService';
 import BusStopService from "@/services/BusStopService";
@@ -13,14 +14,17 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
+// Dynamically import EntityDropdown to avoid SSR issues
+const EntityDropdown = dynamic(() => import("@/components/EntityDropdown"), {
+  ssr: false,
+  loading: () => <EntityDropdownLoader />
+});
+
 // Dynamically import Map to avoid SSR issues
 const BusStopMap = dynamic(() => import('@/components/maps/BusStopMap').then(mod => ({ default: mod.default })), {
   ssr: false,
   loading: () => <MapLoader />
 });
-
-// Dynamically import EntityDropdown to avoid SSR issues
-const EntityDropdown = dynamic(() => import("@/components/EntityDropdown"), { ssr: false });
 
 export default function HomePage() {
   const [selectedStop, setSelectedStop] = useState<BusStopModel | null>(null);
@@ -96,13 +100,13 @@ export default function HomePage() {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-950 min-h-screen flex flex-col">
+    <div className="h-full bg-background flex flex-col">
       {/* Main Content - Two Column Layout */}
-      <section className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[800px]">
+      <section className="flex-1 overflow-y-auto lg:overflow-hidden flex flex-col mx-auto w-full">
+        <div className="flex flex-col lg:flex-row lg:flex-1 lg:min-h-0">
           {/* Left Pane - Search and Info */}
-          <div className="lg:col-span-1 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-6 overflow-y-auto">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+          <div className="w-full lg:w-100 lg:shrink-0 bg-background p-6 lg:overflow-y-auto border-b lg:border-b-0 lg:border-r border-border">
+            <h2 className="text-xl font-bold text-foreground mb-2">
               Find a Bus Stop
             </h2>
             {/* Search Box */}
@@ -126,7 +130,7 @@ export default function HomePage() {
                 }
               />
             </div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-xl font-bold text-foreground mb-2">
               Transportation Companies
             </h2>
             <ul className="mb-6">
@@ -137,7 +141,7 @@ export default function HomePage() {
                     {company.busLines.length > 0 ? company.busLines.map((line, index) => (
                       <span key={line.id}>
                         {index > 0 && ', '}
-                        <Link href={`/lines?lineNumber=${line.lineNumber}`} className='hover:underline'>
+                        <Link href={`/lines?lineNumber=${line.lineNumber}`} className="hover:text-primary">
                           {line.lineNumber}
                         </Link>
                       </span>
@@ -146,7 +150,7 @@ export default function HomePage() {
                 </li>
               ))}
             </ul>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-xl font-bold text-foreground mb-2">
               Zones
             </h2>
             <ul>
@@ -157,7 +161,7 @@ export default function HomePage() {
                     {zone.busLines.length > 0 ? zone.busLines.map((line, index) => (
                       <span key={line.id}>
                         {index > 0 && ', '}
-                        <Link href={`/lines?lineNumber=${line.lineNumber}`} className="hover:underline">
+                        <Link href={`/lines?lineNumber=${line.lineNumber}`} className="hover:text-primary">
                           {line.lineNumber}
                         </Link>
                       </span>
@@ -169,7 +173,7 @@ export default function HomePage() {
           </div>
 
           {/* Right Pane - Map */}
-          <div className="lg:col-span-2 bg-gray-100 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div className="w-full h-100 lg:h-auto lg:flex-1 lg:min-h-0 bg-background-secondary overflow-hidden">
             <BusStopMap
               busStops={busStops}
               selectedStopId={selectedStop?.id}

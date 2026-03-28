@@ -181,7 +181,6 @@ function BusStopMap({
             zoom={defaultZoom}
             maxZoom={maxZoom}
             style={{ width: '100%', height: '100%' }}
-            className="rounded-lg"
           >
             <BusStopMapInstanceProvider
               onMapReady={(map) => { mapRef.current = map; }}

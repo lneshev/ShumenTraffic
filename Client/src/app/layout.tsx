@@ -2,18 +2,13 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { METADATA } from "@/constants/Metadata";
 import { AuthProvider } from "@/context/AuthContext";
+import "@/styles/globals.css";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import localFont from 'next/font/local';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const noName37Regular = localFont({
+  src: "../fonts/no_name_37_Regular.otf",
+  variable: "--font-noName37-regular"
 });
 
 export const metadata: Metadata = {
@@ -24,12 +19,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-white dark:bg-slate-950`}
-      >
+      <body className={`${noName37Regular.variable} antialiased flex flex-col h-screen overflow-hidden bg-background`}>
         <AuthProvider>
           <Header />
-          <main className="flex-1">
+          <main className="flex-1 overflow-y-auto">
             {children}
           </main>
           <Footer />

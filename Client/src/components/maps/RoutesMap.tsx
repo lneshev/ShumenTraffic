@@ -49,7 +49,6 @@ function RoutesMap({
                         center={defaultCenter}
                         zoom={14}
                         style={{ width: '100%', height: '100%' }}
-                        className="rounded-lg"
                     >
                         <TileLayer
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -66,11 +65,11 @@ function RoutesMap({
                                 >
                                     <Tooltip offset={[10, 0]} opacity={1} direction={'right'}>{busStop.name}</Tooltip>
                                     <Popup>
-                                        <div className="font-semibold text-gray-900">
+                                        <div className="font-semibold text-foreground">
                                             {busStop.name}<br />
                                             {busStop.zoneName}
                                         </div>
-                                        <p className="text-gray-600 text-xs">
+                                        <p className="text-text-muted text-xs">
                                             {busStop.location.latitude}, {busStop.location.longitude}
                                         </p>
                                     </Popup>

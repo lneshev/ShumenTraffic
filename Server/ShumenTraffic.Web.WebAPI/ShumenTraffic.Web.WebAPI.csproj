@@ -15,7 +15,7 @@
     </PackageReference>
     <PackageReference Include="MoravianStar.WebAPI" Version="1.54.0" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="4.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="10.1.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="10.1.7" />
   </ItemGroup>
 
   <ItemGroup>

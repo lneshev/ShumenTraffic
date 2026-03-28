@@ -1,0 +1,93 @@
+@import "tailwindcss";
+@import "../styles/react-select.override.css";
+@import "react-datepicker/dist/react-datepicker.css";
+@import "../styles/react-datepicker.override.css";
+
+:root {
+  /* Light mode colors */
+  --background: #ffffff;
+  --background-secondary: #f5f5f5;
+  --background-light: #e3fce3;
+  --foreground: #1f2937;
+  --foreground-light: var(--text-gray-700);
+  --primary: #007000;
+  --primary-dark: #004d00;
+  --primary-light: #008b00;
+  --secondary: #00b400;
+  --accent: #f59e0b;
+  --border: #e5e7eb;
+  --border-element: #d1d5dc;
+  --text-muted: #6b7280;
+  --selected-background: #007000;
+  --selected-foreground: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+  --color-background-light: var(--background-light);
+  --color-foreground: var(--foreground);
+  --color-foreground-light: var(--foreground-light);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-light);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-border-element: var(--border-element);
+  --color-text-muted: var(--text-muted);
+  --color-selected-background: var(--selected-background);
+  --color-selected-foreground: var(--selected-foreground);
+  --font-noName37-regular: var(--font-noName37-regular);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark mode colors */
+    --background: #0f172a;
+    --background-secondary: #1e293b;
+    --background-light: #1f3f1f;
+    --foreground: #f1f5f9;
+    --foreground-light: var(--text-gray-300);
+    --primary: #007000;
+    --primary-dark: #004d00;
+    --primary-light: #008b00;
+    --secondary: #00b400;
+    --accent: #fbbf24;
+    --border: #334155;
+    --border-element: #45556c;
+    --text-muted: #94a3b8;
+    --selected-background: #007000;
+    --selected-foreground: #ffffff;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Reset focus styles */
+button:focus,
+a:focus,
+input:focus {
+  outline: none;
+}
+
+/* Pointer cursor for clickable elements */
+button:hover,
+a:hover,
+select {
+  cursor: pointer;
+}
+
+.label-standard {
+  @apply text-sm font-medium text-gray-700 dark:text-gray-300 mb-2;
+}

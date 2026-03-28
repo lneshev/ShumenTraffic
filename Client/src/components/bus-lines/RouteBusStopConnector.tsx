@@ -8,7 +8,7 @@ interface RouteBusStopConnectorProps {
 // Component for the connecting line between stops
 export default function RouteBusStopConnector({ routes }: RouteBusStopConnectorProps) {
     return (
-        <div className="flex items-start gap-2 h-6">
+        <div className="flex items-start gap-1 h-5">
             {routes.map((route, index) => {
                 const routeColor = ROUTE_COLORS[index % ROUTE_COLORS.length];
                 return (

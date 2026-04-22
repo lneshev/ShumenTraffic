@@ -27,6 +27,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
+        
+      - name: Debug repo structure
+        run: |
+          pwd
+          ls -la
 
       - name: Create Docker metadata
         id: meta

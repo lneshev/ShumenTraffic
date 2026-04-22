@@ -19,9 +19,11 @@ jobs:
       fail-fast: true # Stops the other if one fails
       matrix:
         include:
-          - dockerfile_directory: ./Server/ShumenTraffic.Web.WebAPI
+          - context: ./Server
+            dockerfile_path: ./Server/ShumenTraffic.Web.WebAPI/Dockerfile
             image_suffix: webapi
-          - dockerfile_directory: ./Client
+          - context: ./Client
+            dockerfile_path: ./Client/Dockerfile
             image_suffix: webapp
 
     steps:
@@ -50,8 +52,8 @@ jobs:
       - name: Build & Push Image
         uses: docker/build-push-action@v7
         with:
-          context: ${{ matrix.dockerfile_directory }}
-          file: ${{ matrix.dockerfile_directory }}/Dockerfile
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile_path }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

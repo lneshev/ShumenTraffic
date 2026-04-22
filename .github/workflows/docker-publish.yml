@@ -28,12 +28,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
 
-      - name: Debug repo structure
-        run: |
-          pwd
-          ls -la
-          ls -la ${{ matrix.dockerfile_directory }}
-
       - name: Create Docker metadata
         id: meta
         uses: docker/metadata-action@v6
@@ -57,7 +51,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: ${{ matrix.dockerfile_directory }}
-          file: Dockerfile
+          file: ${{ matrix.dockerfile_directory }}/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

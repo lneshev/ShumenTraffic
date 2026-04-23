@@ -1,5 +1,6 @@
 'use client';
 
+import env from "@/services/EnvService";
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface User {
@@ -44,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (username: string, password: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_WEB_API_BASE_URL}/api/auth/login`, {
+      const response = await fetch(`${env.getPublicWebApiBaseUrl()}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     setIsLoading(true);
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_WEB_API_BASE_URL}/api/auth/logout`, {
+      await fetch(`${env.getPublicWebApiBaseUrl()}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include'
       });

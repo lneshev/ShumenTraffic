@@ -1,5 +1,6 @@
 import { authorisedGetRequest, getQueryString, getRequest } from "@/helpers/Request";
 import string from "@/helpers/StringUtility";
+import env from "@/services/EnvService";
 import Id from "@/types/common/Id";
 import Sort from "@/types/common/Sort";
 import React, { useEffect, useRef, useState } from "react";
@@ -76,7 +77,7 @@ export default function EntityDropdown<TId extends Id>({
             onRequestStart?.();
 
             const queryString = getQueryString(filter, sorts);
-            const fullUrl = `${process.env.NEXT_PUBLIC_WEB_API_BASE_URL}${url}${queryString}`;
+            const fullUrl = `${env.getPublicWebApiBaseUrl()}${url}${queryString}`;
 
             let data;
             if (isAuthorizedRequest) {

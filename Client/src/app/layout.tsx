@@ -5,6 +5,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from 'next/font/local';
+import { PublicEnvScript } from 'next-runtime-env';
 
 const noName37Regular = localFont({
   src: "../fonts/no_name_37_Regular.otf",
@@ -19,6 +20,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
+      <head>
+        <PublicEnvScript />
+      </head>
       <body className={`${noName37Regular.variable} antialiased flex flex-col h-screen overflow-hidden bg-background`}>
         <AuthProvider>
           <Header />

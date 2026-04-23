@@ -1,6 +1,7 @@
 import EnumUtility from "@/helpers/EnumUtility";
 import { getEnumsQueryString, getRequest } from "@/helpers/Request";
 import string from "@/helpers/StringUtility";
+import env from "@/services/EnvService";
 import EnumModel from "@/types/common/EnumModel";
 import { useEffect, useRef, useState } from "react";
 import Select, { FilterOptionOption, MultiValue } from "react-select";
@@ -54,7 +55,7 @@ export default function FlagsEnumMultiselect({
             setError(null);
             hasFetchedRef.current = true;
 
-            const fullUrl = `${process.env.NEXT_PUBLIC_WEB_API_BASE_URL}/api/enums/${enumName}${getEnumsQueryString(exactEnumValues, sortByText)}`;
+            const fullUrl = `${env.getPublicWebApiBaseUrl()}/api/enums/${enumName}${getEnumsQueryString(exactEnumValues, sortByText)}`;
 
             const data = await getRequest(fullUrl, (result) => result) as EnumModel[];
 

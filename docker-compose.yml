@@ -11,7 +11,7 @@ services:
     networks:
       - shumen_traffic_network
     volumes:
-      - mssql-data:/var/opt/mssql
+      - mssql_data:/var/opt/mssql
 
   webapi:
     image: ghcr.io/lneshev/shumen-traffic-webapi:latest
@@ -23,9 +23,9 @@ services:
       - ConnectionStrings__Log=${WebApi__ConnectionStrings__Log}
       - ConsumersConfiguration__WebApp__ApplicationUrl=${WebApi__ConsumersConfiguration__WebApp__ApplicationUrl}
       - UsersConfiguration__SuperAdmin__Email=${WebApi__UsersConfiguration__SuperAdmin__Email}
-      - UsersConfiguration__SuperAdmin__Password=${WebApi_UsersConfiguration__SuperAdmin__Password}
+      - UsersConfiguration__SuperAdmin__Password=${WebApi__UsersConfiguration__SuperAdmin__Password}
     ports:
-      - "5000:80"
+      - "5000:8080"
       - "5001:8081"
     networks:
       - shumen_traffic_network
@@ -50,4 +50,4 @@ networks:
     driver: bridge
 
 volumes:
-  mssql-data:
+  mssql_data:

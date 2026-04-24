@@ -3,19 +3,17 @@ import { NextRequest, NextResponse } from 'next/server';
 
 async function isAuthenticated(request: NextRequest): Promise<boolean> {
   try {
-    const response = await fetch(`${env.getPublicWebApiBaseUrl()}/api/auth/me`, {
+    const response = await fetch(`${env.getInternalWebApiBaseUrl()}/api/auth/me`, {
       method: 'GET',
       headers: {
         cookie: request.headers.get('cookie') ?? '',
       },
       cache: 'no-store',
     });
-    console.log(response);
-    const text = await response.text();
-    console.log(text);
+
     return response.ok;
-  } catch (e) {
-    console.log(e);
+  } catch (е) {
+    console.error(е);
     return false;
   }
 }

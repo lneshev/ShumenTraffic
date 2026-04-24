@@ -85,7 +85,6 @@ namespace ShumenTraffic.Web.WebAPI.Controllers
         /// Get current user information.
         /// </summary>
         /// <returns>Current user info</returns>
-        [ElmahRaiseLog]
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {

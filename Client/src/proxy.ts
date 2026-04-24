@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 async function isAuthenticated(request: NextRequest): Promise<boolean> {
   try {
-    const response = await fetch(`${env.getInternalWebApiBaseUrl()}/api/auth/me`, {
+    const response = await fetch(`${env.getPublicWebApiBaseUrl()}/api/auth/me`, {
       method: 'GET',
       headers: {
         cookie: request.headers.get('cookie') ?? '',

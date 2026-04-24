@@ -12,6 +12,11 @@ services:
       - shumen_traffic_network
     volumes:
       - mssql_data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools*/bin/sqlcmd -S localhost -U sa -P ${MSSQL_SA_PASSWORD} -C -Q "SELECT 1"
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   webapi:
     image: ghcr.io/lneshev/shumen-traffic-webapi:latest
@@ -30,7 +35,8 @@ services:
     networks:
       - shumen_traffic_network
     depends_on:
-      - mssql
+      mssql:
+        condition: service_healthy
 
   webapp:
     image: ghcr.io/lneshev/shumen-traffic-webapp:latest
@@ -38,8 +44,11 @@ services:
     container_name: shumen_traffic_webapp
     environment:
       - NEXT_PUBLIC_WEB_API_BASE_URL=${WebApp__NEXT_PUBLIC_WEB_API_BASE_URL}
+      - INTERNAL_WEB_API_BASE_URL=${WebApp__INTERNAL_WEB_API_BASE_URL}
+      - NODE_OPTIONS=--inspect=0.0.0.0:9229
     ports:
       - "3000:3000"
+      - "9229:9229"
     networks:
       - shumen_traffic_network
     depends_on:

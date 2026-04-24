@@ -10,9 +10,12 @@ async function isAuthenticated(request: NextRequest): Promise<boolean> {
       },
       cache: 'no-store',
     });
-
+    console.log(response);
+    const text = await response.text();
+    console.log(text);
     return response.ok;
-  } catch {
+  } catch (e) {
+    console.log(e);
     return false;
   }
 }
